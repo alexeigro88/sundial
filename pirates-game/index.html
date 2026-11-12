@@ -488,13 +488,30 @@ const fx=[];
 const fireGeo=ball(.35,10,8),fireMat=new T.MeshBasicMaterial({color:0xf0651c});
 const boltMat=new T.MeshBasicMaterial({color:0xf6cf3a,transparent:true});
 
+/* our own pirate flag: a skull and crossbones in the hero's red bandana */
+function jolly(bg,W,H){const c2=document.createElement('canvas');c2.width=W;c2.height=H;const c=c2.getContext('2d'),dark=bg==='#2b2b33',bone=dark?'#ffffff':'#fbf6e6',ink='#2b2b33';
+  c.fillStyle=bg;c.fillRect(0,0,W,H);if(!dark)scribble(c,0,0,W,H,'#e6e0cf',R(5),{gap:16,lw:9,ang:-.5,alpha:.6});
+  const cx=W/2,cy=H*.47,u=H/100;c.lineCap='round';c.lineJoin='round';
+  [1,-1].forEach(sx=>{const x1=cx-sx*34*u,y1=cy-24*u,x2=cx+sx*34*u,y2=cy+30*u;
+    [[ink,10*u,7*u],[bone,6*u,5*u]].forEach(q=>{c.strokeStyle=c.fillStyle=q[0];c.lineWidth=q[1];c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+      [[x1,y1],[x2,y2]].forEach(e=>{[[-3,3],[3,-3]].forEach(o=>{c.beginPath();c.arc(e[0]+o[0]*u*sx,e[1]+o[1]*u,q[2],0,7);c.fill();});});});});
+  c.fillStyle=bone;c.strokeStyle=ink;c.lineWidth=2.6*u;
+  c.beginPath();c.rect(cx-11*u,cy+6*u,22*u,15*u);c.fill();c.stroke();c.beginPath();c.arc(cx,cy-3*u,21*u,0,7);c.fill();c.stroke();
+  c.fillStyle=bone;c.fillRect(cx-9.6*u,cy+4*u,19.2*u,8*u);
+  c.fillStyle=ink;c.beginPath();c.arc(cx-8*u,cy,5.6*u,0,7);c.fill();c.beginPath();c.arc(cx+8*u,cy,5.6*u,0,7);c.fill();
+  c.beginPath();c.moveTo(cx,cy+6*u);c.lineTo(cx-2.6*u,cy+11*u);c.lineTo(cx+2.6*u,cy+11*u);c.closePath();c.fill();
+  c.lineWidth=1.8*u;[-5,0,5].forEach(x=>{c.beginPath();c.moveTo(cx+x*u,cy+15*u);c.lineTo(cx+x*u,cy+21*u);c.stroke();});
+  c.fillStyle='#d63b2f';c.beginPath();c.arc(cx,cy-4*u,22.5*u,Math.PI*1.06,Math.PI*1.94);c.closePath();c.fill();
+  c.beginPath();c.moveTo(cx-21*u,cy-11*u);c.lineTo(cx-33*u,cy-16*u);c.lineTo(cx-31*u,cy-5*u);c.closePath();c.fill();
+  return new T.MeshLambertMaterial({map:new T.CanvasTexture(c2),side:T.DoubleSide});}
+const sailM=jolly('#fffdf6',320,268),flagM=jolly('#2b2b33',160,100);
 /* ships: one in each sea; jump on deck to sail, jump off to land */
 const DECK=-.4,SHIPS=[{hx:8.4,hz:1.5,zmin:WZ+4.5,zmax:16},{hx:8.4,hz:-66,zmin:-140,zmax:WZ-4.5}];
 SHIPS.forEach(s=>{s.x=s.hx;s.z=s.hz;s.rot=Math.PI;const g=new T.Group(),hm=mat('#8a5a2b','#d9b98c',{gap:9,ang:0});
   add(g,box(2.2,1,4.4),hm,0,-.9,0);const bg=cone(1.556,1.7,4);bg.rotateY(Q);const bow=add(g,bg,hm,0,-.9,3.05);bow.rotation.x=Math.PI/2;bow.scale.z=.455;
   add(g,box(.14,.4,4.4),hm,-1.03,-.25,0);add(g,box(.14,.4,4.4),hm,1.03,-.25,0);add(g,box(2.2,.4,.14),hm,0,-.25,-2.13);
-  add(g,cyl(.09,.09,4.2),flat('#8a5a2b'),0,1.7,1.5);add(g,new T.PlaneGeometry(2.5,2.1),new T.MeshLambertMaterial({color:'#ffffff',side:T.DoubleSide}),0,2.2,1.56);
-  add(g,box(2.5,.3,.03),flat('#d63b2f'),0,2.2,1.58);add(g,box(.7,.4,.04),flat('#d63b2f'),.4,3.6,1.5);
+  add(g,cyl(.09,.09,4.2),flat('#8a5a2b'),0,1.7,1.5);add(g,new T.PlaneGeometry(2.5,2.1),sailM,0,2.2,1.36);
+  add(g,new T.PlaneGeometry(.9,.56),flagM,.52,3.5,1.5);
   const cn=add(g,cyl(.2,.27,1.2,10),flat(INK),0,-.02,2.05);cn.rotation.x=Math.PI/2-.3;const ss=add(g,new T.CircleGeometry(1.5,14),shadowM,.5,-1.2,.3);ss.rotation.x=-Math.PI/2;ss.scale.y=1.9;add(g,box(.7,.28,.7),flat('#6b4a22'),0,-.28,1.8);scene.add(g);s.g=g;});
 function shipAt(x,z){for(let i=0;i<SHIPS.length;i++){const s=SHIPS[i],dx=x-s.x,dz=z-s.z,sn=Math.sin(s.rot),cs=Math.cos(s.rot);if(Math.abs(dx*sn+dz*cs)<2.6&&Math.abs(dx*cs-dz*sn)<1.2)return i;}return -1;}
 function shipBlocked(x,z,rot){const sn=Math.sin(rot),cs=Math.cos(rot);for(const k of [-2,0,2.4]){const px=x+sn*k,pz=z+cs*k;for(const I of ISL)if(inside(I,px,pz,-.7))return true;
