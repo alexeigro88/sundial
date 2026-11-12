@@ -13,7 +13,7 @@
 /* Layout: the 3D sea fills the screen like a sheet of drawing paper that fades to blank at the edges; HUD notes sit in the corners, play buttons under the thumbs. Single look by choice: everything is coloured with crayons. */
 :root{
   --paper:#fbfaf4; --ink:#4a4a52; --sea:#6faee3; --grass:#8cc152; --roof:#d63b2f;
-  --orange:#ff9a1f; --shopfill:#ffe838; --wood:#8a5a2b; --mon:#8a56c9; --shark:#6f7f8f; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
+  --orange:#ff9a1f; --shopfill:#ffe838; --shopink:#1c49a6; --shadow:rgba(40,40,60,.42); --wood:#8a5a2b; --mon:#8a56c9; --shark:#6f7f8f; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
   --display:"Amatic SC","Neucha","Comic Sans MS",cursive;
   --body:"Neucha","Comic Sans MS","Segoe Print",cursive;
   color-scheme:light;
@@ -34,10 +34,14 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .chip small{font-size:13px;letter-spacing:.5px}
 #mute{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
 
-#shopBtn{position:absolute;top:6px;right:max(16px,env(safe-area-inset-right,0px));width:138px;height:97px;border:0;background:var(--roof);padding:0;animation:shopPop 1.6s ease-in-out infinite;font-family:var(--display);font-size:32px;line-height:.85;color:var(--blue);letter-spacing:1px}
+#shopWrap{position:absolute;top:8px;right:max(16px,env(safe-area-inset-right,0px));filter:drop-shadow(3px 5px 0 var(--shadow));animation:shopPop 1.6s ease-in-out infinite}
+#shopBtn{position:relative;display:block;width:138px;height:97px;border:0;background:var(--roof);padding:0;font-family:var(--display);font-size:32px;line-height:.85;color:var(--shopink);letter-spacing:1px;transition:transform .15s ease-out,filter .15s}
+#shopBtn:hover{transform:scale(1.12) rotate(-3deg);filter:brightness(1.1) saturate(1.25)}
+#shopBtn:active{transform:scale(.93)}
+#shopWrap:hover{animation-play-state:paused;filter:drop-shadow(5px 8px 0 var(--shadow))}
 #shopBtn::before,#shopBtn::after{content:"";position:absolute;clip-path:inherit}
 @keyframes shopPop{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.08) rotate(2deg)}}
-@media (prefers-reduced-motion:reduce){#shopBtn{animation:none}}
+@media (prefers-reduced-motion:reduce){#shopWrap{animation:none}#shopBtn{transition:none}}
 #shopBtn::before{inset:5px;background:var(--orange)}
 #shopBtn::after{inset:10px;background:var(--shopfill)}
 #shopBtn span{position:relative;z-index:1;display:block}
@@ -73,7 +77,9 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 #miniB{pointer-events:auto;border:2px solid var(--ink);border-radius:4px 10px 5px 11px;background:var(--paper);padding:0;overflow:hidden;line-height:0}
 #mini{display:block;width:64px;height:160px}
 #bigMap{height:min(62vh,600px);width:auto;max-width:100%;border:2px solid var(--ink)}
-.legend{font-size:15px;display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center}
+#map .card{max-width:540px}
+.legend{font-size:15px;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center}
+@media (max-width:520px){.legend{display:grid;grid-template-columns:repeat(3,auto);justify-content:center}}
 .legend span{display:flex;align-items:center;gap:5px}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink)}
 .l-me{background:var(--roof)}.l-ship{background:var(--wood)}.l-boss{background:var(--ink)}.l-mon{background:var(--mon)}.l-shark{background:var(--shark)}.l-chest{background:var(--sun);border-radius:2px!important}
@@ -114,7 +120,7 @@ h2{font-size:38px;color:var(--blue)}
     <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="320"></canvas></button>
   </div>
 
-  <button id="shopBtn" aria-label="Открыть магазин фруктов"><span>SHOP<br>DEVIL</span><small>PRESS</small></button>
+  <div id="shopWrap"><button id="shopBtn" aria-label="Открыть магазин фруктов"><span>SHOP<br>DEVIL</span><small>PRESS</small></button></div>
 
   <div class="mid">
     <div id="hint"></div>
@@ -169,7 +175,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="card">
       <h2>Карта Карандашного моря</h2>
       <canvas id="bigMap" width="456" height="900"></canvas>
-      <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират из розыска</span><span><i class="l-mon"></i>монстр</span><span><i class="l-shark"></i>акула</span><span><i class="l-chest"></i>сундук</span></div>
+      <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират</span><span><i class="l-mon"></i>монстр</span><span><i class="l-shark"></i>акула</span><span><i class="l-chest"></i>сундук</span></div>
       <button class="btn plain" id="mapX">Закрыть</button>
     </div>
   </div>
