@@ -388,7 +388,7 @@ const T=THREE, cv=$('gl');
 const ren=new T.WebGLRenderer({canvas:cv,antialias:true});ren.setClearColor(0xfbfaf4);
 const scene=new T.Scene();scene.fog=new T.Fog(0xfbfaf4,38,95);
 const cam=new T.PerspectiveCamera(50,1,.5,300);
-scene.add(new T.AmbientLight(0xffffff,.82));const sun=new T.DirectionalLight(0xffffff,.45);sun.position.set(6,14,8);scene.add(sun);
+const amb=new T.AmbientLight(0xffffff,.82);scene.add(amb);const sun=new T.DirectionalLight(0xffffff,.45);sun.position.set(6,14,8);scene.add(sun);
 
 const texC={};
 function crayon(col,base,o){o=o||{};const k=col+base+(o.gap||9)+(o.ang||0);if(texC[k])return texC[k];
@@ -427,8 +427,8 @@ function rock(g,x,z,s,col){const o=add(g,new T.IcosahedronGeometry(s,0),mat(col|
 const shadowM=new T.MeshBasicMaterial({color:0x1d3f66,transparent:true,opacity:.2,depthWrite:false}),foamM=new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.6,depthWrite:false});
 const chests={};
 ISL.forEach((I,i)=>{const g=new T.Group();g.position.set(I.x,I.y,I.z);scene.add(g);
-  const top=mat(I.col,'#f3f7df',{gap:10,lw:8});top.map.repeat&&0;
-  const body=new T.Mesh(cyl(I.R,I.R*.82,3.4,I.n),[mat('#c9a66b','#efe0c4',{gap:9,ang:1.2}),top,top]);body.position.y=-1.7;body.rotation.y=I.rot;g.add(body);
+  const top=mat(I.col,I.cave?'#a39dbf':'#f3f7df',{gap:10,lw:8});top.map.repeat&&0;
+  const body=new T.Mesh(cyl(I.R,I.R*.82,3.4,I.n),[I.cave?mat('#3d3856','#6f6890',{gap:8,ang:1.2}):mat('#c9a66b','#efe0c4',{gap:9,ang:1.2}),top,top]);body.position.y=-1.7;body.rotation.y=I.rot;g.add(body);
   const shd=add(scene,new T.CircleGeometry(I.R*.93+1.2,I.n,I.rot-Math.PI/2),shadowM,I.x+1,-1.27,I.z+.9);shd.rotation.x=-Math.PI/2;
   const foam=add(scene,new T.RingGeometry(I.R*.88,I.R*.93+.38,I.n,1,I.rot-Math.PI/2),foamM,I.x,-1.25,I.z);foam.rotation.x=-Math.PI/2;if(I.cave)shd.visible=foam.visible=false;
   const k=I.kind,R_=I.R;
@@ -466,6 +466,47 @@ const BR=BRIDGES.map(([a,b])=>{const A=ISL[a],B=ISL[b];
   [-.9,.9].forEach(x=>{add(g,box(.09,.09,L),flat('#8a5a2b'),x,.6,0);for(let z=-L/2+.2;z<=L/2;z+=(L-.4)/Math.max(2,Math.round(L/1.6)))add(g,box(.1,.66,.1),flat('#8a5a2b'),x,.28,z);});
   return {ax:pa[0]-ux,az:pa[1]-uz,ux,uz,len:gap+2,ya:A.y,yb:B.y,px:pa[0],pz:pa[1],qx:pb[0],qz:pb[1]};});
 function bridgeY(x,z){for(const b of BR){const dx=x-b.ax,dz=z-b.az,d=dx*b.ux+dz*b.uz;if(d>=0&&d<=b.len&&Math.abs(dx*b.uz-dz*b.ux)<.95)return b.ya+(b.yb-b.ya)*clamp((d-1)/(b.len-2),0,1);}return -99;}
+
+/* the cave: lava lake below, rock walls, stalactites, torches, mushrooms, crystals, bats */
+const CAVE={flames:[],bats:[],lava:null,motes:null,glow:[]};
+(()=>{const cx=403,cz=-18,r=R(555),rock=mat('#3d3856','#6f6890',{gap:8,ang:1.2}),rock2=mat('#4a3f5e','#8479a6',{gap:9}),glow=col=>new T.MeshBasicMaterial({color:col});
+  const c2=document.createElement('canvas');c2.width=c2.height=256;const c=c2.getContext('2d');c.fillStyle='#2a0a10';c.fillRect(0,0,256,256);
+  scribble(c,0,0,256,256,'#c9461a',R(71),{gap:15,lw:10,ang:-.5,alpha:.6});scribble(c,0,0,256,256,'#ff9a2a',R(72),{gap:47,lw:5,ang:.8,alpha:.5});
+  const lt=new T.CanvasTexture(c2);lt.wrapS=lt.wrapT=T.RepeatWrapping;lt.repeat.set(5,5);CAVE.lava=lt;
+  add(scene,new T.PlaneGeometry(150,150),new T.MeshBasicMaterial({map:lt}),cx,-5.2,cz).rotation.x=-Math.PI/2;
+  const caves=ISL.filter(I=>I.cave),clear=(x,z,d)=>caves.every(I=>Math.hypot(I.x-x,I.z-z)>I.R+d);
+  /* walls: tall columns on the far side and flanks, low boulders near the camera so the view stays open */
+  for(let i=0;i<34;i++){const a=i/34*TAU+r()*.1,south=Math.cos(a)>.3,rx=27+r()*7,rz=34+r()*7,h=south?4+r()*2:20+r()*12,w=3+r()*2.5;
+    add(scene,cyl(w*.75,w*1.25,h,6),i%3?rock:rock2,cx+Math.sin(a)*rx,-5.2+h/2,cz+Math.cos(a)*rz).rotation.y=r()*3;
+    if(!south){const sh=4+r()*7,q=5+r()*5,st=add(scene,cone(.7+r()*.9,sh,5),rock2,cx+Math.sin(a)*(rx-q),19-sh/2,cz+Math.cos(a)*(rz-q));st.rotation.x=Math.PI;}}
+  /* spires rising out of the lava */
+  for(let i=0,n=0;i<80&&n<16;i++){const x=cx-24+r()*48,z=cz-30+r()*56,h=3+r()*4;if(!clear(x,z,2.5))continue;n++;add(scene,cone(1+r()*1.2,h,5),n%2?rock:rock2,x,-5.2+h/2,z);
+    if(n%4===0){const cr=add(scene,new T.OctahedronGeometry(.5),glow(n%8?0x7fe9ff:0xff8fd8),x+.6,-5.2+h*.75,z+.5);cr.scale.y=2;cr.rotation.z=.5;}}
+  /* torches at both ends of every cave bridge */
+  BR.forEach(b=>{if(b.px<200)return;[[b.px,b.pz,b.ya],[b.qx,b.qz,b.yb]].forEach(e=>[1.35,-1.35].forEach(sd=>{const x=e[0]+b.uz*sd,z=e[1]-b.ux*sd;
+    add(scene,cyl(.07,.1,1.5,6),flat('#6b4a22'),x,e[2]+.75,z);const f=add(scene,cone(.22,.6,6),glow(0xff8a1f),x,e[2]+1.8,z);add(scene,ball(.13,6,6),glow(0xffe23d),x,e[2]+1.62,z);CAVE.flames.push(f);}));});
+  [[0xffa64d,400,3,-3],[0x7fe9ff,410,4,-24],[0xff8fd8,398,4.5,-38],[0xff6a2a,404,-2,-14]].forEach(q=>{const l=new T.PointLight(q[0],1.15,26);l.position.set(q[1],q[2],q[3]);scene.add(l);});
+  /* glowing mushrooms and crystal clusters on every platform */
+  caves.forEach((I,ci)=>{for(let j=0,n=0;j<40&&n<7;j++){const a=r()*TAU,d=I.R*(.5+r()*.4),x=I.x+Math.sin(a)*d,z=I.z+Math.cos(a)*d;if(!inside(I,x,z,.5))continue;n++;
+      const col=n%3===0?0xff8fd8:n%3===1?0x5fffd0:0xb6ff5f,sc=.7+r()*.9;add(scene,cyl(.06*sc,.09*sc,.34*sc,6),flat('#e9e4f5'),x,I.y+.17*sc,z);
+      const cap=add(scene,new T.SphereGeometry(.25*sc,8,5,0,TAU,0,Math.PI/2),glow(col),x,I.y+.32*sc,z);CAVE.glow.push(cap);}
+    for(let j=0,n=0;j<40&&n<2;j++){const a=r()*TAU,d=I.R*.78,x=I.x+Math.sin(a)*d,z=I.z+Math.cos(a)*d;if(!inside(I,x,z,.7)||BR.some(b=>Math.hypot(b.px-x,b.pz-z)<2.4||Math.hypot(b.qx-x,b.qz-z)<2.4)||(ci===0&&Math.cos(a)>.5))continue;n++;
+      [[0,0,.7],[.5,.2,.45],[-.4,.35,.38],[.1,-.45,.3]].forEach((q,k)=>{const cr=add(scene,new T.OctahedronGeometry(q[2]),glow((k+n)%2?0x7fe9ff:0xff8fd8),x+q[0],I.y+q[2]*1.4,z+q[1]);cr.scale.y=2;cr.rotation.set(q[1]*.8,k,q[0]*.8);});DEC.push({x,z,r:.7});}});
+  /* treasure hall: gold heaps and one giant crystal behind the chests */
+  const H=ISL[CAVE0+3];[[-4.3,1.8,1.1],[4.4,1.4,1],[-3.9,-3.2,.8],[4,-3.4,.9]].forEach(q=>{add(scene,cone(q[2],q[2]*.8,9),flat('#f6cf3a'),H.x+q[0],H.y+q[2]*.4,H.z+q[1]);add(scene,ball(.16,6,6),glow(0xfff2a8),H.x+q[0]+.3,H.y+q[2]*.8,H.z+q[1]);DEC.push({x:H.x+q[0],z:H.z+q[1],r:q[2]*.8});});
+  const big=add(scene,new T.OctahedronGeometry(1.25),glow(0x7fe9ff),H.x,H.y+2.3,H.z-5.7);big.scale.y=2.1;CAVE.glow.push(big);add(scene,cyl(1.3,1.6,.6,7),rock2,H.x,H.y+.3,H.z-5.7);DEC.push({x:H.x,z:H.z-5.7,r:1.5});
+  /* stone arch around the exit ring */
+  const E=ISL[CAVE0];[-1.7,1.7].forEach((x,k)=>{add(scene,box(.6,1.5,.6),rock2,E.x+x,E.y+.75,E.z+3.6);const cr=add(scene,new T.OctahedronGeometry(.3),glow(k?0x7fe9ff:0xff8fd8),E.x+x,E.y+1.95,E.z+3.6);cr.scale.y=1.7;CAVE.glow.push(cr);});
+  /* bats and drifting sparks */
+  for(let i=0;i<7;i++){const g=new T.Group(),bm=flat('#2b2440');add(g,ball(.17,8,6),bm,0,0,0);add(g,ball(.04,5,5),glow(0xffe23d),.07,.05,.14);add(g,ball(.04,5,5),glow(0xffe23d),-.07,.05,.14);
+    const w=[1,-1].map(sd=>{const p=new T.Group();p.position.x=sd*.12;add(p,box(.55,.03,.3),bm,sd*.28,0,0);g.add(p);return p;});scene.add(g);CAVE.bats.push({g,w,a:r()*TAU,rad:7+r()*13,y:4.5+r()*3,sp:(.5+r()*.5)*(i%2?1:-1)});}
+  const pos=new Float32Array(170*3);for(let i=0;i<170;i++){pos[i*3]=cx-26+r()*52;pos[i*3+1]=-3+r()*11;pos[i*3+2]=cz-32+r()*60;}
+  const pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(pos,3));CAVE.motes=new T.Points(pg,new T.PointsMaterial({color:0xffc56b,size:.16,transparent:true,opacity:.8}));scene.add(CAVE.motes);})();
+function caveAnim(){if(caveK<.02||RM)return;CAVE.lava.offset.set(tNow*.012,Math.sin(tNow*.2)*.05);
+  CAVE.flames.forEach((f,i)=>{const k=1+Math.sin(tNow*13+i*2.1)*.25;f.scale.set(1+Math.sin(tNow*9+i)*.12,k,1+Math.sin(tNow*9+i)*.12);});
+  CAVE.bats.forEach((b,i)=>{b.a+=b.sp*.016;b.g.position.set(403+Math.sin(b.a)*b.rad,b.y+Math.sin(tNow*2+i)*.5,-18+Math.cos(b.a)*b.rad*1.25);b.g.rotation.y=b.a+(b.sp>0?Math.PI/2:-Math.PI/2);b.w.forEach((w,k)=>{w.rotation.z=(k?-1:1)*Math.sin(tNow*17+i)*.8;});});
+  CAVE.motes.position.y=Math.sin(tNow*.4)*.8;CAVE.motes.rotation.y=Math.sin(tNow*.05)*.04;
+  CAVE.glow.forEach((m,i)=>{const k=1+Math.sin(tNow*2.2+i)*.06;m.scale.x=m.scale.z=k;});}
 
 /* hero */
 function stripes(){const c2=document.createElement('canvas');c2.width=c2.height=64;const c=c2.getContext('2d');c.fillStyle='#f6f3e8';c.fillRect(0,0,64,64);c.fillStyle='#2f66c2';for(let i=0;i<4;i++)c.fillRect(0,4+i*16,64,7);return new T.CanvasTexture(c2);}
@@ -755,7 +796,7 @@ function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA
   cam.position.x+=(P.x-cam.position.x)*k;cam.position.y+=(Math.max(P.y,0)+oy-cam.position.y)*k;cam.position.z+=(P.z+oz-cam.position.z)*k;
   cam.lookAt(cam.position.x,cam.position.y-oy+1,cam.position.z-oz-1.5);
   if(!RM)seaTex.offset.set(Math.sin(tNow*.25)*.01,tNow*.004);
-  caveK+=((P.x>200?1:0)-caveK)*(RM?1:.08);if(Math.abs(caveK-lastK)>.002){lastK=caveK;fogC.copy(dayC).lerp(caveC,caveK);scene.fog.color.copy(fogC);ren.setClearColor(fogC);}
+  caveK+=((P.x>200?1:0)-caveK)*(RM?1:.08);if(Math.abs(caveK-lastK)>.002){lastK=caveK;fogC.copy(dayC).lerp(caveC,caveK);scene.fog.color.copy(fogC);ren.setClearColor(fogC);amb.intensity=.82-.34*caveK;sun.intensity=.45-.3*caveK;}caveAnim();
   hBody.rotation.x=P.dash>0?.55:P.slam?-.4:0;
   xMark.visible=!!S.dig;if(S.dig){xMark.position.set(S.dig.x,ISL[S.dig.isl].y+.04,S.dig.z);xMark.scale.setScalar(RM?1:1+Math.sin(tNow*4)*.1);}
   SHIPS.forEach((s,i)=>{s.g.position.set(s.x,RM?0:Math.sin(tNow*1.6+i)*.05,s.z);s.g.rotation.y=s.rot;});if(frameN++%8===0)mapDraw($('mini'),miniBase,MB);
