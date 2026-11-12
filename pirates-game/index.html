@@ -13,7 +13,7 @@
 /* Layout: the 3D sea fills the screen like a sheet of drawing paper that fades to blank at the edges; HUD notes sit in the corners, play buttons under the thumbs. Single look by choice: everything is coloured with crayons. */
 :root{
   --paper:#fbfaf4; --ink:#4a4a52; --sea:#6faee3; --grass:#8cc152; --roof:#d63b2f;
-  --orange:#f08a1c; --wood:#8a5a2b; --mon:#8a56c9; --shark:#6f7f8f; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
+  --orange:#ff9a1f; --shopfill:#ffe838; --wood:#8a5a2b; --mon:#8a56c9; --shark:#6f7f8f; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
   --display:"Amatic SC","Neucha","Comic Sans MS",cursive;
   --body:"Neucha","Comic Sans MS","Segoe Print",cursive;
   color-scheme:light;
@@ -34,10 +34,12 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .chip small{font-size:13px;letter-spacing:.5px}
 #mute{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
 
-#shopBtn{position:absolute;top:6px;right:max(16px,env(safe-area-inset-right,0px));width:128px;height:90px;border:0;background:var(--orange);padding:0;font-family:var(--display);font-size:29px;line-height:.85;color:var(--blue);letter-spacing:1px}
+#shopBtn{position:absolute;top:6px;right:max(16px,env(safe-area-inset-right,0px));width:138px;height:97px;border:0;background:var(--roof);padding:0;animation:shopPop 1.6s ease-in-out infinite;font-family:var(--display);font-size:32px;line-height:.85;color:var(--blue);letter-spacing:1px}
 #shopBtn::before,#shopBtn::after{content:"";position:absolute;clip-path:inherit}
-#shopBtn::before{inset:4px;background:var(--sun)}
-#shopBtn::after{inset:8px;background:var(--paper)}
+@keyframes shopPop{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.08) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){#shopBtn{animation:none}}
+#shopBtn::before{inset:5px;background:var(--orange)}
+#shopBtn::after{inset:10px;background:var(--shopfill)}
 #shopBtn span{position:relative;z-index:1;display:block}
 #shopBtn small{position:relative;z-index:1;display:block;font-family:var(--body);font-size:12px;color:var(--ink);letter-spacing:2px;margin-top:3px}
 
