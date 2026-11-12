@@ -512,19 +512,25 @@ function caveAnim(){if(caveK<.02||RM)return;CAVE.lava.offset.set(tNow*.012,Math.
 /* hero */
 function stripes(){const c2=document.createElement('canvas');c2.width=c2.height=64;const c=c2.getContext('2d');c.fillStyle='#f6f3e8';c.fillRect(0,0,64,64);c.fillStyle='#2f66c2';for(let i=0;i<4;i++)c.fillRect(0,4+i*16,64,7);return new T.CanvasTexture(c2);}
 const hero=new T.Group(),hBody=new T.Group();hero.add(hBody);scene.add(hero);
-const SKIN=flat('#f6c9a0'),HAIR=flat('#2b2b33'),RED=flat('#d63b2f');
+const SKIN=flat('#f6c9a0'),HAIR=flat('#6b4424'),RED=flat('#d63b2f');
 /* chibi proportions: short legs, small striped body, big head with a face */
 const legL=new T.Group(),legR=new T.Group();legL.position.set(-.17,.5,0);legR.position.set(.17,.5,0);hBody.add(legL,legR);
 [legL,legR].forEach(l=>{add(l,cyl(.15,.17,.3,10),flat('#2f7f86'),0,-.13,0);add(l,cyl(.18,.18,.08,10),flat('#bfe3e6'),0,-.29,0);add(l,cyl(.085,.08,.16,8),SKIN,0,-.39,0);add(l,box(.2,.06,.36),flat('#8a5a2b'),0,-.48,.05);add(l,box(.2,.04,.06),flat('#6b4a22'),0,-.43,.12);});
 add(hBody,cyl(.29,.33,.56,12),new T.MeshLambertMaterial({map:stripes()}),0,.8,0);
 add(hBody,cyl(.345,.345,.13,12),flat('#f6b21c'),0,.6,0);add(hBody,box(.11,.3,.09),flat('#f6b21c'),.3,.44,.16).rotation.z=.25;add(hBody,ball(.08,8,6),flat('#f6b21c'),.3,.6,.18);
 add(hBody,ball(.48,18,14),SKIN,0,1.56,0);add(hBody,ball(.1,8,6),SKIN,-.47,1.5,0);add(hBody,ball(.1,8,6),SKIN,.47,1.5,0);
-[1,-1].forEach(sd=>{add(hBody,ball(.14,12,10),flat('#ffffff'),sd*.19,1.58,.385);add(hBody,ball(.065,8,8),flat('#1c1c22'),sd*.19,1.58,.5);add(hBody,ball(.022,6,6),flat('#ffffff'),sd*.19+.028,1.61,.555);
-  const br=add(hBody,box(.16,.035,.04),HAIR,sd*.19,1.755,.41);br.rotation.z=sd*-.22;add(hBody,ball(.06,8,6),flat('#f4a79a'),sd*.33,1.44,.33).scale.set(1,.6,.5);});
-add(hBody,box(.34,.13,.04),flat('#1c1c22'),0,1.36,.44);add(hBody,box(.29,.085,.05),flat('#ffffff'),0,1.365,.45);
-add(hBody,new T.SphereGeometry(.5,16,9,0,TAU,0,Math.PI*.3),RED,0,1.59,0);add(hBody,cyl(.405,.43,.08,16),flat('#b02c22'),0,1.875,0);
-add(hBody,ball(.09,8,6),RED,-.1,1.86,-.41);[[-.2,-.25],[-.02,-.4]].forEach(q=>{const tl=add(hBody,box(.1,.36,.04),RED,q[0],1.68,-.5);tl.rotation.z=q[1];tl.rotation.x=.3;});
-for(let i=0;i<9;i++){const an=-2.2+i*.55,front=Math.abs(an)<.7,h=add(hBody,cone(.11,front?.22:.34,5),HAIR,Math.sin(an)*(front?.4:.44),front?1.83:1.44+(i%2)*.06,Math.cos(an)*(front?.38:.44));h.rotation.set(Math.cos(an)*(front?2.6:2.2),0,-Math.sin(an)*(front?2.6:2.2));}
+const FACE=flat('#2b2b33'),HAT=flat('#3a4f9a');
+/* a kind face: small dark eyes with a sparkle, rosy cheeks, a soft smile */
+[1,-1].forEach(sd=>{add(hBody,ball(.07,10,8),FACE,sd*.17,1.56,.44).scale.set(1,1.3,.5);add(hBody,ball(.022,6,6),flat('#ffffff'),sd*.17+.02,1.6,.476);
+  add(hBody,ball(.075,8,6),flat('#f7a99c'),sd*.31,1.43,.35).scale.set(1,.6,.4);});
+const smile=add(hBody,new T.TorusGeometry(.12,.022,6,14,Math.PI),FACE,0,1.45,.445);smile.rotation.z=Math.PI;smile.rotation.x=.3;
+/* hair: soft brown tufts at the sides and back, a fringe under the hat */
+for(let i=0;i<7;i++){const an=1.15+i*.66;add(hBody,ball(.16,8,6),HAIR,Math.sin(an)*.4,1.5+(i%2)*.07,Math.cos(an)*.4).scale.set(1,1.2,1);}
+add(hBody,ball(.2,8,6),HAIR,.1,1.85,.33).scale.set(1.4,.45,.8);
+/* hat: navy, wide brim, gold band, red feather */
+const hat=new T.Group();hat.position.set(0,1.9,-.04);hat.rotation.x=-.18;hBody.add(hat);
+add(hat,cyl(.72,.72,.05,24),HAT,0,0,0);add(hat,cyl(.36,.42,.34,18),HAT,0,.19,0);add(hat,cyl(.43,.435,.09,18),flat('#f6cf3a'),0,.075,0);add(hat,cyl(.37,.37,.03,18),flat('#2f3f7c'),0,.37,0);
+{const fe=add(hat,cone(.075,.6,5),RED,.38,.4,-.12);fe.rotation.z=-.55;fe.rotation.x=-.35;}
 const armL=add(hBody,cyl(.08,.07,.44,8),SKIN,-.4,.86,0);armL.rotation.z=-.3;add(hBody,ball(.1,8,6),SKIN,-.48,.63,0);add(hBody,cyl(.11,.1,.14,8),new T.MeshLambertMaterial({map:stripes()}),-.36,1,0).rotation.z=-.3;
 const arm=new T.Group();arm.position.set(.38,1.04,0);hBody.add(arm);
 add(arm,cyl(.08,.07,.44,8),SKIN,0,-.2,0);add(arm,cyl(.11,.1,.14,8),new T.MeshLambertMaterial({map:stripes()}),0,-.05,0);add(arm,ball(.1,8,6),SKIN,0,-.46,0);
