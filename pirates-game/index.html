@@ -13,7 +13,7 @@
 /* Layout: the 3D sea fills the screen like a sheet of drawing paper that fades to blank at the edges; HUD notes sit in the corners, play buttons under the thumbs. Single look by choice: everything is coloured with crayons. */
 :root{
   --paper:#fbfaf4; --ink:#4a4a52; --sea:#6faee3; --grass:#8cc152; --roof:#d63b2f;
-  --orange:#f08a1c; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
+  --orange:#f08a1c; --wood:#8a5a2b; --mon:#8a56c9; --sun:#f6cf3a; --blue:#2f66c2; --dim:rgba(60,62,75,.45); --poster:#f1e2bd;
   --display:"Amatic SC","Neucha","Comic Sans MS",cursive;
   --body:"Neucha","Comic Sans MS","Segoe Print",cursive;
   color-scheme:light;
@@ -41,7 +41,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 #shopBtn span{position:relative;z-index:1;display:block}
 #shopBtn small{position:relative;z-index:1;display:block;font-family:var(--body);font-size:12px;color:var(--ink);letter-spacing:2px;margin-top:3px}
 
-.mid{position:absolute;top:104px;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.mid{position:absolute;top:122px;left:calc(max(16px,env(safe-area-inset-left,0px)) + 76px);right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
 #hint{background:var(--paper);border:2px solid var(--ink);border-radius:5px 12px 6px 13px;padding:4px 14px;text-align:center;max-width:460px;line-height:1.2;transition:opacity .4s}
 #hint.off{opacity:0}
 .btn{pointer-events:auto;background:var(--sun);border:2px solid var(--ink);border-radius:5px 12px 6px 13px;padding:8px 18px;font-size:20px;box-shadow:2px 3px 0 var(--ink)}
@@ -68,6 +68,13 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 @keyframes up{to{margin-top:-70px;opacity:0}}
 @media (prefers-reduced-motion:reduce){.float{animation-duration:1.6s}}
 
+#miniB{pointer-events:auto;border:2px solid var(--ink);border-radius:4px 10px 5px 11px;background:var(--paper);padding:0;overflow:hidden;line-height:0}
+#mini{display:block;width:64px;height:165px}
+#bigMap{height:min(58vh,540px);width:auto;max-width:100%;border:2px solid var(--ink)}
+.legend{font-size:15px;display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink)}
+.l-me{background:var(--roof)}.l-ship{background:var(--wood)}.l-boss{background:var(--ink)}.l-mon{background:var(--mon)}.l-chest{background:var(--sun);border-radius:2px!important}
 .ov{position:absolute;inset:0;display:grid;place-items:center;background:var(--dim);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));z-index:5}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:5px 14px 7px 16px;box-shadow:4px 5px 0 rgba(40,40,50,.35);width:100%;max-width:430px;max-height:100%;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
 h1,h2{font-family:var(--display);margin:0;line-height:1;text-wrap:balance;font-weight:700}
@@ -90,7 +97,7 @@ h2{font-size:38px;color:var(--blue)}
 #fInfo{min-height:66px;align-self:stretch}
 #fInfo strong{font-family:var(--display);font-size:28px;color:var(--orange);display:block;line-height:1}
 .poster{width:230px;max-width:100%;height:auto;border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(40,40,50,.3);transform:rotate(-2deg)}
-@media (max-height:640px){h1{font-size:38px}.fr canvas{width:38px;height:38px}.poster{width:170px}.round{width:70px;height:70px;font-size:26px}}
+@media (max-height:640px){#mini{width:46px;height:118px}h1{font-size:38px}.fr canvas{width:38px;height:38px}.poster{width:170px}.round{width:70px;height:70px;font-size:26px}}
 </style>
 
 <div id="app">
@@ -102,6 +109,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="chip"><span class="coin"></span><span id="coinT">0</span></div>
     <div class="chip"><small>Награда за тебя</small><span id="bountyT">0</span></div>
     <button id="mute" aria-label="Звук">♪</button>
+    <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="330"></canvas></button>
   </div>
 
   <button id="shopBtn" aria-label="Открыть магазин фруктов"><span>SHOP<br>DEVIL</span><small>PRESS</small></button>
@@ -121,11 +129,11 @@ h2{font-size:38px;color:var(--blue)}
     <div class="card">
       <h1>Пираты Карандашного моря</h1>
       <ul class="rules">
-        <li><canvas id="r1" width="88" height="88"></canvas><span>Бегай и прыгай с острова на остров. Упал в воду — не страшно, вернёшься на берег.</span></li>
+        <li><canvas id="r1" width="88" height="88"></canvas><span>Прыгай с острова на остров или запрыгни на корабль и плыви. Упал в воду — не страшно, вернёшься на берег.</span></li>
         <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови трёх пиратов из розыска — за них дают огромную награду.</span></li>
         <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в SHOP DEVIL: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
-      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар, 1–4 — силы фруктов. На телефоне: води пальцем слева, кнопки справа.</p>
+      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар, 1–4 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.</p>
       <div class="row">
         <button class="btn" id="go">В плавание!</button>
         <button class="btn plain" id="fresh" hidden>Начать заново</button>
@@ -152,6 +160,15 @@ h2{font-size:38px;color:var(--blue)}
       <canvas class="poster" id="wCv" width="460" height="600"></canvas>
       <p id="wText"></p>
       <button class="btn" id="wOk">В бой!</button>
+    </div>
+  </div>
+
+  <div class="ov" id="map" hidden>
+    <div class="card">
+      <h2>Карта Карандашного моря</h2>
+      <canvas id="bigMap" width="336" height="864"></canvas>
+      <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират из розыска</span><span><i class="l-mon"></i>монстр</span><span><i class="l-chest"></i>сундук</span></div>
+      <button class="btn plain" id="mapX">Закрыть</button>
     </div>
   </div>
 
@@ -244,7 +261,7 @@ const KEY='pencil-sea-pirates-3d-1';
 const fresh=()=>({hp:6,coins:0,bounty:0,fr:[],dead:[],open:[],home:0,seen:[],won:false});
 let S=fresh(), hadSave=false;
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Array.isArray(s.fr)&&ISL[s.home]){S=Object.assign(fresh(),s);hadSave=true;}}catch(e){}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){try{S.ships=SHIPS.map(s=>[s.x,s.z,s.rot]);localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const has=id=>S.fr.includes(id);
 const maxHp=()=>6+(has('heart')?3:0);
 
@@ -423,12 +440,48 @@ const fx=[];
 const fireGeo=ball(.35,10,8),fireMat=new T.MeshBasicMaterial({color:0xf0651c});
 const boltMat=new T.MeshBasicMaterial({color:0xf6cf3a,transparent:true});
 
+/* ships: one in each sea; jump on deck to sail, jump off to land */
+const DECK=-.4,SHIPS=[{hx:8.4,hz:1.5,zmin:WZ+4.5,zmax:16},{hx:8.4,hz:-66,zmin:-140,zmax:WZ-4.5}];
+SHIPS.forEach(s=>{s.x=s.hx;s.z=s.hz;s.rot=Math.PI;const g=new T.Group(),hm=mat('#8a5a2b','#d9b98c',{gap:9,ang:0});
+  add(g,box(2.2,1,4.4),hm,0,-.9,0);const bg=cone(1.556,1.7,4);bg.rotateY(Q);const bow=add(g,bg,hm,0,-.9,3.05);bow.rotation.x=Math.PI/2;bow.scale.z=.455;
+  add(g,box(.14,.4,4.4),hm,-1.03,-.25,0);add(g,box(.14,.4,4.4),hm,1.03,-.25,0);add(g,box(2.2,.4,.14),hm,0,-.25,-2.13);
+  add(g,cyl(.09,.09,4.2),flat('#8a5a2b'),0,1.7,1.5);add(g,new T.PlaneGeometry(2.5,2.1),new T.MeshLambertMaterial({color:'#ffffff',side:T.DoubleSide}),0,2.2,1.56);
+  add(g,box(2.5,.3,.03),flat('#d63b2f'),0,2.2,1.58);add(g,box(.7,.4,.04),flat('#d63b2f'),.4,3.6,1.5);scene.add(g);s.g=g;});
+function shipAt(x,z){for(let i=0;i<SHIPS.length;i++){const s=SHIPS[i],dx=x-s.x,dz=z-s.z,sn=Math.sin(s.rot),cs=Math.cos(s.rot);if(Math.abs(dx*sn+dz*cs)<2.6&&Math.abs(dx*cs-dz*sn)<1.2)return i;}return -1;}
+function shipBlocked(x,z,rot){const sn=Math.sin(rot),cs=Math.cos(rot);for(const k of [-2,0,2.4]){const px=x+sn*k,pz=z+cs*k;for(const I of ISL)if(inside(I,px,pz,-.7))return true;}return false;}
+function syncShips(){SHIPS.forEach((s,i)=>{const v=S.ships&&S.ships[i];if(v&&v.length===3&&v.every(n=>typeof n==='number'&&isFinite(n))&&!shipBlocked(v[0],v[1],v[2])){s.x=v[0];s.z=v[1];s.rot=v[2];}else{s.x=s.hx;s.z=s.hz;s.rot=Math.PI;}});}
+let shipHints=0,frameN=0;
+
+/* map */
+const MB={x0:-32,z0:-132,w:56,h:144};
+function mapBase(W){const c2=document.createElement('canvas');c2.width=W;c2.height=Math.round(W*MB.h/MB.w);const c=c2.getContext('2d'),s=W/MB.w,r=R(77),X=x=>(x-MB.x0)*s,Z=z=>(z-MB.z0)*s;
+  c.fillStyle='#e9f3fb';c.fillRect(0,0,c2.width,c2.height);scribble(c,0,0,c2.width,c2.height,'#6faee3',r,{gap:W/20,lw:W/42,ang:-1,alpha:.45});
+  c.strokeStyle='#d63b2f';c.lineWidth=Math.max(3,s*2.4);c.beginPath();c.moveTo(0,Z(WZ));c.lineTo(X(-GATE-1),Z(WZ));c.moveTo(X(GATE+1),Z(WZ));c.lineTo(c2.width,Z(WZ));c.stroke();
+  ISL.forEach(I=>{const pts=[];for(let k=0;k<I.n;k++){const a=I.rot+k*TAU/I.n;pts.push([X(I.x+Math.sin(a)*I.R),Z(I.z+Math.cos(a)*I.R)]);}
+    path(c,pts);c.fillStyle='#f6f8e6';c.fill();c.save();path(c,pts);c.clip();scribble(c,X(I.x-I.R),Z(I.z-I.R),I.R*2*s,I.R*2*s,I.col,r,{gap:Math.max(2.5,W/60),lw:Math.max(2,W/70),ang:-.6,alpha:.9});c.restore();
+    c.strokeStyle=INK;c.lineWidth=Math.max(1,W/220);poly(c,pts,r,W/200);});
+  if(W>200){c.fillStyle=INK;c.textAlign='left';c.font='700 30px "Amatic SC","Neucha",cursive';c.fillText('Малое море',X(-31),Z(-38));c.fillText('Большое море',X(-31),Z(-108));
+    c.fillStyle='#d63b2f';c.font='700 24px "Amatic SC","Neucha",cursive';c.fillText('Красная стена',X(6),Z(WZ)-8);}
+  return c2;}
+function mapDraw(cvs,base){const c=cvs.getContext('2d'),s=cvs.width/MB.w,u=cvs.width/128,X=x=>(x-MB.x0)*s,Z=z=>(z-MB.z0)*s;
+  c.drawImage(base,0,0);c.lineWidth=Math.max(1,u*.8);c.strokeStyle=INK;
+  if(doorClosed()){c.strokeStyle='#8a5a2b';c.lineWidth=u*3.5;c.beginPath();c.moveTo(X(-GATE-1),Z(WZ));c.lineTo(X(GATE+1),Z(WZ));c.stroke();c.strokeStyle=INK;c.lineWidth=Math.max(1,u*.8);}
+  ISL.forEach((I,i)=>{if(I.heal){const x=X(I.x),z=Z(I.z);c.fillStyle='#f6cf3a';c.fillRect(x-3*u,z-1*u,6*u,5*u);c.fillStyle='#d63b2f';c.beginPath();c.moveTo(x-4.5*u,z-1*u);c.lineTo(x,z-6*u);c.lineTo(x+4.5*u,z-1*u);c.closePath();c.fill();}
+    if(I.chest&&!S.open.includes(i)){c.fillStyle='#f6cf3a';c.fillRect(X(I.x)-3*u,Z(I.z)-3*u,6*u,6*u);c.strokeRect(X(I.x)-3*u,Z(I.z)-3*u,6*u,6*u);}});
+  MONS.forEach(m=>{if(!alive(m))return;c.beginPath();c.arc(X(m.x),Z(m.z),m.boss?5*u:2.4*u,0,7);c.fillStyle=m.boss?INK:'#8a56c9';c.fill();
+    if(m.boss){c.strokeStyle='#fff';c.lineWidth=u*1.4;const x=X(m.x),z=Z(m.z),k=2.4*u;c.beginPath();c.moveTo(x-k,z-k);c.lineTo(x+k,z+k);c.moveTo(x+k,z-k);c.lineTo(x-k,z+k);c.stroke();c.strokeStyle=INK;c.lineWidth=Math.max(1,u*.8);}});
+  SHIPS.forEach(sh=>{c.save();c.translate(X(sh.x),Z(sh.z));c.rotate(-sh.rot);c.fillStyle='#8a5a2b';c.beginPath();c.moveTo(0,6*u);c.lineTo(3.2*u,1*u);c.lineTo(3.2*u,-4.5*u);c.lineTo(-3.2*u,-4.5*u);c.lineTo(-3.2*u,1*u);c.closePath();c.fill();c.stroke();c.restore();});
+  const px=X(P.x),pz=Z(P.z),pr=RM?0:(tNow*1.5%1);c.strokeStyle='#d63b2f';c.lineWidth=u*1.2;c.globalAlpha=1-pr;c.beginPath();c.arc(px,pz,(5+pr*8)*u,0,7);c.stroke();c.globalAlpha=1;
+  c.beginPath();c.arc(px,pz,4.6*u,0,7);c.fillStyle='#d63b2f';c.fill();c.strokeStyle='#fff';c.lineWidth=u*1.6;c.stroke();}
+const miniBase=mapBase(128);let bigBase=null;
+function openMap(){if(overlayOpen())return;for(const k in keys)keys[k]=false;bigBase=bigBase||mapBase(336);mapDraw($('bigMap'),bigBase);$('map').hidden=false;}
+
 /* ---------- player ---------- */
-const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
+const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
 const cd={};let jumpQ=0,started=false,tNow=0;
 const keys={},joy={x:0,y:0,id:null,ox:0,oy:0};
-const overlayOpen=()=>['start','shop','wanted','win'].some(id=>!$(id).hidden);
-function placeAt(i){const I=ISL[i];P.x=I.x;P.z=I.z+I.R*.25;P.y=I.y;P.vy=0;P.kx=P.kz=0;P.ground=true;P.isl=-1;P.sx=P.x;P.sz=P.z;P.sy=P.y;}
+const overlayOpen=()=>['start','shop','map','wanted','win'].some(id=>!$(id).hidden);
+function placeAt(i){const I=ISL[i];P.x=I.x;P.z=I.z+I.R*.25;P.y=I.y;P.vy=0;P.kx=P.kz=0;P.ground=true;P.ship=-1;P.isl=-1;P.sx=P.x;P.sz=P.z;P.sy=P.y;}
 
 function floatTxt(x,y,z,txt,cls){const v=new T.Vector3(x,y,z).project(cam),e=document.createElement('div');e.className='float '+(cls||'');e.textContent=txt;
   e.style.left=((v.x+1)/2*cv.clientWidth)+'px';e.style.top=((1-v.y)/2*cv.clientHeight)+'px';$('app').appendChild(e);setTimeout(()=>e.remove(),RM?1600:1000);}
@@ -476,17 +529,23 @@ function update(dt){tNow+=dt;
   let ix=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x,iz=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0)+joy.y;
   const il=Math.hypot(ix,iz);if(il>1){ix/=il;iz/=il;}
   const sp=has('speed')?8.8:6.6,pz=P.z;
-  P.x+=(ix*sp+P.kx)*dt;P.z+=(iz*sp+P.kz)*dt;const dk=Math.pow(.004,dt);P.kx*=dk;P.kz*=dk;
   if(il>.15){P.face=Math.atan2(ix,iz);P.walk+=dt*12;}
+  if(P.ship>=0&&P.ground){const sh=SHIPS[P.ship],v=7.5*dt;
+    if(il>.15){let dr=P.face-sh.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));const nr=sh.rot+dr*Math.min(1,dt*5);if(!shipBlocked(sh.x,sh.z,nr))sh.rot=nr;
+      const nx=clamp(sh.x+ix*v,-46,46),nz=clamp(sh.z+iz*v,sh.zmin,sh.zmax);if(!shipBlocked(nx,sh.z,sh.rot))sh.x=nx;if(!shipBlocked(sh.x,nz,sh.rot))sh.z=nz;}
+    P.x=sh.x;P.z=sh.z;P.kx=P.kz=0;}
+  else{P.x+=(ix*sp+P.kx)*dt;P.z+=(iz*sp+P.kz)*dt;}
+  const dk=Math.pow(.004,dt);P.kx*=dk;P.kz*=dk;
   /* wall */
   if(Math.abs(P.z-WZ)<1.5){if(!doorClosed()&&Math.abs(pz-WZ)<1.5)P.x=clamp(P.x,-GATE+.4,GATE-.4);else if(doorClosed()||Math.abs(P.x)>GATE-.4)P.z=pz>=WZ?WZ+1.5:WZ-1.5;}
   /* gravity & ground */
   P.vy-=27*dt;P.y+=P.vy*dt;P.coy-=dt;jumpQ-=dt;
-  const gi=islandAt(P.x,P.z),gy=gi<0?-99:ISL[gi].y;
-  if(gi>=0&&P.vy<=0&&P.y<=gy&&P.y>gy-1){P.y=gy;P.vy=0;if(!P.ground)P.ground=true;P.coy=.12;
-    const I=ISL[gi];P.sx=P.x+(I.x-P.x)*.2;P.sz=P.z+(I.z-P.z)*.2;P.sy=gy;if(gi!==P.isl)enter(gi);}
+  const gi=islandAt(P.x,P.z),si=gi<0?shipAt(P.x,P.z):-1,gy=gi>=0?ISL[gi].y:si>=0?DECK:-99;
+  if((gi>=0||si>=0)&&P.vy<=0&&P.y<=gy&&P.y>gy-1){P.y=gy;P.vy=0;P.ground=true;P.coy=.12;
+    if(gi>=0){const I=ISL[gi];if(P.ship>=0){P.ship=-1;save();}P.sx=P.x+(I.x-P.x)*.2;P.sz=P.z+(I.z-P.z)*.2;P.sy=gy;if(gi!==P.isl)enter(gi);}
+    else{const sh=SHIPS[si];if(P.ship!==si){P.ship=si;P.isl=-1;hud();if(shipHints++<2)say('Ты на корабле! Плыви куда хочешь. Кнопка «Прыг» — спрыгнуть на остров.');}P.sx=sh.x;P.sz=sh.z;P.sy=DECK;}}
   else P.ground=false;
-  if(jumpQ>0&&(P.ground||P.coy>0)){P.vy=has('spring')?13.6:10.2;P.ground=false;P.coy=0;jumpQ=0;sfx.jump();}
+  if(jumpQ>0&&(P.ground||P.coy>0)){P.vy=has('spring')?13.6:10.2;P.ground=false;P.coy=0;jumpQ=0;if(P.ship>=0){P.ship=-2;}sfx.jump();}
   if(P.ground)for(const d of DEC){const dx=P.x-d.x,dz=P.z-d.z,dd=Math.hypot(dx,dz),rr=d.r+.35;if(dd<rr&&dd>0){P.x=d.x+dx/dd*rr;P.z=d.z+dz/dd*rr;}}
   if(P.y<-1.9){sfx.splash();floatTxt(P.x,-.5,P.z,'Бултых!');P.x=P.sx;P.z=P.sz;P.y=P.sy;P.vy=0;P.kx=P.kz=0;P.inv=Math.max(P.inv,1);say(has('spring')?'Бултых! Разбегись и прыгай с самого края.':'Бултых! Прыгай с самого края. До дальних островов нужна Прыгун-ягода.');}
   P.inv-=dt;P.atk-=dt;P.swing-=dt;
@@ -513,7 +572,7 @@ function update(dt){tNow+=dt;
 }
 function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA||keys.KeyS||keys.KeyD||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight;
   hero.position.set(P.x,P.y,P.z);let df=P.face-hero.rotation.y;df=Math.atan2(Math.sin(df),Math.cos(df));hero.rotation.y+=df*.35;
-  const sw=P.ground&&moving?Math.sin(P.walk)*.7:P.ground?0:.5;legL.rotation.x=sw;legR.rotation.x=-sw;hBody.position.y=P.ground&&moving?Math.abs(Math.sin(P.walk))*.08:0;
+  const sw=P.ground&&moving&&P.ship<0?Math.sin(P.walk)*.7:P.ground?0:.5;legL.rotation.x=sw;legR.rotation.x=-sw;hBody.position.y=P.ground&&moving?Math.abs(Math.sin(P.walk))*.08:0;
   arm.rotation.x=P.swing>0?-2.4+(1-P.swing/.26)*2.6:-.25;arm.rotation.y=P.swing>0?.6-(1-P.swing/.26)*1.4:0;
   hero.visible=P.inv>0?Math.floor(tNow*14)%2===0:true;
   const gi=islandAt(P.x,P.z);shadow.visible=gi>=0;if(gi>=0){shadow.position.set(P.x,ISL[gi].y+.03,P.z);const s=clamp(1-(P.y-ISL[gi].y)*.12,.4,1);shadow.scale.setScalar(s);}
@@ -521,6 +580,7 @@ function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA
   cam.position.x+=(P.x-cam.position.x)*k;cam.position.y+=(Math.max(P.y,0)+oy-cam.position.y)*k;cam.position.z+=(P.z+oz-cam.position.z)*k;
   cam.lookAt(cam.position.x,cam.position.y-oy+1,cam.position.z-oz-1.5);
   if(!RM)seaTex.offset.set(Math.sin(tNow*.25)*.01,tNow*.004);
+  SHIPS.forEach((s,i)=>{s.g.position.set(s.x,RM?0:Math.sin(tNow*1.6+i)*.05,s.z);s.g.rotation.y=s.rot;});if(frameN++%8===0)mapDraw($('mini'),miniBase);
   ren.render(scene,cam);
   pwBtns.forEach(b=>{const c=cd[b.fid]>0;b.el.classList.toggle('cd',c);b.num.textContent=c?Math.ceil(cd[b.fid]):'';});}
 let last=0;
@@ -529,8 +589,8 @@ function resize(){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;ren.
 window.addEventListener('resize',resize);
 
 /* ---------- input ---------- */
-window.addEventListener('keydown',e=>{if(overlayOpen()){if(e.code==='Escape')$('shop').hidden=true;return;}keys[e.code]=true;
-  if(e.code==='Space'){jump();e.preventDefault();}else if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter')attack();
+window.addEventListener('keydown',e=>{if(overlayOpen()){if(e.code==='Escape'||e.code==='KeyM'){$('shop').hidden=true;$('map').hidden=true;}return;}keys[e.code]=true;
+  if(e.code==='Space'){jump();e.preventDefault();}else if(e.code==='KeyM')openMap();else if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter')attack();
   else if(/^Digit[1-4]$/.test(e.code)){const b=pwBtns[+e.code[5]-1];if(b)usePow(b.fid);}
   if(e.code.indexOf('Arrow')===0)e.preventDefault();});
 window.addEventListener('keyup',e=>{keys[e.code]=false;});
@@ -565,6 +625,7 @@ $('shop').addEventListener('click',e=>{if(e.target===$('shop'))$('shop').hidden=
 $('buy').onclick=()=>{const f=FBY[selF];if(!f||has(f.id)||S.coins<f.price)return;S.coins-=f.price;S.fr.push(f.id);if(f.id==='heart')S.hp+=3;sfx.coin();save();hud();renderShop();renderPows();};
 (function burst(){const n=26,p=[];for(let i=0;i<n;i++){const a=i/n*TAU-1.57,rad=i%2?50:39;p.push((50+Math.cos(a)*rad).toFixed(1)+'% '+(50+Math.sin(a)*rad).toFixed(1)+'%');}$('shopBtn').style.clipPath='polygon('+p.join(',')+')';})();
 $('act').onclick=()=>{S.dead=S.dead.filter(id=>MONS[id].boss);save();syncMons();hud();say('Монстры вернулись на свои острова. Вперёд за монетами!');};
+$('miniB').onclick=openMap;$('mapX').onclick=()=>{$('map').hidden=true;};$('map').addEventListener('click',e=>{if(e.target===$('map'))$('map').hidden=true;});
 $('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'✕':'♪';if(!muted)beep(660,.1);};
 
 /* ---------- wanted posters, start, win ---------- */
@@ -576,8 +637,8 @@ function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent
   $('wOk').textContent='Ура!';afterWanted=b===BOSS[2]?showWin:null;$('wanted').hidden=false;}
 $('wOk').onclick=()=>{$('wanted').hidden=true;const f=afterWanted;afterWanted=null;if(f)f();};
 function showWin(){drawPoster($('winCv'),{name:'Гроза Карандашного моря',bounty:S.bounty,seed:8});$('win').hidden=false;}
-function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();renderPows();hud();}
-function begin(){$('start').hidden=true;started=true;beep(520,.12);hud();say('Беги к краю острова и прыгай на следующий!');}
+function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();renderPows();hud();}
+function begin(){$('start').hidden=true;started=true;beep(520,.12);hud();say('Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!');}
 $('go').onclick=begin;
 $('fresh').onclick=()=>{reset();begin();};
 $('again').onclick=()=>{$('win').hidden=true;reset();};
@@ -587,10 +648,10 @@ function start(data){load();if(data&&data.S&&ISL[data.S.home]){S=Object.assign(f
   if(hadSave&&(S.coins||S.fr.length||S.dead.length)){$('go').textContent='Продолжить плавание';$('fresh').hidden=false;}
   if(started)$('start').hidden=true;
   drawHero2($('r1').getContext('2d'),44,80,1.8,3);drawMonster2($('r2').getContext('2d'),BOSS[2],44,48,1.15,4);drawFruit($('r3').getContext('2d'),FBY.fire,44,48,2);
-  placeAt(S.home);syncMons();renderPows();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
+  placeAt(S.home);syncMons();syncShips();renderPows();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{});
   requestAnimationFrame(frame);}
-window.__game={ISL,MONS,P,get S(){return S;},inside};
+window.__game={ISL,MONS,P,SHIPS,get S(){return S;},inside};
 const hot=window.claude&&window.claude.hot;
 if(hot&&hot.snapshot)hot.snapshot(()=>({S,started}));
 if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
