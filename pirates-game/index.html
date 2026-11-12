@@ -69,7 +69,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.float{animation-duration:1.6s}}
 
 #miniB{pointer-events:auto;border:2px solid var(--ink);border-radius:4px 10px 5px 11px;background:var(--paper);padding:0;overflow:hidden;line-height:0}
-#mini{display:block;width:64px;height:171px}
+#mini{display:block;width:64px;height:160px}
 #bigMap{height:min(62vh,600px);width:auto;max-width:100%;border:2px solid var(--ink)}
 .legend{font-size:15px;display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center}
 .legend span{display:flex;align-items:center;gap:5px}
@@ -97,7 +97,7 @@ h2{font-size:38px;color:var(--blue)}
 #fInfo{min-height:66px;align-self:stretch}
 #fInfo strong{font-family:var(--display);font-size:28px;color:var(--orange);display:block;line-height:1}
 .poster{width:230px;max-width:100%;height:auto;border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(40,40,50,.3);transform:rotate(-2deg)}
-@media (max-height:640px){#mini{width:46px;height:123px}h1{font-size:38px}.fr canvas{width:38px;height:38px}.poster{width:170px}.round{width:70px;height:70px;font-size:26px}}
+@media (max-height:640px){#mini{width:46px;height:115px}h1{font-size:38px}.fr canvas{width:38px;height:38px}.poster{width:170px}.round{width:70px;height:70px;font-size:26px}}
 </style>
 
 <div id="app">
@@ -109,7 +109,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="chip"><span class="coin"></span><span id="coinT">0</span></div>
     <div class="chip"><small>Награда за тебя</small><span id="bountyT">0</span></div>
     <button id="mute" aria-label="Музыка и звук">♪</button>
-    <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="343"></canvas></button>
+    <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="320"></canvas></button>
   </div>
 
   <button id="shopBtn" aria-label="Открыть магазин фруктов"><span>SHOP<br>DEVIL</span><small>PRESS</small></button>
@@ -130,7 +130,7 @@ h2{font-size:38px;color:var(--blue)}
       <h1>Пираты Карандашного моря</h1>
       <ul class="rules">
         <li><canvas id="r1" width="88" height="88"></canvas><span>Прыгай с острова на остров, ходи по мостикам или плыви на корабле с пушкой: собирай бочки с монетами и берегись акул. Упал в воду — не страшно, вернёшься на берег.</span></li>
-        <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови трёх пиратов из розыска — за них дают огромную награду.</span></li>
+        <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.</span></li>
         <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в SHOP DEVIL: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
       <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар, 1–4 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.</p>
@@ -176,7 +176,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="card">
       <h1>Победа!</h1>
       <canvas class="poster" id="winCv" width="460" height="600"></canvas>
-      <p>Все три пирата пойманы. Теперь самый знаменитый пират Карандашного моря — ты!</p>
+      <p>Все пираты из розыска пойманы. Теперь самый знаменитый пират Карандашного моря — ты!</p>
       <div class="row">
         <button class="btn" id="again">Играть заново</button>
         <button class="btn plain" id="stay">Погулять по островам</button>
@@ -232,7 +232,8 @@ const LV=[null,{hp:2,dmg:1,sp:2.0,coin:40000,s:.6},{hp:4,dmg:1,sp:2.5,coin:70000
 const BOSS=[
  {name:'Капитан Железный Зуб',bounty:10000000,coin:300000,col:'#7d8894',light:'#d5dbe1',eyes:2,horns:0,tent:0,legs:0,teeth:1,w:1.15,h:1.05,k:2.2,seed:61,hp:12,dmg:1,sp:2.6,s:1.35},
  {name:'Барон Песочник',bounty:20000000,coin:500000,col:'#d9a531',light:'#f6e3b0',eyes:1,horns:2,tent:0,legs:0,teeth:1,w:1.1,h:1.2,k:3.1,seed:73,hp:20,dmg:2,sp:3.0,s:1.6},
- {name:'Кракен Чернильное Пузо',bounty:30000000,coin:0,col:'#5b3f9e',light:'#cabff0',eyes:3,horns:2,tent:6,legs:6,teeth:1,w:1.25,h:1.05,k:2.3,seed:97,hp:30,dmg:2,sp:3.3,s:1.95}];
+ {name:'Кракен Чернильное Пузо',bounty:30000000,coin:0,col:'#5b3f9e',light:'#cabff0',eyes:3,horns:2,tent:6,legs:6,teeth:1,w:1.25,h:1.05,k:2.3,seed:97,hp:30,dmg:2,sp:3.3,s:1.95},
+ {name:'Адмирал Красный Клык',bounty:40000000,coin:0,col:'#c8372d',light:'#f3c1bc',eyes:2,horns:3,tent:4,legs:4,teeth:1,w:1.2,h:1.15,k:3.7,seed:113,hp:38,dmg:2,sp:3.6,s:2.05}];
 
 const Q=Math.PI/4;
 const ISL=[
@@ -258,7 +259,8 @@ const ISL=[
  {x:-22,z:-67,R:5.5,n:5,rot:.7,y:0,kind:'palms',m:[3,2],f:[3],col:'#e3d27a'},
  {x:-14.5,z:-96.5,R:6,n:6,rot:.3,y:0,kind:'rocks',m:[3,3,2],col:'#c9b6ea'},
  {x:18,z:-93,R:5,n:4,rot:.2,y:0,kind:'palms',m:[3,3],f:[3],col:'#b4d455'},
- {x:-17.6,z:-120,R:5.2,n:5,rot:.4,y:0,kind:'rocks',m:[3,3,3],f:[3],col:'#8f7fc4'}
+ {x:-17.6,z:-120,R:5.2,n:5,rot:.4,y:0,kind:'rocks',m:[3,3,3],f:[3],col:'#8f7fc4'},
+ {x:20.5,z:-114.5,R:7,n:6,rot:.2,y:0,kind:'treasure',boss:3,late:1,gold:[[-2.6,-3.4,100,400000],[2.6,-3.4,101,400000],[0,-4.9,102,500000]],col:'#f0c23a'}
 ];
 const BRIDGES=[[0,1],[3,5],[2,15],[7,8],[8,19],[10,12],[12,13]];
 const WZ=-55, GATE=3.3;
@@ -353,7 +355,7 @@ function drawPoster(cv,o){const c=cv.getContext('2d'),W=cv.width,H=cv.height,r=R
   c.strokeStyle=INK;c.lineWidth=3;poly(c,[[12,12],[W-12,12],[W-12,H-12],[12,H-12]],r,3);
   c.fillStyle=INK;c.textAlign='center';c.font='700 96px "Amatic SC","Neucha",cursive';c.fillText('WANTED',W/2,104);
   c.fillStyle='#fbf6e6';c.fillRect(60,124,W-120,250);c.lineWidth=2.5;poly(c,[[60,124],[W-60,124],[W-60,374],[60,374]],r,2.5);
-  if(o.boss)drawMonster2(c,o.boss,W/2,262,3.3,o.boss.seed);else drawHero2(c,W/2,356,5,3);
+  c.save();c.beginPath();c.rect(62,126,W-124,246);c.clip();if(o.boss)drawMonster2(c,o.boss,W/2,o.boss.tent?240:262,o.boss.tent?2.8:3.3,o.boss.seed);else drawHero2(c,W/2,356,5,3);c.restore();
   c.fillStyle=INK;c.font='700 50px "Amatic SC","Neucha",cursive';c.fillText('DEAD OR ALIVE',W/2,424);
   c.font='34px "Neucha",cursive';c.fillText(o.name,W/2,468,W-50);
   c.font='700 74px "Amatic SC","Neucha",cursive';c.fillStyle='#a8540a';c.fillText(money(o.bounty),W/2,548,W-50);
@@ -421,8 +423,9 @@ ISL.forEach((I,i)=>{const g=new T.Group();g.position.set(I.x,I.y,I.z);scene.add(
   else if(k==='ship'){const hull=add(g,box(1.5,1,4),mat('#8a5a2b','#d9b98c',{gap:9,ang:0}),-2.2,.5,-1.6);hull.rotation.y=.5;add(g,cyl(.08,.08,3.4),flat('#8a5a2b'),-2.2,2.2,-1.6);
     const s=add(g,new T.PlaneGeometry(1.7,1.7),new T.MeshLambertMaterial({color:'#ffffff',side:T.DoubleSide}),-2.2,2.6,-1.55);s.rotation.y=.5;DEC.push({x:I.x-2.2,z:I.z-1.6,r:1.5});}
   else if(k==='final'){for(let j=0;j<5;j++){const a=1.2+j*.95;rock(g,Math.sin(a)*7.6,Math.cos(a)*7.6-1,1.2,'#4a4a52');}add(g,cyl(.07,.07,4),flat('#4a4a52'),0,2,-7.5);add(g,box(1.5,1,.05),flat('#4a4a52'),.78,3.5,-7.5);}
-  if(I.chest){const c=new T.Group();c.position.set(.6,0,.4);g.add(c);add(c,box(1.1,.6,.75),mat('#b5762a','#e6c9a5',{gap:8}),0,.3,0);add(c,box(.2,.62,.78),flat('#f6cf3a'),0,.3,0);
-    const lid=new T.Group();lid.position.set(0,.6,-.375);c.add(lid);add(lid,box(1.1,.26,.75),mat('#8a5a2b','#d9b98c',{gap:8}),0,.13,.375);chests[i]={lid,x:I.x+.6,z:I.z+.4};}
+  if(k==='treasure'){palm(g,-4.6,-.6,1.2);palm(g,4.6,-.8,1.3);[[-4.2,2.6],[4,2.8],[0,-3.2]].forEach(q=>{add(g,cone(.9,.8,9),flat('#f6cf3a'),q[0],.4,q[1]);DEC.push({x:I.x+q[0],z:I.z+q[1],r:.8});});}
+  (I.chest?[[.6,.4,i,200000]]:I.gold||[]).forEach(q=>{const c=new T.Group();c.position.set(q[0],0,q[1]);g.add(c);add(c,box(1.1,.6,.75),mat('#b5762a','#e6c9a5',{gap:8}),0,.3,0);add(c,box(.2,.62,.78),flat('#f6cf3a'),0,.3,0);
+    const lid=new T.Group();lid.position.set(0,.6,-.375);c.add(lid);add(lid,box(1.1,.26,.75),mat('#8a5a2b','#d9b98c',{gap:8}),0,.13,.375);chests[q[2]]={lid,x:I.x+q[0],z:I.z+q[1],val:q[3]};});
 });
 
 /* bridges: plank walkways between some islands */
@@ -461,7 +464,7 @@ function makeMon(d,s){const g=new T.Group(),m=mat(d.col,'#ffffff',{gap:8,alpha:.
   add(g,box(.7,.09,.05),flat(INK),0,.72,.93);
   if(d.bounty){add(g,cyl(1.15,1.15,.08,14),flat(INK),0,1.82,0);add(g,cyl(.62,.75,.6,10),flat(INK),0,2.1,0);for(let i=0;i<4;i++)add(g,cone(.09,.2,4),flat('#ffffff'),-.3+i*.2,.62,.92).rotation.x=Math.PI;}
   g.scale.setScalar(s);g.userData.m=m;return g;}
-[0,1,2].forEach(pass=>ISL.forEach((I,i)=>{const list=pass===2?(I.f||[]).map(lv=>({lv})):pass?(I.e||[]).map(lv=>({lv})):I.boss!=null?[{boss:BOSS[I.boss]}]:(I.m||[]).map(lv=>({lv})),j0=pass===2?(I.m||[]).length+(I.e||[]).length:pass?(I.m||[]).length:0;
+[0,1,2,3].forEach(pass=>ISL.forEach((I,i)=>{const list=pass===3?(I.late?[{boss:BOSS[I.boss]}]:[]):pass===2?(I.f||[]).map(lv=>({lv})):pass?(I.e||[]).map(lv=>({lv})):I.late?[]:I.boss!=null?[{boss:BOSS[I.boss]}]:(I.m||[]).map(lv=>({lv})),j0=pass===2?(I.m||[]).length+(I.e||[]).length:pass?(I.m||[]).length:0;
   list.forEach((e,jj)=>{const j=jj+j0;const b=e.boss,L=b||LV[e.lv],d=b||KINDS[e.lv][(i+j)%2],a=j*2.4+i,rr=b?0:I.R*.3;
     const m={id:MONS.length,isl:i,boss:b||null,d,max:L.hp,hp:L.hp,dmg:L.dmg,sp:L.sp,coin:L.coin,s:L.s,hx:I.x+Math.sin(a)*rr,hz:I.z+Math.cos(a)*rr-(b?I.R*.2:0),froz:0,flash:0,ph:j*1.7+i,kx:0,kz:0};
     m.x=m.hx;m.z=m.hz;m.g=makeMon(d,L.s);scene.add(m.g);
@@ -489,10 +492,10 @@ function shipAt(x,z){for(let i=0;i<SHIPS.length;i++){const s=SHIPS[i],dx=x-s.x,d
 function shipBlocked(x,z,rot){const sn=Math.sin(rot),cs=Math.cos(rot);for(const k of [-2,0,2.4]){const px=x+sn*k,pz=z+cs*k;for(const I of ISL)if(inside(I,px,pz,-.7))return true;
     for(const b of BR){const dx=px-b.ax,dz=pz-b.az,d=dx*b.ux+dz*b.uz;if(d>-.6&&d<b.len+.6&&Math.abs(dx*b.uz-dz*b.ux)<1.9)return true;}}return false;}
 function syncShips(){SHIPS.forEach((s,i)=>{const v=S.ships&&S.ships[i];if(v&&v.length===3&&v.every(n=>typeof n==='number'&&isFinite(n))&&!shipBlocked(v[0],v[1],v[2])){s.x=v[0];s.z=v[1];s.rot=v[2];}else{s.x=s.hx;s.z=s.hz;s.rot=Math.PI;}});}
-let shipHints=0,frameN=0;
+let shipHints=0,frameN=0,lockT=-9;
 
 /* map */
-const MB={x0:-32,z0:-138,w:56,h:150},MBIG={x0:-42,z0:-138,w:76,h:150};
+const MB={x0:-32,z0:-138,w:60,h:150},MBIG={x0:-42,z0:-138,w:76,h:150};
 function mapBase(W,M){const c2=document.createElement('canvas');c2.width=W;c2.height=Math.round(W*M.h/M.w);const c=c2.getContext('2d'),s=W/M.w,r=R(77),X=x=>(x-M.x0)*s,Z=z=>(z-M.z0)*s;
   c.fillStyle='#e9f3fb';c.fillRect(0,0,c2.width,c2.height);scribble(c,0,0,c2.width,c2.height,'#6faee3',r,{gap:W/20,lw:W/42,ang:-1,alpha:.45});
   c.strokeStyle='#d63b2f';c.lineWidth=Math.max(3,s*2.4);c.beginPath();c.moveTo(0,Z(WZ));c.lineTo(X(-GATE-1),Z(WZ));c.moveTo(X(GATE+1),Z(WZ));c.lineTo(c2.width,Z(WZ));c.stroke();
@@ -507,7 +510,8 @@ function mapDraw(cvs,base,M){const c=cvs.getContext('2d'),s=cvs.width/M.w,u=s*.4
   c.drawImage(base,0,0);c.lineWidth=Math.max(1,u*.8);c.strokeStyle=INK;
   if(doorClosed()){c.strokeStyle='#8a5a2b';c.lineWidth=u*3.5;c.beginPath();c.moveTo(X(-GATE-1),Z(WZ));c.lineTo(X(GATE+1),Z(WZ));c.stroke();c.strokeStyle=INK;c.lineWidth=Math.max(1,u*.8);}
   ISL.forEach((I,i)=>{if(I.heal){const x=X(I.x),z=Z(I.z);c.fillStyle='#f6cf3a';c.fillRect(x-3*u,z-1*u,6*u,5*u);c.fillStyle='#d63b2f';c.beginPath();c.moveTo(x-4.5*u,z-1*u);c.lineTo(x,z-6*u);c.lineTo(x+4.5*u,z-1*u);c.closePath();c.fill();}
-    if(I.chest&&!S.open.includes(i)){c.fillStyle='#f6cf3a';c.fillRect(X(I.x)-3*u,Z(I.z)-3*u,6*u,6*u);c.strokeRect(X(I.x)-3*u,Z(I.z)-3*u,6*u,6*u);}});
+});
+  for(const id in chests){const q=chests[id];if(S.open.includes(+id))continue;c.fillStyle='#f6cf3a';c.fillRect(X(q.x)-3*u,Z(q.z)-3*u,6*u,6*u);c.strokeRect(X(q.x)-3*u,Z(q.z)-3*u,6*u,6*u);}
   MONS.forEach(m=>{if(!alive(m))return;c.beginPath();c.arc(X(m.x),Z(m.z),m.boss?5*u:2.4*u,0,7);c.fillStyle=m.boss?INK:'#8a56c9';c.fill();
     if(m.boss){c.strokeStyle='#fff';c.lineWidth=u*1.4;const x=X(m.x),z=Z(m.z),k=2.4*u;c.beginPath();c.moveTo(x-k,z-k);c.lineTo(x+k,z+k);c.moveTo(x+k,z-k);c.lineTo(x-k,z+k);c.stroke();c.strokeStyle=INK;c.lineWidth=Math.max(1,u*.8);}});
   SHARKS.forEach(k=>{if(k.dead>0)return;c.beginPath();c.arc(X(k.x),Z(k.z),3.2*u,0,7);c.fillStyle='#6f7f8f';c.fill();c.stroke();});
@@ -515,14 +519,24 @@ function mapDraw(cvs,base,M){const c=cvs.getContext('2d'),s=cvs.width/M.w,u=s*.4
   const px=X(P.x),pz=Z(P.z),pr=RM?0:(tNow*1.5%1);c.strokeStyle='#d63b2f';c.lineWidth=u*1.2;c.globalAlpha=1-pr;c.beginPath();c.arc(px,pz,(5+pr*8)*u,0,7);c.stroke();c.globalAlpha=1;
   c.beginPath();c.arc(px,pz,4.6*u,0,7);c.fillStyle='#d63b2f';c.fill();c.strokeStyle='#fff';c.lineWidth=u*1.6;c.stroke();}
 const miniBase=mapBase(128,MB);let bigBase=null;
+function finMesh(pts,m){const sh=new T.Shape();pts.forEach((q,i)=>sh[i?'lineTo':'moveTo'](q[0],q[1]));const o=new T.Mesh(new T.ShapeGeometry(sh),m);o.rotation.y=-Math.PI/2;return o;}
+function makeShark(){const g=new T.Group();g.rotation.order='YXZ';
+  const c2=document.createElement('canvas');c2.width=256;c2.height=64;const c=c2.getContext('2d');c.fillStyle='#8aa0b2';c.fillRect(0,0,256,64);scribble(c,0,0,256,64,'#4f6a80',R(31),{gap:6,lw:5,ang:0,alpha:.85});c.fillStyle='#f4f6f7';c.fillRect(0,0,56,64);c.fillRect(200,0,56,64);
+  const skin=new T.MeshLambertMaterial({map:new T.CanvasTexture(c2),side:T.DoubleSide}),fm=new T.MeshLambertMaterial({color:'#4f6a80',side:T.DoubleSide});
+  const prof=[[.001,-2.3],[.14,-2.1],[.3,-1.5],[.55,-.6],[.72,.4],[.68,1.2],[.5,1.9],[.24,2.4],[.001,2.7]].map(q=>new T.Vector2(q[0],q[1]));
+  const body=add(g,new T.LatheGeometry(prof,18),skin,0,.05,0);body.rotation.x=Math.PI/2;body.scale.z=.85;
+  const df=finMesh([[.55,0],[-.5,1.3],[-.8,0]],fm);df.position.set(0,.58,.25);g.add(df);
+  const tail=new T.Group();tail.position.set(0,.05,-2.05);g.add(tail);tail.add(finMesh([[.2,0],[-.9,1.2],[-.5,0],[-.8,-.8]],fm));g.userData.tail=tail;
+  [1,-1].forEach(sd=>{const pf=finMesh([[.55,-.5],[1.7,.7],[.6,.35]],fm);pf.rotation.set(-Math.PI/2,0,sd*-.25);pf.scale.x=sd;pf.position.set(0,-.05,.5);g.add(pf);
+    add(g,ball(.1,8,6),flat('#1c1c22'),sd*.47,.25,1.6);for(let i=0;i<3;i++)add(g,box(.02,.3,.04),flat('#4f6a80'),sd*.69,.1,.75+i*.16);});
+  for(let i=0;i<6;i++){const t=add(g,cone(.07,.2,4),flat('#ffffff'),(i-2.5)*.13,-.22,2.05-Math.abs(i-2.5)*.06);t.rotation.x=Math.PI;}
+  return g;}
 /* sea life: barrels of coins to pick up by ship, and a shark in each sea */
 const BARRELS=[],SHARKS=[];let sharkSeen=0;
 SHIPS.forEach((sh,si)=>{const r=R(909+si*31);let n=0,guard=0;
   while(n<7&&guard++<400){const x=-38+r()*76,z=Math.max(-134,sh.zmin+2)+r()*(sh.zmax-Math.max(-134,sh.zmin+2)-3);if(shipBlocked(x,z,0)||shipBlocked(x,z,1.57)||Math.hypot(x-sh.hx,z-sh.hz)<6)continue;
     const g=new T.Group();add(g,cyl(.45,.45,.9,10),mat('#8a5a2b','#d9b98c',{gap:9,ang:0}),0,0,0);add(g,cyl(.47,.47,.14,10),flat('#f6cf3a'),0,.2,0);add(g,cyl(.47,.47,.14,10),flat('#f6cf3a'),0,-.2,0);g.rotation.z=.5;scene.add(g);BARRELS.push({x,z,g,t:0,ph:n*1.3});n++;}
-  const g=new T.Group(),m=flat('#6f7f8f'),b=add(g,ball(1,12,8),m,0,-.55,0);b.scale.set(.75,.55,2.1);add(g,cone(.5,1.2,4),m,0,.4,-.1).scale.x=.25;add(g,cone(.45,.9,4),m,0,.05,-2.1).scale.x=.25;
-  add(g,ball(.1,6,6),flat('#ffffff'),.42,-.28,1.35);add(g,ball(.1,6,6),flat('#ffffff'),-.42,-.28,1.35);scene.add(g);
-  const hx=32,hz=si?-112:-26;SHARKS.push({si,x:hx,z:hz,hx,hz,hp:4,dead:0,flee:0,g});});
+  const g=makeShark();scene.add(g);const hx=si?-34:32,hz=si?-108:-26;SHARKS.push({si,x:hx,z:hz,hx,hz,hp:4,dead:0,flee:0,up:0,g});});
 function seaLife(dt){
   BARRELS.forEach(b=>{if(b.t>0){b.t-=dt;if(b.t<=0)b.g.visible=true;return;}b.g.position.set(b.x,-1.02+Math.sin(tNow*2+b.ph)*.08,b.z);b.g.rotation.y+=dt*.4;
     if(P.ship>=0&&Math.hypot(P.x-b.x,P.z-b.z)<2.7){b.t=60;b.g.visible=false;const n=gain(30000);sfx.coin();floatTxt(b.x,.6,b.z,'+'+money(n),'gold');save();hud();}});
@@ -534,7 +548,7 @@ function seaLife(dt){
     const dx=tx-k.x,dz=tz-k.z,dd=Math.hypot(dx,dz)||1,v=Math.min(dd,sp*dt),nx=clamp(k.x+dx/dd*v,-44,44),nz=clamp(k.z+dz/dd*v,SHIPS[k.si].zmin,SHIPS[k.si].zmax);
     if(!shipBlocked(nx,k.z,0))k.x=nx;if(!shipBlocked(k.x,nz,0))k.z=nz;
     if(dd>.3){let dr=Math.atan2(dx,dz)-k.g.rotation.y;dr=Math.atan2(Math.sin(dr),Math.cos(dr));k.g.rotation.y+=dr*Math.min(1,dt*4);}
-    k.g.position.set(k.x,-.75+Math.sin(tNow*3+k.si)*.06,k.z);
+    const bite=on&&k.flee<=0&&d<7?1:0;k.up+=(bite-k.up)*Math.min(1,dt*6);k.g.position.set(k.x,-1.32+k.up*.6+Math.sin(tNow*3+k.si)*.05,k.z);k.g.rotation.x=-k.up*.32;k.g.userData.tail.rotation.y=RM?0:Math.sin(tNow*(sp>4?12:6)+k.si)*.45;
     if(on&&d<2.7&&k.flee<=0){k.flee=3.5;hurtHero({dmg:1,x:k.x,z:k.z});}});}
 function openMap(){if(overlayOpen())return;for(const k in keys)keys[k]=false;bigBase=bigBase||mapBase(456,MBIG);mapDraw($('bigMap'),bigBase,MBIG);$('map').hidden=false;}
 
@@ -558,7 +572,7 @@ function hurtMon(m,dmg,fromX,fromZ){if(!alive(m))return;m.hp-=dmg;m.flash=.18;sf
   const dx=m.x-fromX,dz=m.z-fromZ,d=Math.hypot(dx,dz)||1,kb=m.boss?3:7;m.kx=dx/d*kb;m.kz=dz/d*kb;
   if(m.hp<=0){S.dead.push(m.id);m.g.visible=false;m.bar.visible=false;
     if(m.boss){S.bounty+=m.boss.bounty;if(m.coin)gain(m.coin);sfx.win();if(m.boss===BOSS[0]){door.visible=false;}
-      if(m.boss===BOSS[2])S.won=true;save();hud();showCaught(m.boss);}
+      if(!MONS.some(o=>o.boss&&alive(o)))S.won=true;save();hud();showCaught(m.boss);}
     else{const n=gain(m.coin);sfx.coin();floatTxt(m.x,ISL[m.isl].y+1.2,m.z,'+'+money(n),'gold');save();hud();}}}
 function hurtHero(m){if(P.inv>0)return;S.hp-=m.dmg;P.inv=has('rock')?3:1.1;sfx.ouch();floatTxt(P.x,P.y+2.4,P.z,'−'+m.dmg+' ♥');
   const dx=P.x-m.x,dz=P.z-m.z,d=Math.hypot(dx,dz)||1;P.kx=dx/d*9;P.kz=dz/d*9;
@@ -571,7 +585,7 @@ function cannon(){const sh=SHIPS[P.ship],sx=sh.x+Math.sin(sh.rot)*2.2,sz=sh.z+Ma
   if(S.coins<BALL){P.atk=.6;say('На ядро не хватает монет: одно стоит '+money(BALL)+'. Собирай бочки в море!');return;}
   S.coins-=BALL;hud();floatTxt(sx,1.6,sz,'−'+money(BALL));P.atk=.9;
   const t=nearest(17);let tg=t?{x:t.x,z:t.z,y:ISL[t.isl].y+t.s,d:Math.hypot(t.x-P.x,t.z-P.z)}:null;
-  SHARKS.forEach(k=>{if(k.dead>0)return;const d=Math.hypot(k.x-P.x,k.z-P.z);if(d<17&&(!tg||d<tg.d))tg={x:k.x,z:k.z,y:-.6,d};});
+  SHARKS.forEach(k=>{if(k.dead>0)return;const d=Math.hypot(k.x-P.x,k.z-P.z);if(d<17&&(!tg||d<tg.d))tg={x:k.x,z:k.z,y:-1,d};});
   let dx,dz,d,ty;if(tg){dx=tg.x-sx;dz=tg.z-sz;d=Math.hypot(dx,dz)||1;ty=tg.y;}else{d=14;dx=Math.sin(sh.rot)*d;dz=Math.cos(sh.rot)*d;ty=-1.3;}
   const tt=Math.max(.3,d/19),o=add(scene,ball(.28,10,8),flat(INK),sx,y0,sz);fx.push({k:'ball',o,vx:dx/tt,vz:dz/tt,vy:(ty-y0)/tt+7*tt,t:tt+.2});
   beep(90,.3,'square',.09);setTimeout(()=>beep(55,.3,'sawtooth',.07),50);}
@@ -622,7 +636,7 @@ function update(dt){tNow+=dt;
   if(P.y<-1.9){sfx.splash();floatTxt(P.x,-.5,P.z,'Бултых!');P.x=P.sx;P.z=P.sz;P.y=P.sy;P.vy=0;P.kx=P.kz=0;P.inv=Math.max(P.inv,1);say(has('spring')?'Бултых! Разбегись и прыгай с самого края.':'Бултых! Прыгай с самого края. До дальних островов нужна Прыгун-ягода.');}
   P.inv-=dt;P.atk-=dt;P.swing-=dt;
   /* chests */
-  for(const i in chests){const c=chests[i];if(!S.open.includes(+i)&&P.ground&&Math.hypot(P.x-c.x,P.z-c.z)<1.7){S.open.push(+i);c.lid.rotation.x=-1.2;const n=gain(200000);sfx.coin();floatTxt(c.x,1.6,c.z,'+'+money(n),'gold');say('В сундуке '+money(n)+' монет!');save();hud();}}
+  for(const i in chests){const c=chests[i];if(!S.open.includes(+i)&&P.ground&&Math.hypot(P.x-c.x,P.z-c.z)<1.7){if(c.val>200000&&alive(MONS.find(m=>m.boss===BOSS[3]))){if(tNow-lockT>4){lockT=tNow;say('Сундук заперт! Сначала победи Адмирала.');}continue;}S.open.push(+i);c.lid.rotation.x=-1.2;const n=gain(c.val);sfx.coin();floatTxt(c.x,1.6,c.z,'+'+money(n),'gold');say('В сундуке '+money(n)+' монет!');save();hud();}}
   /* monsters */
   MONS.forEach(m=>{if(!alive(m))return;const I=ISL[m.isl];m.flash-=dt;m.froz-=dt;
     let hop=0;const act=P.isl===m.isl&&gi===m.isl||Math.hypot(P.x-m.x,P.z-m.z)<m.s+3;
@@ -642,7 +656,7 @@ function update(dt){tNow+=dt;
       const h=MONS.find(m=>alive(m)&&Math.hypot(m.x-f.o.position.x,m.z-f.o.position.z)<m.s+.5);if(h){hurtMon(h,4,P.x,P.z);f.t=0;}}
     else if(f.k==='ball'){f.vy-=14*dt;f.o.position.x+=f.vx*dt;f.o.position.z+=f.vz*dt;f.o.position.y+=f.vy*dt;
       const h=MONS.find(m=>alive(m)&&Math.hypot(m.x-f.o.position.x,m.z-f.o.position.z)<m.s+.6&&f.o.position.y<ISL[m.isl].y+m.s*2+.6);if(h){hurtMon(h,2,P.x,P.z);f.t=0;}
-      const k=SHARKS.find(k=>k.dead<=0&&Math.hypot(k.x-f.o.position.x,k.z-f.o.position.z)<1.9&&f.o.position.y<.9);
+      const k=SHARKS.find(k=>k.dead<=0&&Math.hypot(k.x-f.o.position.x,k.z-f.o.position.z)<2.1&&f.o.position.y<.9);
       if(k&&f.t>0){f.t=0;k.hp-=2;k.flee=1.5;sfx.hit();floatTxt(k.x,.8,k.z,'−2');if(k.hp<=0){k.dead=45;k.g.visible=false;const n=gain(150000);sfx.coin();floatTxt(k.x,1.6,k.z,'+'+money(n),'gold');say('Акула побеждена! +'+money(n)+' монет');save();hud();}}}
     else f.o.material.opacity=Math.max(0,f.t/.3);
     if(f.t<=0){scene.remove(f.o);fx.splice(i,1);}}
@@ -712,8 +726,9 @@ let afterWanted=null;
 function showWanted(b){for(const k in keys)keys[k]=false;$('wTitle').textContent='Разыскивается!';drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed});
   $('wText').textContent='На этом острове прячется '+b.name+'. Поймаешь — награда за твою голову вырастет!';$('wOk').textContent='В бой!';afterWanted=null;$('wanted').hidden=false;}
 function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent='Пойман!';drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed,caught:1});
-  $('wText').textContent=b===BOSS[0]?'Ворота в Красной стене открылись — впереди Большое море!':b===BOSS[1]?'Остался последний, самый страшный пират — Кракен.':'Кракен повержен!';
-  $('wOk').textContent='Ура!';afterWanted=b===BOSS[2]?showWin:null;$('wanted').hidden=false;}
+  const left=MONS.filter(m=>m.boss&&alive(m)).length;
+  $('wText').textContent=(b===BOSS[0]?'Ворота в Красной стене открылись — впереди Большое море!':b===BOSS[3]?'Сундуки на Острове сокровищ теперь твои!':b.name+' больше никого не напугает.')+(left?' Пиратов в розыске осталось: '+left+'.':'');
+  $('wOk').textContent='Ура!';afterWanted=left?null:showWin;$('wanted').hidden=false;}
 $('wOk').onclick=()=>{$('wanted').hidden=true;const f=afterWanted;afterWanted=null;if(f)f();};
 function showWin(){drawPoster($('winCv'),{name:'Гроза Карандашного моря',bounty:S.bounty,seed:8});$('win').hidden=false;}
 function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();renderPows();hud();}
