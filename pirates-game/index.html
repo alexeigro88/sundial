@@ -55,8 +55,9 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .btn.plain{background:var(--paper);font-size:17px;padding:5px 14px}
 .btn:disabled{opacity:.45;cursor:default}
 
-.pad{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:16px;display:grid;grid-template-columns:auto auto;gap:10px;align-items:end;justify-items:end}
-#pows{grid-column:1/3;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.pad{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:16px;display:grid;grid-template-columns:auto auto auto;gap:10px;align-items:end;justify-items:end}
+#bDash{width:64px;height:64px;font-size:23px;background:var(--paper)}
+#pows{grid-column:1/4;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .round{width:84px;height:84px;border-radius:50%;border:3px solid var(--ink);font-family:var(--display);font-size:30px;line-height:.9;box-shadow:2px 4px 0 var(--ink);padding:0}
 .round:active,.round.down{transform:translate(2px,4px);box-shadow:none}
 #bAtk{background:#f0756a;color:#fff;text-shadow:1px 1px 0 var(--ink)}
@@ -79,10 +80,10 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 #bigMap{height:min(62vh,600px);width:auto;max-width:100%;border:2px solid var(--ink)}
 #map .card{max-width:540px}
 .legend{font-size:15px;display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center}
-@media (max-width:520px){.legend{display:grid;grid-template-columns:repeat(3,auto);justify-content:center}}
+@media (max-width:520px){.legend{display:grid;grid-template-columns:repeat(4,auto);justify-content:center}}
 .legend span{display:flex;align-items:center;gap:5px}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--ink)}
-.l-me{background:var(--roof)}.l-ship{background:var(--wood)}.l-boss{background:var(--ink)}.l-mon{background:var(--mon)}.l-shark{background:var(--shark)}.l-chest{background:var(--sun);border-radius:2px!important}
+.l-me{background:var(--roof)}.l-ship{background:var(--wood)}.l-boss{background:var(--ink)}.l-x{color:var(--roof);font-weight:400;font-size:17px;line-height:1}.l-mon{background:var(--mon)}.l-shark{background:var(--shark)}.l-chest{background:var(--sun);border-radius:2px!important}
 .ov{position:absolute;inset:0;display:grid;place-items:center;background:var(--dim);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));z-index:5}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:5px 14px 7px 16px;box-shadow:4px 5px 0 rgba(40,40,50,.35);width:100%;max-width:430px;max-height:100%;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
 h1,h2{font-family:var(--display);margin:0;line-height:1;text-wrap:balance;font-weight:700}
@@ -129,6 +130,7 @@ h2{font-size:38px;color:var(--blue)}
 
   <div class="pad">
     <div id="pows"></div>
+    <button class="round" id="bDash">Рывок<small>Shift</small></button>
     <button class="round" id="bAtk"><span id="atkL">Удар</span><small id="atkS">F</small></button>
     <button class="round" id="bJump">Прыг<small>пробел</small></button>
   </div>
@@ -139,9 +141,11 @@ h2{font-size:38px;color:var(--blue)}
       <ul class="rules">
         <li><canvas id="r1" width="88" height="88"></canvas><span>Прыгай с острова на остров, ходи по мостикам или плыви на корабле с пушкой: собирай бочки с монетами и берегись акул. Упал в воду — не страшно, вернёшься на берег.</span></li>
         <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.</span></li>
+        <li><canvas id="r4" width="88" height="88"></canvas><span>Ищи по карте красный крестик: там зарыт клад. В первом кладе тебя ждёт друг!</span></li>
+        <li><canvas id="r5" width="88" height="88"></canvas><span>На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.</span></li>
         <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в SHOP DEVIL: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
-      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар, 1–5 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.</p>
+      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.</p>
       <div class="row">
         <button class="btn" id="go">В плавание!</button>
         <button class="btn plain" id="fresh" hidden>Начать заново</button>
@@ -175,7 +179,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="card">
       <h2>Карта Карандашного моря</h2>
       <canvas id="bigMap" width="456" height="900"></canvas>
-      <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират</span><span><i class="l-mon"></i>монстр</span><span><i class="l-shark"></i>акула</span><span><i class="l-chest"></i>сундук</span></div>
+      <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират</span><span><i class="l-mon"></i>монстр</span><span><i class="l-shark"></i>акула</span><span><i class="l-chest"></i>сундук</span><span><b class="l-x">✕</b>клад</span></div>
       <button class="btn plain" id="mapX">Закрыть</button>
     </div>
   </div>
@@ -240,7 +244,7 @@ const KINDS=[null,
  [{col:'#4f9bd9',eyes:2,horns:1,legs:0},{col:'#c86bc0',eyes:2,horns:0,legs:5},{col:'#4fa07a',eyes:2,horns:0,legs:4,shell:1},{col:'#6b5b95',eyes:2,horns:0,legs:0,wings:1,fast:1.35}],
  [{col:'#8a6fd1',eyes:3,horns:3,legs:0},{col:'#d9903a',eyes:2,horns:2,legs:3},{col:'#3f9a4a',eyes:1,horns:0,legs:0,spikes:11},{col:'#b8433a',eyes:2,horns:1,legs:4,dash:1}],
  [{col:'#3d4763',eyes:3,horns:2,legs:0,wings:1,fast:1.15},{col:'#e8451f',eyes:2,horns:2,legs:3,spikes:8,dash:1}]];
-const NEWM={1:[[1,2]],2:[[1,2]],15:[[1,2]],16:[[2,2]],3:[[2,3]],5:[[2,2]],17:[[2,3]],18:[[3,2]],8:[[3,3]],9:[[3,2]],19:[[3,3]],20:[[4,0],[3,2]],21:[[4,1]],22:[[4,0],[4,1]],12:[[4,1]]};
+const NEWM={1:[[1,2]],2:[[1,2]],15:[[1,2]],16:[[2,2]],3:[[2,3]],5:[[2,2]],17:[[2,3]],18:[[3,2]],8:[[3,3]],9:[[3,2]],19:[[3,3]],20:[[4,0],[3,2]],21:[[4,1]],22:[[4,0],[4,1]],12:[[4,1]],25:[[4,0],[3,3]],26:[[4,1],[4,0]],27:[[4,0],[4,1],[3,2]]};
 const LV=[null,{hp:2,dmg:1,sp:2.0,coin:40000,s:.6},{hp:4,dmg:1,sp:2.5,coin:70000,s:.75},{hp:6,dmg:1,sp:3.1,coin:110000,s:.9},{hp:9,dmg:2,sp:3.4,coin:160000,s:1.05}];
 const BOSS=[
  {name:'Капитан Железный Зуб',bounty:10000000,coin:300000,col:'#7d8894',light:'#d5dbe1',eyes:2,horns:0,tent:0,legs:0,teeth:1,w:1.15,h:1.05,k:2.2,seed:61,hp:12,dmg:1,sp:2.6,s:1.35},
@@ -273,9 +277,14 @@ const ISL=[
  {x:-14.5,z:-96.5,R:6,n:6,rot:.3,y:0,kind:'rocks',m:[3,3,2],col:'#c9b6ea'},
  {x:18,z:-93,R:5,n:4,rot:.2,y:0,kind:'palms',m:[3,3],f:[3],col:'#b4d455'},
  {x:-17.6,z:-120,R:5.2,n:5,rot:.4,y:0,kind:'rocks',m:[3,3,3],f:[3],col:'#8f7fc4'},
- {x:20.5,z:-114.5,R:7,n:6,rot:.2,y:0,kind:'treasure',boss:3,late:1,gold:[[-2.6,-3.4,100,400000],[2.6,-3.4,101,400000],[0,-4.9,102,500000]],col:'#f0c23a'}
+ {x:20.5,z:-114.5,R:7,n:6,rot:.2,y:0,kind:'treasure',boss:3,late:1,gold:[[-2.6,-3.4,100,400000],[2.6,-3.4,101,400000],[0,-4.9,102,500000]],col:'#f0c23a'},
+ {x:400,z:0,R:6,n:6,rot:.2,y:0,kind:'cave',cave:1,col:'#7d7696'},
+ {x:400,z:-13.5,R:6.5,n:5,rot:.5,y:0,kind:'cave',cave:1,col:'#6f6890'},
+ {x:411,z:-25,R:6,n:6,rot:.1,y:.6,kind:'cave',cave:1,col:'#7d7696'},
+ {x:398,z:-37.5,R:7.5,n:8,rot:0,y:0,kind:'cave',cave:1,gold:[[-2,-3.6,103,500000],[2,-3.6,104,500000]],col:'#5f587e'}
 ];
-const BRIDGES=[[0,1],[3,5],[2,15],[7,8],[8,19],[10,12],[12,13]];
+const CAVE_IN=18,CAVE0=24;
+const BRIDGES=[[0,1],[3,5],[2,15],[7,8],[8,19],[10,12],[12,13],[24,25],[25,26],[26,27]];
 const WZ=-55, GATE=3.3;
 function inside(I,x,z,pad){const dx=x-I.x,dz=z-I.z,d=Math.hypot(dx,dz),seg=TAU/I.n,a=Math.atan2(dx,dz)-I.rot,m=((a%seg)+seg)%seg-seg/2;return d*Math.cos(m)<=I.R*Math.cos(seg/2)-(pad||0);}
 function islandAt(x,z){for(let i=0;i<ISL.length;i++)if(inside(ISL[i],x,z))return i;return -1;}
@@ -421,7 +430,7 @@ ISL.forEach((I,i)=>{const g=new T.Group();g.position.set(I.x,I.y,I.z);scene.add(
   const top=mat(I.col,'#f3f7df',{gap:10,lw:8});top.map.repeat&&0;
   const body=new T.Mesh(cyl(I.R,I.R*.82,3.4,I.n),[mat('#c9a66b','#efe0c4',{gap:9,ang:1.2}),top,top]);body.position.y=-1.7;body.rotation.y=I.rot;g.add(body);
   const shd=add(scene,new T.CircleGeometry(I.R*.93+1.2,I.n,I.rot-Math.PI/2),shadowM,I.x+1,-1.27,I.z+.9);shd.rotation.x=-Math.PI/2;
-  const foam=add(scene,new T.RingGeometry(I.R*.88,I.R*.93+.38,I.n,1,I.rot-Math.PI/2),foamM,I.x,-1.25,I.z);foam.rotation.x=-Math.PI/2;
+  const foam=add(scene,new T.RingGeometry(I.R*.88,I.R*.93+.38,I.n,1,I.rot-Math.PI/2),foamM,I.x,-1.25,I.z);foam.rotation.x=-Math.PI/2;if(I.cave)shd.visible=foam.visible=false;
   const k=I.kind,R_=I.R;
   if(k==='village'){house(g,-R_*.38,-R_*.3,1.9,'#f6cf3a');house(g,R_*.36,-R_*.36,1.7,'#f08a1c');house(g,-R_*.4,R_*.25,1.6,'#f6cf3a');house(g,R_*.42,R_*.1,1.5,'#9fd0f0');}
   else if(k==='pines'){palm(g,-3,-2.2,1.4);palm(g,3,-2.4,1.15);palm(g,-3.2,2,1.1);palm(g,2.6,2.6,1.3);palm(g,0,-3.6,1);}
@@ -436,6 +445,12 @@ ISL.forEach((I,i)=>{const g=new T.Group();g.position.set(I.x,I.y,I.z);scene.add(
   else if(k==='ship'){const hull=add(g,box(1.5,1,4),mat('#8a5a2b','#d9b98c',{gap:9,ang:0}),-2.2,.5,-1.6);hull.rotation.y=.5;add(g,cyl(.08,.08,3.4),flat('#8a5a2b'),-2.2,2.2,-1.6);
     const s=add(g,new T.PlaneGeometry(1.7,1.7),new T.MeshLambertMaterial({color:'#ffffff',side:T.DoubleSide}),-2.2,2.6,-1.55);s.rotation.y=.5;DEC.push({x:I.x-2.2,z:I.z-1.6,r:1.5});}
   else if(k==='final'){for(let j=0;j<5;j++){const a=1.2+j*.95;rock(g,Math.sin(a)*7.6,Math.cos(a)*7.6-1,1.2,'#4a4a52');}add(g,cyl(.07,.07,4),flat('#4a4a52'),0,2,-7.5);add(g,box(1.5,1,.05),flat('#4a4a52'),.78,3.5,-7.5);}
+  if(k==='cave'){const sm=mat('#5f587e','#b9b3cf',{gap:8});const dirs=[i-1,i+1].filter(q=>ISL[q]&&ISL[q].cave).map(q=>Math.atan2(ISL[q].x-I.x,ISL[q].z-I.z));if(i===CAVE0)dirs.push(0);
+    for(let j=0;j<6;j++){const a=j*1.047+i*.7,rr=R_*.72,hh=1.4+(j%3)*.7;if(dirs.some(q=>Math.abs(Math.atan2(Math.sin(a-q),Math.cos(a-q)))<.7))continue;
+      add(g,cone(.55,hh,5),sm,Math.sin(a)*rr,hh/2,Math.cos(a)*rr);DEC.push({x:I.x+Math.sin(a)*rr,z:I.z+Math.cos(a)*rr,r:.5});
+      const cr=add(g,new T.OctahedronGeometry(.42),new T.MeshBasicMaterial({color:j%2?0x7fe9ff:0xff8fd8}),Math.sin(a+.5)*rr*.92,.75,Math.cos(a+.5)*rr*.92);cr.scale.y=1.9;}}
+  if(i===CAVE_IN){add(g,new T.SphereGeometry(2,10,7,0,TAU,0,Math.PI/2),mat('#8d939c','#dfe2e6',{gap:9}),0,0,-2.4);add(g,box(1.6,1.7,1.2),flat('#15131f'),0,.85,-1);DEC.push({x:I.x,z:I.z-2.4,r:1.7});}
+  if(i===CAVE0){add(g,new T.TorusGeometry(1.1,.17,8,22),new T.MeshBasicMaterial({color:0xfff2a8}),0,1.35,3.6);add(g,new T.CircleGeometry(1,20),new T.MeshBasicMaterial({color:0xcdeeff,side:T.DoubleSide}),0,1.35,3.6);}
   if(k==='treasure'){palm(g,-4.6,-.6,1.2);palm(g,4.6,-.8,1.3);[[-4.2,2.6],[4,2.8],[0,-3.2]].forEach(q=>{add(g,cone(.9,.8,9),flat('#f6cf3a'),q[0],.4,q[1]);DEC.push({x:I.x+q[0],z:I.z+q[1],r:.8});});}
   (I.chest?[[.6,.4,i,200000]]:I.gold||[]).forEach(q=>{const c=new T.Group();c.position.set(q[0],0,q[1]);g.add(c);add(c,box(1.1,.6,.75),mat('#b5762a','#e6c9a5',{gap:8}),0,.3,0);add(c,box(.2,.62,.78),flat('#f6cf3a'),0,.3,0);
     const lid=new T.Group();lid.position.set(0,.6,-.375);c.add(lid);add(lid,box(1.1,.26,.75),mat('#8a5a2b','#d9b98c',{gap:8}),0,.13,.375);chests[q[2]]={lid,x:I.x+q[0],z:I.z+q[1],val:q[3]};});
@@ -549,6 +564,7 @@ function mapDraw(cvs,base,M){const c=cvs.getContext('2d'),s=cvs.width/M.w,u=s*.4
     if(m.boss){c.strokeStyle='#fff';c.lineWidth=u*1.4;const x=X(m.x),z=Z(m.z),k=2.4*u;c.beginPath();c.moveTo(x-k,z-k);c.lineTo(x+k,z+k);c.moveTo(x+k,z-k);c.lineTo(x-k,z+k);c.stroke();c.strokeStyle=INK;c.lineWidth=Math.max(1,u*.8);}});
   SHARKS.forEach(k=>{if(k.dead>0)return;c.beginPath();c.arc(X(k.x),Z(k.z),3.2*u,0,7);c.fillStyle='#6f7f8f';c.fill();c.stroke();});
   SHIPS.forEach(sh=>{c.save();c.translate(X(sh.x),Z(sh.z));c.rotate(-sh.rot);c.fillStyle='#8a5a2b';c.beginPath();c.moveTo(0,6*u);c.lineTo(3.2*u,1*u);c.lineTo(3.2*u,-4.5*u);c.lineTo(-3.2*u,-4.5*u);c.lineTo(-3.2*u,1*u);c.closePath();c.fill();c.stroke();c.restore();});
+  if(S.dig){const x=X(S.dig.x),z=Z(S.dig.z),k=3.8*u;[['#ffffff',u*3.6],['#d63b2f',u*2]].forEach(q=>{c.strokeStyle=q[0];c.lineWidth=q[1];c.beginPath();c.moveTo(x-k,z-k);c.lineTo(x+k,z+k);c.moveTo(x+k,z-k);c.lineTo(x-k,z+k);c.stroke();});}
   const px=X(P.x),pz=Z(P.z),pr=RM?0:(tNow*1.5%1);c.strokeStyle='#d63b2f';c.lineWidth=u*1.2;c.globalAlpha=1-pr;c.beginPath();c.arc(px,pz,(5+pr*8)*u,0,7);c.stroke();c.globalAlpha=1;
   c.beginPath();c.arc(px,pz,4.6*u,0,7);c.fillStyle='#d63b2f';c.fill();c.strokeStyle='#fff';c.lineWidth=u*1.6;c.stroke();}
 const miniBase=mapBase(128,MB);let bigBase=null;
@@ -583,10 +599,33 @@ function seaLife(dt){
     if(dd>.3){let dr=Math.atan2(dx,dz)-k.g.rotation.y;dr=Math.atan2(Math.sin(dr),Math.cos(dr));k.g.rotation.y+=dr*Math.min(1,dt*4);}
     const bite=on&&k.flee<=0&&d<7?1:0;k.up+=(bite-k.up)*Math.min(1,dt*6);k.g.position.set(k.x,-1.32+k.up*.6+Math.sin(tNow*3+k.si)*.05,k.z);k.g.rotation.x=-k.up*.32;k.g.userData.tail.rotation.y=RM?0:Math.sin(tNow*(sp>4?12:6)+k.si)*.45;
     if(on&&d<2.7&&k.flee<=0){k.flee=3.5;hurtHero({dmg:1,x:k.x,z:k.z});}});}
+/* buried treasure (a red X to find with the map) and the parrot that comes out of the first one */
+const xMark=new T.Group();[Q,-Q].forEach(a=>{add(xMark,box(1.6,.05,.32),flat('#d63b2f'),0,0,0).rotation.y=a;});scene.add(xMark);
+function newDig(){const c=[];ISL.forEach((I,i)=>{if(I.boss==null&&!I.heal&&!I.cave&&i!==P.isl&&!(S.dig&&S.dig.isl===i))c.push(i);});
+  for(let t=0;t<80;t++){const i=c[Math.random()*c.length|0],I=ISL[i],a=Math.random()*TAU,d=Math.random()*I.R*.4,x=I.x+Math.sin(a)*d,z=I.z+Math.cos(a)*d;
+    if(inside(I,x,z,1.2)&&DEC.every(q=>Math.hypot(q.x-x,q.z-z)>q.r+.9)&&!Object.values(chests).some(q=>Math.hypot(q.x-x,q.z-z)<1.7)){S.dig={isl:i,x,z,n:0};return;}}
+  S.dig=null;}
+function syncDig(){const d=S.dig;if(!d||!ISL[d.isl]||typeof d.x!=='number'||!inside(ISL[d.isl],d.x,d.z,.5))newDig();PR.x=P.x;PR.y=P.y+2.5;PR.z=P.z;PR.tg=null;}
+const digNear=()=>S.dig&&P.ground&&islandAt(P.x,P.z)===S.dig.isl&&Math.hypot(P.x-S.dig.x,P.z-S.dig.z)<1.6;
+function digHit(){const d=S.dig;P.atk=.45;P.swing=.26;d.n=(d.n||0)+1;sfx.hit();floatTxt(d.x,ISL[d.isl].y+1,d.z,d.n<3?'Копаю…':'Клад!','gold');if(d.n<3)return;
+  S.digs=(S.digs||0)+1;const n=gain(150000+50000*Math.min(S.digs,5));sfx.win();
+  if(!S.parrot){S.parrot=true;say('Клад! +'+money(n)+' монет. А ещё в сундуке сидел попугай — теперь он твой друг и клюёт монстров!');}
+  else say('Клад! +'+money(n)+' монет. На карте появился новый красный крестик.');
+  newDig();save();hud();}
+const parrot=new T.Group(),PR={x:0,y:3,z:0,cd:3,tg:null,t:0};
+add(parrot,ball(.22,10,8),flat('#d63b2f'),0,0,0).scale.set(1,1.1,1.3);add(parrot,ball(.17,10,8),flat('#d63b2f'),0,.23,.2);add(parrot,cone(.07,.2,5),flat('#f6cf3a'),0,.2,.42).rotation.x=Math.PI/2;
+add(parrot,ball(.04,6,6),flat(INK),.1,.28,.3);add(parrot,ball(.04,6,6),flat(INK),-.1,.28,.3);add(parrot,box(.12,.04,.45),flat('#2f66c2'),0,-.05,-.42);
+parrot.userData.w=[1,-1].map(sd=>{const w=new T.Group();w.position.set(sd*.18,.06,0);add(w,box(.46,.04,.32),flat('#3f9a4a'),sd*.23,0,0);parrot.add(w);return w;});scene.add(parrot);
+function parrotUpd(dt){parrot.visible=!!S.parrot;if(!S.parrot)return;PR.cd-=dt;let tx=P.x-.8,ty=P.y+2.5*hero.scale.x+Math.sin(tNow*3)*.12,tz=P.z+.4,k=4;
+  if(!PR.tg&&PR.cd<=0){const m=nearest(7);if(m){PR.tg=m;PR.t=1.5;}else PR.cd=.5;}
+  if(PR.tg){const m=PR.tg;PR.t-=dt;if(!alive(m)||PR.t<=0){PR.tg=null;PR.cd=4;}
+    else{tx=m.x;ty=ISL[m.isl].y+m.s*2+.2;tz=m.z;k=9;if(Math.hypot(PR.x-tx,PR.z-tz)<.6){hurtMon(m,1,PR.x,PR.z);PR.tg=null;PR.cd=4;}}}
+  const dx=tx-PR.x,dz=tz-PR.z,f=Math.min(1,dt*k);PR.x+=dx*f;PR.y+=(ty-PR.y)*f;PR.z+=dz*f;parrot.position.set(PR.x,PR.y,PR.z);
+  if(Math.hypot(dx,dz)>.08)parrot.rotation.y=Math.atan2(dx,dz);parrot.userData.w.forEach((w,i)=>{w.rotation.z=(i?-1:1)*Math.sin(tNow*18)*.7;});}
 function openMap(){if(overlayOpen())return;for(const k in keys)keys[k]=false;bigBase=bigBase||mapBase(456,MBIG);mapDraw($('bigMap'),bigBase,MBIG);$('map').hidden=false;}
 
 /* ---------- player ---------- */
-const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,giant:0,dj:false,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
+const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,giant:0,dj:false,dash:0,dcd:0,slam:false,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
 const cd={};let jumpQ=0,started=false,tNow=0;
 const keys={},joy={x:0,y:0,id:null,ox:0,oy:0};
 const overlayOpen=()=>['start','shop','map','wanted','win'].some(id=>!$(id).hidden);
@@ -622,7 +661,7 @@ function cannon(){const sh=SHIPS[P.ship],sx=sh.x+Math.sin(sh.rot)*2.2,sz=sh.z+Ma
   let dx,dz,d,ty;if(tg){dx=tg.x-sx;dz=tg.z-sz;d=Math.hypot(dx,dz)||1;ty=tg.y;}else{d=14;dx=Math.sin(sh.rot)*d;dz=Math.cos(sh.rot)*d;ty=-1.3;}
   const tt=Math.max(.3,d/19),o=add(scene,ball(.28,10,8),flat(INK),sx,y0,sz);fx.push({k:'ball',dmg:has('powder')?4:2,o,vx:dx/tt,vz:dz/tt,vy:(ty-y0)/tt+7*tt,t:tt+.2});
   beep(90,.3,'square',.09);setTimeout(()=>beep(55,.3,'sawtooth',.07),50);}
-function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.ship>=0&&P.ground){cannon();return;}P.atk=.38;P.swing=.26;sfx.swing();
+function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.ship>=0&&P.ground){cannon();return;}if(digNear()&&!nearest(2.6)){digHit();return;}if(!P.ground&&P.ship<0){if(!P.slam){P.slam=true;P.vy=-24;P.atk=.3;sfx.swing();}return;}P.atk=.38;P.swing=.26;sfx.swing();
   const t=nearest(2.8);if(t)P.face=Math.atan2(t.x-P.x,t.z-P.z);
   const fx_=Math.sin(P.face),fz=Math.cos(P.face),dmg=(has('power')?2:1)*(P.giant>0?3:1),rng=P.giant>0?3.8:2.1;
   MONS.forEach(m=>{if(!alive(m))return;const dx=m.x-P.x,dz=m.z-P.z,d=Math.hypot(dx,dz),e=d-m.s;if(Math.abs(P.y-ISL[m.isl].y)>2.2)return;
@@ -636,6 +675,11 @@ function usePow(id){if(!started||overlayOpen()||!has(id)||cd[id]>0)return;const 
   else if(id==='giant'){P.giant=8;sfx.win();say('Ты великан! Восемь секунд монстры не могут тебя ранить.');}
   if(ok)cd[id]=f.cd*(has('crown')?.5:1);}
 
+let tpT=0,caveK=0,lastK=-1;const dayC=new T.Color(0xfbfaf4),caveC=new T.Color(0x1f1a33),fogC=new T.Color();
+function tp(x,z,y,msg){P.x=x;P.z=z;P.y=y;P.vy=0;P.kx=P.kz=0;P.isl=-1;P.sx=x;P.sz=z;P.sy=y;P.slam=false;tpT=1.6;cam.position.set(x,y+11,z+12.5);PR.x=x;PR.y=y+2.5;PR.z=z;PR.tg=null;sfx.zap();say(msg);}
+function dash(){if(!started||overlayOpen()||P.dcd>0||(P.ship>=0&&P.ground))return;P.dash=.2;P.dcd=1.1;P.inv=Math.max(P.inv,.35);sfx.swing();}
+function slamHit(y){const dmg=((has('power')?2:1)+1)*(P.giant>0?3:1);MONS.forEach(m=>{if(alive(m)&&Math.hypot(m.x-P.x,m.z-P.z)<m.s+3&&Math.abs(ISL[m.isl].y-y)<1.5)hurtMon(m,dmg,P.x,P.z);});
+  const o=add(scene,new T.RingGeometry(.7,1,28),new T.MeshBasicMaterial({color:0xf6cf3a,transparent:true,side:T.DoubleSide,depthWrite:false}),P.x,y+.08,P.z);o.rotation.x=-Math.PI/2;fx.push({k:'ring',o,t:.4});beep(70,.3,'square',.1);}
 function enter(i){const I=ISL[i];P.isl=i;
   if(I.heal){S.home=i;if(S.hp<maxHp()){S.hp=maxHp();say('Деревня: ты отдохнул, сердечки полные!');}else say(i?'Деревня Большого моря. Здесь можно отдохнуть.':'Твоя деревня. Прыгай на соседний остров!');save();}
   else if(I.boss!=null){const b=BOSS[I.boss],m=MONS.find(o=>o.boss===b);if(alive(m)&&!S.seen.includes(I.boss)){S.seen.push(I.boss);showWanted(b);}}
@@ -653,25 +697,28 @@ function update(dt){tNow+=dt;
     if(il>.15){let dr=P.face-sh.rot;dr=Math.atan2(Math.sin(dr),Math.cos(dr));const nr=sh.rot+dr*Math.min(1,dt*5);if(!shipBlocked(sh.x,sh.z,nr))sh.rot=nr;
       const nx=clamp(sh.x+ix*v,-46,46),nz=clamp(sh.z+iz*v,sh.zmin,sh.zmax);if(!shipBlocked(nx,sh.z,sh.rot))sh.x=nx;if(!shipBlocked(sh.x,nz,sh.rot))sh.z=nz;}
     P.x=sh.x;P.z=sh.z;P.kx=P.kz=0;}
-  else{P.x+=(ix*sp+P.kx)*dt;P.z+=(iz*sp+P.kz)*dt;}
+  else{const dv=P.dash>0?19:0;P.x+=(ix*sp+P.kx+Math.sin(P.face)*dv)*dt;P.z+=(iz*sp+P.kz+Math.cos(P.face)*dv)*dt;}
   const dk=Math.pow(.004,dt);P.kx*=dk;P.kz*=dk;
   /* wall */
   if(Math.abs(P.z-WZ)<1.5){if(!doorClosed()&&Math.abs(pz-WZ)<1.5)P.x=clamp(P.x,-GATE+.4,GATE-.4);else if(doorClosed()||Math.abs(P.x)>GATE-.4)P.z=pz>=WZ?WZ+1.5:WZ-1.5;}
   /* gravity & ground */
   P.vy-=27*dt;P.y+=P.vy*dt;P.coy-=dt;jumpQ-=dt;
   const gi=islandAt(P.x,P.z),by=gi<0?bridgeY(P.x,P.z):-99,si=gi<0&&by<-90?shipAt(P.x,P.z):-1,gy=gi>=0?ISL[gi].y:by>-90?by:si>=0?DECK:-99;
-  if(gy>-90&&P.vy<=0&&P.y<=gy+.02&&P.y>gy-1){P.y=gy;P.vy=0;P.ground=true;P.dj=false;P.coy=.12;
+  if(gy>-90&&P.vy<=0&&P.y<=gy+.02&&P.y>gy-1){P.y=gy;P.vy=0;P.ground=true;P.dj=false;P.coy=.12;if(P.slam){P.slam=false;if(si<0)slamHit(gy);}
     if(gi>=0){const I=ISL[gi];if(P.ship>=0){P.ship=-1;save();}P.sx=P.x+(I.x-P.x)*.2;P.sz=P.z+(I.z-P.z)*.2;P.sy=gy;if(gi!==P.isl)enter(gi);}
     else if(si<0){P.ship=-1;P.sx=P.x;P.sz=P.z;P.sy=gy;}
     else{const sh=SHIPS[si];if(P.ship!==si){P.ship=si;P.isl=-1;hud();if(shipHints++<2)say('Ты на корабле! Плыви куда хочешь и стреляй из пушки кнопкой «Огонь» (ядра платные). «Прыг» — спрыгнуть на остров.');}P.sx=sh.x;P.sz=sh.z;P.sy=DECK;}}
   else P.ground=false;
   if(jumpQ>0&&(P.ground||P.coy>0)){P.vy=has('spring')?14.2:11;P.ground=false;P.coy=0;jumpQ=0;if(P.ship>=0){P.ship=-2;}sfx.jump();}
   else if(jumpQ>0&&has('double')&&!P.dj&&!P.ground){P.vy=has('spring')?12:9.5;P.dj=true;jumpQ=0;sfx.jump();floatTxt(P.x,P.y+.3,P.z,'☁','green');}
+  tpT-=dt;if(P.ground&&tpT<=0){const A=ISL[CAVE_IN],C=ISL[CAVE0];
+    if(Math.hypot(P.x-A.x,P.z-A.z-.1)<1.1)tp(C.x,C.z,C.y,'Ты в пещере! Тут живут самые сильные монстры и спрятаны сундуки. Выход — светящееся кольцо.');
+    else if(Math.hypot(P.x-C.x,P.z-C.z-3.6)<1.1)tp(A.x,A.z+2.9,A.y,'Ты снова на солнышке.');}
   if(P.ground)for(const d of DEC){const dx=P.x-d.x,dz=P.z-d.z,dd=Math.hypot(dx,dz),rr=d.r+.35;if(dd<rr&&dd>0){P.x=d.x+dx/dd*rr;P.z=d.z+dz/dd*rr;}}
-  if(P.y<-1.9){sfx.splash();floatTxt(P.x,-.5,P.z,'Бултых!');P.x=P.sx;P.z=P.sz;P.y=P.sy;P.vy=0;P.kx=P.kz=0;P.inv=Math.max(P.inv,1);say(has('spring')?'Бултых! Разбегись и прыгай с самого края.':'Бултых! Прыгай с самого края. До дальних островов нужна Прыгун-ягода.');}
-  P.inv-=dt;P.atk-=dt;P.swing-=dt;P.giant-=dt;
+  if(P.y<-1.9){P.slam=false;sfx.splash();floatTxt(P.x,-.5,P.z,P.x>200?'Ой!':'Бултых!');P.x=P.sx;P.z=P.sz;P.y=P.sy;P.vy=0;P.kx=P.kz=0;P.inv=Math.max(P.inv,1);say(P.x>200?'Осторожно, в пещере глубоко! Иди по мостикам.':'Бултых! Разбегись и прыгай с самого края острова.');}
+  P.inv-=dt;P.atk-=dt;P.swing-=dt;P.giant-=dt;P.dash-=dt;P.dcd-=dt;
   /* chests */
-  for(const i in chests){const c=chests[i];if(!S.open.includes(+i)&&P.ground&&Math.hypot(P.x-c.x,P.z-c.z)<1.7){if(c.val>200000&&alive(MONS.find(m=>m.boss===BOSS[3]))){if(tNow-lockT>4){lockT=tNow;say('Сундук заперт! Сначала победи Адмирала.');}continue;}S.open.push(+i);c.lid.rotation.x=-1.2;const n=gain(c.val);sfx.coin();floatTxt(c.x,1.6,c.z,'+'+money(n),'gold');say('В сундуке '+money(n)+' монет!');save();hud();}}
+  for(const i in chests){const c=chests[i];if(!S.open.includes(+i)&&P.ground&&Math.hypot(P.x-c.x,P.z-c.z)<1.7){if(+i<103&&c.val>200000&&alive(MONS.find(m=>m.boss===BOSS[3]))){if(tNow-lockT>4){lockT=tNow;say('Сундук заперт! Сначала победи Адмирала.');}continue;}S.open.push(+i);c.lid.rotation.x=-1.2;const n=gain(c.val);sfx.coin();floatTxt(c.x,1.6,c.z,'+'+money(n),'gold');say('В сундуке '+money(n)+' монет!');save();hud();}}
   /* monsters */
   MONS.forEach(m=>{if(!alive(m))return;const I=ISL[m.isl];m.flash-=dt;m.froz-=dt;
     let hop=0;const act=P.isl===m.isl&&gi===m.isl||Math.hypot(P.x-m.x,P.z-m.z)<m.s+3;
@@ -684,7 +731,8 @@ function update(dt){tNow+=dt;
     if(!inside(I,m.x,m.z,m.s*.5)){const dx=I.x-m.x,dz=I.z-m.z,d=Math.hypot(dx,dz)||1;m.x+=dx/d*.15;m.z+=dz/d*.15;}
     m.g.position.set(m.x,I.y+hop,m.z);if(m.g.userData.wings&&!RM)m.g.userData.wings.forEach((w,wi)=>{w.rotation.z=(wi?-1:1)*Math.sin(tNow*10+m.ph)*.5;});const mm=m.g.userData.m;mm.color.set(m.flash>0?0xffffff:m.froz>0?0x9fdcff:0xffffff);mm.emissive.set(m.flash>0?0xaa2222:0x000000);
     const show=m.hp<m.max||act;m.bar.visible=show;if(show){m.bar.position.set(m.x,I.y+hop+m.s*2.3+.5,m.z);m.bar.quaternion.copy(cam.quaternion);m.bar.scale.setScalar(m.boss?1.8:1);m.fill.scale.x=Math.max(.001,m.hp/m.max);m.fill.position.x=-.7*(1-m.hp/m.max);}});
-  seaLife(dt);
+  seaLife(dt);parrotUpd(dt);
+  if(digNear()&&!S.dig.h){S.dig.h=1;say('Здесь что-то зарыто! Жми «Удар» три раза, чтобы выкопать клад.');}
   /* effects */
   for(let i=fx.length-1;i>=0;i--){const f=fx[i];f.t-=dt;
     if(f.k==='fire'){f.o.position.x+=f.vx*dt;f.o.position.z+=f.vz*dt;f.o.scale.setScalar(1+Math.sin(tNow*30)*.2);
@@ -693,6 +741,7 @@ function update(dt){tNow+=dt;
       const h=MONS.find(m=>alive(m)&&Math.hypot(m.x-f.o.position.x,m.z-f.o.position.z)<m.s+.6&&f.o.position.y<ISL[m.isl].y+m.s*2+.6);if(h){hurtMon(h,f.dmg,P.x,P.z);f.t=0;}
       const k=SHARKS.find(k=>k.dead<=0&&Math.hypot(k.x-f.o.position.x,k.z-f.o.position.z)<2.1&&f.o.position.y<.9);
       if(k&&f.t>0){f.t=0;k.hp-=f.dmg;k.flee=1.5;sfx.hit();floatTxt(k.x,.8,k.z,'−'+f.dmg);if(k.hp<=0){k.dead=45;k.g.visible=false;const n=gain(150000);sfx.coin();floatTxt(k.x,1.6,k.z,'+'+money(n),'gold');say('Акула побеждена! +'+money(n)+' монет');save();hud();}}}
+    else if(f.k==='ring'){const u=1-Math.max(0,f.t)/.4;f.o.scale.setScalar(1+u*3.4);f.o.material.opacity=1-u;}
     else f.o.material.opacity=Math.max(0,f.t/.3);
     if(f.t<=0){scene.remove(f.o);fx.splice(i,1);}}
 }
@@ -706,6 +755,9 @@ function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA
   cam.position.x+=(P.x-cam.position.x)*k;cam.position.y+=(Math.max(P.y,0)+oy-cam.position.y)*k;cam.position.z+=(P.z+oz-cam.position.z)*k;
   cam.lookAt(cam.position.x,cam.position.y-oy+1,cam.position.z-oz-1.5);
   if(!RM)seaTex.offset.set(Math.sin(tNow*.25)*.01,tNow*.004);
+  caveK+=((P.x>200?1:0)-caveK)*(RM?1:.08);if(Math.abs(caveK-lastK)>.002){lastK=caveK;fogC.copy(dayC).lerp(caveC,caveK);scene.fog.color.copy(fogC);ren.setClearColor(fogC);}
+  hBody.rotation.x=P.dash>0?.55:P.slam?-.4:0;
+  xMark.visible=!!S.dig;if(S.dig){xMark.position.set(S.dig.x,ISL[S.dig.isl].y+.04,S.dig.z);xMark.scale.setScalar(RM?1:1+Math.sin(tNow*4)*.1);}
   SHIPS.forEach((s,i)=>{s.g.position.set(s.x,RM?0:Math.sin(tNow*1.6+i)*.05,s.z);s.g.rotation.y=s.rot;});if(frameN++%8===0)mapDraw($('mini'),miniBase,MB);
   const onS=P.ship>=0&&P.ground,al=onS?'Огонь':'Удар';const sm=onS?money(ballCost()):'F';if($('atkL').textContent!==al)$('atkL').textContent=al;if($('atkS').textContent!==sm)$('atkS').textContent=sm;
   ren.render(scene,cam);
@@ -717,7 +769,7 @@ window.addEventListener('resize',resize);
 
 /* ---------- input ---------- */
 window.addEventListener('keydown',e=>{if(overlayOpen()){if(e.code==='Escape'||e.code==='KeyM'){$('shop').hidden=true;$('map').hidden=true;}return;}keys[e.code]=true;
-  if(e.code==='Space'){jump();e.preventDefault();}else if(e.code==='KeyM')openMap();else if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter')attack();
+  if(e.code==='Space'){jump();e.preventDefault();}else if(e.code==='ShiftLeft'||e.code==='ShiftRight'||e.code==='KeyE')dash();else if(e.code==='KeyM')openMap();else if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter')attack();
   else if(/^Digit[1-5]$/.test(e.code)){const b=pwBtns[+e.code[5]-1];if(b)usePow(b.fid);}
   if(e.code.indexOf('Arrow')===0)e.preventDefault();});
 window.addEventListener('keyup',e=>{keys[e.code]=false;});
@@ -727,7 +779,7 @@ cv.addEventListener('pointermove',e=>{if(e.pointerId!==joy.id)return;let dx=(e.c
 const joyEnd=e=>{if(e.pointerId!==joy.id)return;joy.id=null;joy.x=joy.y=0;$('joy').hidden=true;};
 cv.addEventListener('pointerup',joyEnd);cv.addEventListener('pointercancel',joyEnd);
 const press=(el,fn)=>el.addEventListener('pointerdown',e=>{e.preventDefault();fn();});
-press($('bAtk'),attack);press($('bJump'),jump);
+press($('bAtk'),attack);press($('bJump'),jump);press($('bDash'),dash);
 $('app').addEventListener('contextmenu',e=>e.preventDefault());
 
 /* ---------- shop ---------- */
@@ -766,7 +818,7 @@ function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent
   $('wOk').textContent='Ура!';afterWanted=left?null:showWin;$('wanted').hidden=false;}
 $('wOk').onclick=()=>{$('wanted').hidden=true;const f=afterWanted;afterWanted=null;if(f)f();};
 function showWin(){drawPoster($('winCv'),{name:'Гроза Карандашного моря',bounty:S.bounty,seed:8});$('win').hidden=false;}
-function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();renderPows();hud();}
+function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();syncDig();renderPows();hud();}
 function begin(){$('start').hidden=true;started=true;beep(520,.12);music();hud();say('Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!');}
 $('go').onclick=begin;
 $('fresh').onclick=()=>{reset();begin();};
@@ -776,11 +828,12 @@ $('stay').onclick=()=>{$('win').hidden=true;};
 function start(data){load();if(data&&data.S&&ISL[data.S.home]){S=Object.assign(fresh(),data.S);started=!!data.started;}
   if(hadSave&&(S.coins||S.fr.length||S.dead.length)){$('go').textContent='Продолжить плавание';$('fresh').hidden=false;}
   if(started)$('start').hidden=true;
-  drawHero2($('r1').getContext('2d'),44,80,1.8,3);drawMonster2($('r2').getContext('2d'),BOSS[2],44,48,1.15,4);drawFruit($('r3').getContext('2d'),FBY.fire,44,48,2);
-  placeAt(S.home);syncMons();syncShips();renderPows();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
+  drawHero2($('r1').getContext('2d'),44,80,1.8,3);drawMonster2($('r2').getContext('2d'),BOSS[2],44,48,1.15,4);drawFruit($('r3').getContext('2d'),FBY.fire,44,48,2);{const c=$('r5').getContext('2d'),r=R(21);c.fillStyle='#8d939c';c.beginPath();c.arc(44,70,36,Math.PI,0);c.fill();c.fillStyle='#15131f';c.beginPath();c.arc(44,70,17,Math.PI,0);c.fill();c.strokeStyle=INK;c.lineWidth=2;c.beginPath();c.arc(44,70,36,Math.PI,0);c.closePath();c.stroke();}
+  {const c=$('r4').getContext('2d'),r=R(12);c.strokeStyle='#d63b2f';c.lineWidth=9;c.lineCap='round';pl(c,20,20,68,68,r,3);pl(c,68,20,20,68,r,3);}
+  placeAt(S.home);syncMons();syncShips();syncDig();renderPows();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{});
   requestAnimationFrame(frame);}
-window.__game={ISL,MONS,P,SHIPS,BR,SHARKS,BARRELS,shipBlocked,get S(){return S;},inside};
+window.__game={ISL,MONS,P,SHIPS,BR,PR,SHARKS,BARRELS,shipBlocked,get S(){return S;},inside};
 const hot=window.claude&&window.claude.hot;
 if(hot&&hot.snapshot)hot.snapshot(()=>({S,started}));
 if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
