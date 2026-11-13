@@ -148,7 +148,7 @@ h2{font-size:38px;color:var(--blue)}
       <ul class="rules">
         <li><canvas id="r1" width="88" height="88"></canvas><span>Прыгай с острова на остров, ходи по мостикам или плыви на корабле с пушкой: собирай бочки с монетами и берегись акул. Упал в воду — не страшно, вернёшься на берег.</span></li>
         <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.</span></li>
-        <li><canvas id="r4" width="88" height="88"></canvas><span>Ищи по карте красный крестик: там зарыт клад. В первом кладе тебя ждёт друг!</span></li>
+        <li><canvas id="r4" width="88" height="88"></canvas><span>Ищи по карте красный крестик: там зарыт клад. А на первом острове в клетке сидит попугай — освободи его!</span></li>
         <li><canvas id="r5" width="88" height="88"></canvas><span>На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.</span></li>
         <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
@@ -231,7 +231,7 @@ const EN={
 'ЛАВКА':'FRUIT','ФРУКТОВ':'SHOP','ЖМИ':'PRESS','Лавка фруктов':'Fruit Shop',
 'Прыгай с острова на остров, ходи по мостикам или плыви на корабле с пушкой: собирай бочки с монетами и берегись акул. Упал в воду — не страшно, вернёшься на берег.':'Jump from island to island, cross the bridges or sail the ship with a cannon: pick up barrels of coins and watch out for sharks. Fell in the water? No worries, you go back to the shore.',
 'Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.':'Slash monsters with your sword and catch the four wanted pirates. Each one is worth a huge bounty.',
-'Ищи по карте красный крестик: там зарыт клад. В первом кладе тебя ждёт друг!':'Look for the red X on the map: treasure is buried there. A friend is waiting in the first one!',
+'Ищи по карте красный крестик: там зарыт клад. А на первом острове в клетке сидит попугай — освободи его!':'Look for the red X on the map: treasure is buried there. And a parrot sits in a cage on the first island. Set it free!',
 'На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.':'One island in the Small Sea hides the way into a dark cave full of crystals and chests.',
 'За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.':'Spend coins on magic fruits in the Fruit Shop: fire, ice, lightning, super jump.',
 'Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, Q — сменить оружие, M — карта. Три удара подряд — усиленный, держи F — заряженный. На телефоне: води пальцем слева, кнопки справа.':'Keyboard: arrows or WASD to run, space to jump, F to hit (in the air: ground slam), Shift to dash, 1–5 for fruit powers, Q to switch weapon, M for the map. Three hits in a row make a strong one, hold F for a charged attack. On a phone: drag on the left, buttons on the right.',
@@ -280,6 +280,7 @@ const EN={
 'Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!':'Run to the edge of the island and jump to the next one. Your ship is waiting by the shore on the right!'};
 Object.assign(EN,{'Сабля':'Sword','Молот':'Hammer','Копьё':'Spear','Бумеранг':'Boomerang','Заряжено!':'Charged!','Красный круг на земле — туда прилетит удар. Уходи рывком!':'A red mark on the ground shows where the hit will land. Dash away!'});
 Object.assign(EN,{'Начать заново?':'Start over?','Монеты, фрукты и пойманные пираты сотрутся, игра начнётся с самого начала.':'Coins, fruits and caught pirates will be wiped and the game starts from the very beginning.','Да, заново':'Yes, start over','Отмена':'Cancel'});
+Object.assign(EN,{'Бам!':'Bam!','Попугай на свободе! Теперь он твой друг и клюёт монстров.':'The parrot is free! Now it is your friend and pecks monsters.','В клетке сидит попугай! Ударь по клетке три раза, чтобы его освободить.':'A parrot is sitting in the cage! Hit the cage three times to set it free.'});
 const NAMES=['Капитан Железный Зуб','Барон Песочник','Кракен Чернильное Пузо','Адмирал Красный Клык'];
 function tr(s){if(LANG==='ru'||typeof s!=='string'||!/[А-Яа-яЁё]/.test(s))return s;if(EN[s]!=null)return EN[s];
   const nums=[],nm=[];let k=s;NAMES.forEach(n=>{if(k.indexOf(n)>=0){k=k.split(n).join('@');nm.push(EN[n]);}});
@@ -755,14 +756,24 @@ function syncDig(){const d=S.dig;if(!d||!ISL[d.isl]||typeof d.x!=='number'||!ins
 const digNear=()=>S.dig&&P.ground&&islandAt(P.x,P.z)===S.dig.isl&&Math.hypot(P.x-S.dig.x,P.z-S.dig.z)<1.6;
 function digHit(){const d=S.dig;P.atk=.45;P.swing=.26;d.n=(d.n||0)+1;sfx.hit();floatTxt(d.x,ISL[d.isl].y+1,d.z,d.n<3?'Копаю…':'Клад!','gold');if(d.n<3)return;
   S.digs=(S.digs||0)+1;const n=gain(150000+50000*Math.min(S.digs,5));sfx.win();
-  if(!S.parrot){S.parrot=true;say('Клад! +'+money(n)+' монет. А ещё в сундуке сидел попугай — теперь он твой друг и клюёт монстров!');}
-  else say('Клад! +'+money(n)+' монет. На карте появился новый красный крестик.');
+  say('Клад! +'+money(n)+' монет. На карте появился новый красный крестик.');
   newDig();save();hud();}
 const parrot=new T.Group(),PR={x:0,y:3,z:0,cd:3,tg:null,t:0};
 add(parrot,ball(.22,10,8),flat('#d63b2f'),0,0,0).scale.set(1,1.1,1.3);add(parrot,ball(.17,10,8),flat('#d63b2f'),0,.23,.2);add(parrot,cone(.07,.2,5),flat('#f6cf3a'),0,.2,.42).rotation.x=Math.PI/2;
 add(parrot,ball(.04,6,6),flat(INK),.1,.28,.3);add(parrot,ball(.04,6,6),flat(INK),-.1,.28,.3);add(parrot,box(.12,.04,.45),flat('#2f66c2'),0,-.05,-.42);
 parrot.userData.w=[1,-1].map(sd=>{const w=new T.Group();w.position.set(sd*.18,.06,0);add(w,box(.46,.04,.32),flat('#3f9a4a'),sd*.23,0,0);parrot.add(w);return w;});scene.add(parrot);
-function parrotUpd(dt){parrot.visible=!!S.parrot;if(!S.parrot)return;PR.cd-=dt;let tx=P.x-.8,ty=P.y+2.5*hero.scale.x+Math.sin(tNow*3)*.12,tz=P.z+.4,k=4;
+/* the parrot waits in a cage in the middle of the first island */
+const CG={x:ISL[1].x,z:ISL[1].z,y:ISL[1].y,n:0,tip:0},cage=new T.Group(),cageDec={x:CG.x,z:CG.z,r:.95};DEC.push(cageDec);
+{const bm=flat('#f6cf3a'),dk=flat('#8a5a2b');add(cage,cyl(1,1.05,.16,16),dk,0,.08,0);add(cage,cyl(.98,.98,.07,16),bm,0,1.86,0);add(cage,cone(1,.6,16),bm,0,2.2,0);add(cage,ball(.11,8,6),bm,0,2.55,0);
+  for(let i=0;i<10;i++){const a=i/10*TAU;add(cage,cyl(.035,.035,1.75,6),bm,Math.sin(a)*.92,1,Math.cos(a)*.92);}add(cage,cyl(.03,.03,1.5,6),dk,0,.62,0).rotation.z=Math.PI/2;cage.position.set(CG.x,CG.y,CG.z);scene.add(cage);}
+const cageNear=()=>!S.parrot&&P.ground&&Math.hypot(P.x-CG.x,P.z-CG.z)<2.3&&Math.abs(P.y-CG.y)<1;
+function cageHit(){P.atk=.4;P.swing=P.swingD=.26;P.face=Math.atan2(CG.x-P.x,CG.z-P.z);CG.n++;CG.shake=.25;sfx.hit();
+  if(CG.n<3){floatTxt(CG.x,CG.y+2.9,CG.z,'Бам!','gold');return;}
+  S.parrot=true;PR.x=CG.x;PR.y=CG.y+1.2;PR.z=CG.z;PR.tg=null;PR.cd=2;ringFx(CG.x,CG.y,CG.z,3.4);sfx.win();say('Попугай на свободе! Теперь он твой друг и клюёт монстров.');save();}
+function parrotUpd(dt){cage.visible=!S.parrot;cageDec.x=S.parrot?99999:CG.x;
+  if(!S.parrot){parrot.visible=true;CG.shake=(CG.shake||0)-dt;cage.rotation.z=CG.shake>0&&!RM?Math.sin(tNow*60)*.06:0;parrot.position.set(CG.x,CG.y+.82+Math.abs(Math.sin(tNow*3))*.05,CG.z);parrot.rotation.y=Math.atan2(P.x-CG.x,P.z-CG.z);parrot.userData.w.forEach((w,i)=>{w.rotation.z=(i?-1:1)*(CG.shake>0?Math.sin(tNow*30)*.8:.15);});
+    if(!CG.tip&&cageNear()){CG.tip=1;say('В клетке сидит попугай! Ударь по клетке три раза, чтобы его освободить.');}return;}
+  parrot.visible=true;PR.cd-=dt;let tx=P.x-.8,ty=P.y+2.5*hero.scale.x+Math.sin(tNow*3)*.12,tz=P.z+.4,k=4;
   if(!PR.tg&&PR.cd<=0){const m=nearest(7);if(m){PR.tg=m;PR.t=1.5;}else PR.cd=.5;}
   if(PR.tg){const m=PR.tg;PR.t-=dt;if(!alive(m)||PR.t<=0){PR.tg=null;PR.cd=4;}
     else{tx=m.x;ty=ISL[m.isl].y+m.s*2+.2;tz=m.z;k=9;if(Math.hypot(PR.x-tx,PR.z-tz)<.6){hurtMon(m,1,PR.x,PR.z);PR.tg=null;PR.cd=4;}}}
@@ -807,7 +818,7 @@ function cannon(){const sh=SHIPS[P.ship],sx=sh.x+Math.sin(sh.rot)*2.2,sz=sh.z+Ma
   let dx,dz,d,ty;if(tg){dx=tg.x-sx;dz=tg.z-sz;d=Math.hypot(dx,dz)||1;ty=tg.y;}else{d=14;dx=Math.sin(sh.rot)*d;dz=Math.cos(sh.rot)*d;ty=-1.3;}
   const tt=Math.max(.3,d/19),o=add(scene,ball(.28,10,8),flat(INK),sx,y0,sz);fx.push({k:'ball',dmg:has('powder')?4:2,o,vx:dx/tt,vz:dz/tt,vy:(ty-y0)/tt+7*tt,t:tt+.2});
   beep(90,.3,'square',.09);setTimeout(()=>beep(55,.3,'sawtooth',.07),50);}
-function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.ship>=0&&P.ground){cannon();return;}if(digNear()&&!nearest(2.6)){digHit();return;}if(!P.ground&&P.ship<0){if(!P.slam){P.slam=true;P.vy=-24;P.atk=.3;sfx.swing();}return;}const w=S.wpn||0;if(w===3&&boomOut)return;P.comboN=tNow-P.lastAtk<.8?P.comboN%3+1:1;P.lastAtk=tNow;doAttack(w,P.comboN===3&&w!==3?1:0);}
+function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.ship>=0&&P.ground){cannon();return;}if(digNear()&&!nearest(2.6)){digHit();return;}if(cageNear()&&!nearest(2.2)){cageHit();return;}if(!P.ground&&P.ship<0){if(!P.slam){P.slam=true;P.vy=-24;P.atk=.3;sfx.swing();}return;}const w=S.wpn||0;if(w===3&&boomOut)return;P.comboN=tNow-P.lastAtk<.8?P.comboN%3+1:1;P.lastAtk=tNow;doAttack(w,P.comboN===3&&w!==3?1:0);}
 const WPN=['Сабля','Молот','Копьё','Бумеранг'];let boomOut=false;
 function ringFx(x,y,z,r,col){const o=add(scene,new T.RingGeometry(.7,1,28),new T.MeshBasicMaterial({color:col||0xf6cf3a,transparent:true,side:T.DoubleSide,depthWrite:false}),x,y+.08,z);o.rotation.x=-Math.PI/2;fx.push({k:'r2',o,t:.35,d:.35,up(f){const u=1-Math.max(0,f.t)/f.d;o.scale.setScalar(.3+u*r);o.material.opacity=1-u;}});}
 function hitWhere(test,dmg,pierce,stun){let n=0;MONS.forEach(m=>{if(!alive(m)||Math.abs(P.y-ISL[m.isl].y)>2.4)return;if(test(m,m.x-P.x,m.z-P.z)){if(stun)m.froz=Math.max(m.froz,stun);hurtMon(m,dmg,P.x,P.z,pierce);n++;}});return n;}
@@ -1025,7 +1036,7 @@ function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent
   $('wOk').textContent=tr('Ура!');afterWanted=left?null:showWin;$('wanted').hidden=false;}
 $('wOk').onclick=()=>{$('wanted').hidden=true;const f=afterWanted;afterWanted=null;if(f)f();};
 function showWin(){drawPoster($('winCv'),{name:'Гроза Карандашного моря',bounty:S.bounty,seed:8});$('win').hidden=false;}
-function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();syncDig();setWpn(0,true);renderPows();hud();}
+function reset(){S=fresh();save();for(const k in cd)cd[k]=0;CG.n=0;CG.tip=0;selF=null;placeAt(0);syncMons();syncShips();syncDig();setWpn(0,true);renderPows();hud();}
 function begin(){$('start').hidden=true;started=true;beep(520,.12);music();hud();say('Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!');}
 $('go').onclick=begin;
 $('fresh').onclick=()=>{reset();begin();};
