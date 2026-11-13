@@ -32,10 +32,11 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 #hearts i{font-style:normal;opacity:.22}
 .coin{width:17px;height:17px;border-radius:50%;background:var(--sun);border:2px solid var(--ink);display:inline-block;flex:none}
 .chip small{font-size:13px;letter-spacing:.5px}
-#mute{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
+#lang{font-size:15px!important}
+#mute,#lang{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
 
 #shopWrap{position:absolute;top:8px;right:max(16px,env(safe-area-inset-right,0px));filter:drop-shadow(3px 5px 0 var(--shadow));animation:shopPop 1.6s ease-in-out infinite}
-#shopBtn{position:relative;display:block;width:138px;height:97px;border:0;background:var(--roof);padding:0;font-family:var(--display);font-size:32px;line-height:.85;color:var(--shopink);letter-spacing:1px;transition:transform .15s ease-out,filter .15s}
+#shopBtn{position:relative;display:block;width:138px;height:97px;border:0;background:var(--roof);padding:0;font-family:var(--display);font-size:29px;line-height:.9;color:var(--shopink);letter-spacing:1px;transition:transform .15s ease-out,filter .15s}
 #shopBtn:hover{transform:scale(1.12) rotate(-3deg);filter:brightness(1.1) saturate(1.25)}
 #shopBtn:active{transform:scale(.93)}
 #shopWrap:hover{animation-play-state:paused;filter:drop-shadow(5px 8px 0 var(--shadow))}
@@ -118,10 +119,11 @@ h2{font-size:38px;color:var(--blue)}
     <div class="chip"><span class="coin"></span><span id="coinT">0</span></div>
     <div class="chip"><small>Награда за тебя</small><span id="bountyT">0</span></div>
     <button id="mute" aria-label="Музыка и звук">♪</button>
+    <button id="lang" aria-label="Language"></button>
     <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="320"></canvas></button>
   </div>
 
-  <div id="shopWrap"><button id="shopBtn" aria-label="Открыть магазин фруктов"><span>SHOP<br>DEVIL</span><small>PRESS</small></button></div>
+  <div id="shopWrap"><button id="shopBtn" aria-label="Открыть магазин фруктов"><span>ЛАВКА<br>ФРУКТОВ</span><small>ЖМИ</small></button></div>
 
   <div class="mid">
     <div id="hint"></div>
@@ -143,19 +145,20 @@ h2{font-size:38px;color:var(--blue)}
         <li><canvas id="r2" width="88" height="88"></canvas><span>Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.</span></li>
         <li><canvas id="r4" width="88" height="88"></canvas><span>Ищи по карте красный крестик: там зарыт клад. В первом кладе тебя ждёт друг!</span></li>
         <li><canvas id="r5" width="88" height="88"></canvas><span>На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.</span></li>
-        <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в SHOP DEVIL: огонь, лёд, молния, супер-прыжок.</span></li>
+        <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
       <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.</p>
       <div class="row">
         <button class="btn" id="go">В плавание!</button>
         <button class="btn plain" id="fresh" hidden>Начать заново</button>
+        <button class="btn plain" id="lang2"></button>
       </div>
     </div>
   </div>
 
   <div class="ov" id="shop" hidden>
     <div class="card">
-      <h2>Shop Devil</h2>
+      <h2>Лавка фруктов</h2>
       <div class="chip"><span class="coin"></span><span id="shopCoin">0</span></div>
       <div class="grid" id="grid"></div>
       <div id="fInfo"></div>
@@ -205,7 +208,64 @@ const $=id=>document.getElementById(id);
 const INK='#4a4a52', PAPER='#fbfaf4', TAU=Math.PI*2;
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const R=seed=>{let a=seed|0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
-const money=n=>Math.round(n).toLocaleString('ru-RU');
+let LANG='ru';try{LANG=localStorage.getItem('pencil-lang')||((navigator.language||'en').toLowerCase().indexOf('ru')===0?'ru':'en');}catch(e){LANG='en';}
+const money=n=>Math.round(n).toLocaleString(LANG==='ru'?'ru-RU':'en-US');
+const EN={
+'Пираты Карандашного моря':'Pirates of the Pencil Sea','Награда за тебя':'Your bounty','Позвать монстров обратно':'Call the monsters back','Рывок':'Dash','Удар':'Hit','Прыг':'Jump','пробел':'space',
+'ЛАВКА':'FRUIT','ФРУКТОВ':'SHOP','ЖМИ':'PRESS','Лавка фруктов':'Fruit Shop',
+'Прыгай с острова на остров, ходи по мостикам или плыви на корабле с пушкой: собирай бочки с монетами и берегись акул. Упал в воду — не страшно, вернёшься на берег.':'Jump from island to island, cross the bridges or sail the ship with a cannon: pick up barrels of coins and watch out for sharks. Fell in the water? No worries, you go back to the shore.',
+'Руби монстров саблей и лови четырёх пиратов из розыска — за них дают огромную награду.':'Slash monsters with your sword and catch the four wanted pirates. Each one is worth a huge bounty.',
+'Ищи по карте красный крестик: там зарыт клад. В первом кладе тебя ждёт друг!':'Look for the red X on the map: treasure is buried there. A friend is waiting in the first one!',
+'На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.':'One island in the Small Sea hides the way into a dark cave full of crystals and chests.',
+'За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.':'Spend coins on magic fruits in the Fruit Shop: fire, ice, lightning, super jump.',
+'Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, M — карта. На телефоне: води пальцем слева, кнопки справа.':'Keyboard: arrows or WASD to run, space to jump, F to hit (in the air: ground slam), Shift to dash, 1–5 for fruit powers, M for the map. On a phone: drag on the left, buttons on the right.',
+'В плавание!':'Set sail!','Продолжить плавание':'Keep sailing','Начать заново':'Start over','Купить':'Buy','Закрыть':'Close','Разыскивается!':'Wanted!','В бой!':'Fight!','Карта Карандашного моря':'Map of the Pencil Sea',
+'ты':'you','корабль':'ship','пират':'pirate','монстр':'monster','акула':'shark','сундук':'chest','клад':'treasure','Победа!':'Victory!',
+'Все пираты из розыска пойманы. Теперь самый знаменитый пират Карандашного моря — ты!':'Every wanted pirate is caught. The most famous pirate of the Pencil Sea is now you!',
+'Играть заново':'Play again','Погулять по островам':'Keep exploring',
+'Прыгун-ягода':'Jumpberry','Прыжок выше и дальше — можно допрыгнуть до дальних островов с сундуками.':'Jump higher and farther, far enough to reach the distant chest islands.',
+'Сердцевишня':'Heart Cherry','Три дополнительных сердечка.':'Three extra hearts.',
+'Лимон-силач':'Strong Lemon','Сабля бьёт вдвое сильнее.':'Your sword hits twice as hard.',
+'Огнеперец':'Fire Pepper','Сила: огненный шар летит вперёд и сильно бьёт монстра.':'Power: a fireball flies ahead and hits a monster hard.',
+'Лечебная груша':'Healing Pear','Сила: вернуть три сердечка.':'Power: get three hearts back.',
+'Монетная дыня':'Coin Melon','Монет за монстров и сундуки в полтора раза больше.':'One and a half times more coins from monsters and chests.',
+'Шустрый арбуз':'Speedy Watermelon','Бегаешь заметно быстрее.':'You run a lot faster.',
+'Ледяника':'Iceberry','Сила: заморозить всех монстров рядом на четыре секунды.':'Power: freeze every monster nearby for four seconds.',
+'Камнеорех':'Stone Nut','После удара монстры не могут ранить тебя целых три секунды.':'After you get hit, monsters cannot hurt you for three whole seconds.',
+'Громослива':'Thunder Plum','Сила: молния с неба бьёт в ближайшего монстра.':'Power: lightning strikes the nearest monster.',
+'Колючий каштан':'Spiky Chestnut','Монстр, который тебя тронул, сам получает укол.':'A monster that touches you gets pricked itself.',
+'Королевский ананас':'Royal Pineapple','Силы фруктов заряжаются вдвое быстрее.':'Fruit powers recharge twice as fast.',
+'Облачный персик':'Cloud Peach','Второй прыжок прямо в воздухе: нажми «Прыг» ещё раз, пока летишь.':'A second jump in mid-air: press Jump again while flying.',
+'Пороховой гранат':'Powder Pomegranate','Ядра пушки бьют вдвое сильнее и стоят вдвое дешевле.':'Cannonballs hit twice as hard and cost half as much.',
+'Тыква-великан':'Giant Pumpkin','Сила: на восемь секунд ты великан — бьёшь втрое сильнее, и монстры не могут тебя ранить.':'Power: for eight seconds you are a giant. You hit three times harder and monsters cannot hurt you.',
+'Капитан Железный Зуб':'Captain Iron Tooth','Барон Песочник':'Baron Sandman','Кракен Чернильное Пузо':'Kraken Inkbelly','Адмирал Красный Клык':'Admiral Red Fang',
+'ПОЙМАН!':'CAUGHT!','Малое море':'Small Sea','Большое море':'Big Sea','Красная стена':'Red Wall',
+'Акула! Стреляй в неё из пушки или уплывай.':'Shark! Shoot it with the cannon or sail away.','Копаю…':'Digging…','Клад!':'Treasure!',
+'Клад! +# монет. А ещё в сундуке сидел попугай — теперь он твой друг и клюёт монстров!':'Treasure! +# coins. And a parrot was sitting in the chest. Now it is your friend and pecks monsters!',
+'Клад! +# монет. На карте появился новый красный крестик.':'Treasure! +# coins. A new red X has appeared on the map.',
+'Монстр оказался сильнее… Ты проснулся в деревне с полными сердечками. Загляни в Лавку фруктов и попробуй ещё раз!':'The monster was stronger… You woke up in the village with full hearts. Visit the Fruit Shop and try again!',
+'На ядро не хватает монет: одно стоит #. Собирай бочки в море!':'Not enough coins for a cannonball: one costs #. Pick up barrels at sea!',
+'Рядом нет монстров — молнии не в кого бить.':'No monsters nearby, so the lightning has nothing to hit.','Рядом нет монстров — замораживать некого.':'No monsters nearby, so there is nothing to freeze.',
+'Монстры заморожены! Бей скорее.':'The monsters are frozen! Hit them fast.','Сердечки и так полные.':'Your hearts are already full.',
+'Ты великан! Восемь секунд монстры не могут тебя ранить.':'You are a giant! Monsters cannot hurt you for eight seconds.',
+'Деревня: ты отдохнул, сердечки полные!':'Village: you rested and your hearts are full!','Деревня Большого моря. Здесь можно отдохнуть.':'The Big Sea village. You can rest here.',
+'Твоя деревня. Прыгай на соседний остров!':'Your village. Jump to the next island!','Сундук! Подойди к нему поближе.':'A chest! Walk up to it.',
+'Остров монстров! Руби их саблей — кнопка «Удар».':'Monster island! Slash them with the Hit button.',
+'Ты на корабле! Плыви куда хочешь и стреляй из пушки кнопкой «Огонь» (ядра платные). «Прыг» — спрыгнуть на остров.':'You are on the ship! Sail anywhere and shoot the cannon with Fire (cannonballs cost coins). Jump to hop onto an island.',
+'Ты в пещере! Тут живут самые сильные монстры и спрятаны сундуки. Выход — светящееся кольцо.':'You are in the cave! The strongest monsters live here and chests are hidden. The glowing ring is the way out.',
+'Ты снова на солнышке.':'Back in the sunshine.','Ой!':'Oops!','Бултых!':'Splash!','Осторожно, в пещере глубоко! Иди по мостикам.':'Careful, the cave is deep! Use the bridges.',
+'Бултых! Разбегись и прыгай с самого края острова.':'Splash! Take a run and jump from the very edge of the island.','Сундук заперт! Сначала победи Адмирала.':'The chest is locked! Beat the Admiral first.',
+'В сундуке # монет!':'The chest had # coins!','Здесь что-то зарыто! Жми «Удар» три раза, чтобы выкопать клад.':'Something is buried here! Press Hit three times to dig it up.',
+'Акула побеждена! +# монет':'Shark defeated! +# coins','Огонь':'Fire','Есть!':'Yours!','Нажми на фрукт, чтобы узнать его силу.':'Tap a fruit to see what it does.',
+'Уже съеден':'Already eaten','Не хватает #':'# short','Купить за #':'Buy for #','Монстры вернулись на свои острова. Вперёд за монетами!':'The monsters are back on their islands. Go get those coins!',
+'На этом острове прячется @. Поймаешь — награда за твою голову вырастет!':'@ is hiding on this island. Catch them and your own bounty goes up!',
+'Пойман!':'Caught!','Ворота в Красной стене открылись — впереди Большое море!':'The gate in the Red Wall is open. The Big Sea is ahead!','Сундуки на Острове сокровищ теперь твои!':'The chests on Treasure Island are yours now!',
+'@ больше никого не напугает.':'@ will not scare anyone again.',' Пиратов в розыске осталось: #.':' Wanted pirates left: #.','Ура!':'Hooray!','Гроза Карандашного моря':'Terror of the Pencil Sea',
+'Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!':'Run to the edge of the island and jump to the next one. Your ship is waiting by the shore on the right!'};
+const NAMES=['Капитан Железный Зуб','Барон Песочник','Кракен Чернильное Пузо','Адмирал Красный Клык'];
+function tr(s){if(LANG==='ru'||typeof s!=='string'||!/[А-Яа-яЁё]/.test(s))return s;if(EN[s]!=null)return EN[s];
+  const nums=[],nm=[];let k=s;NAMES.forEach(n=>{if(k.indexOf(n)>=0){k=k.split(n).join('@');nm.push(EN[n]);}});
+  k=k.replace(/\d[\d\u00a0\u202f ,]*\d|\d/g,m=>{nums.push(m);return '#';});const e=EN[k];if(e==null)return s;let a=0,b=0;return e.replace(/#/g,()=>nums[a++]).replace(/@/g,()=>nm[b++]);}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 /* ---------- pencil & crayon helpers (2D) ---------- */
@@ -350,8 +410,8 @@ function drawHero2(c,x,y,s,seed){const r=R(seed);c.save();c.translate(x,y);c.sca
   c.strokeStyle='#8a8f98';c.lineWidth=2.2;pl(c,14,-20,22,-37,r,.8);c.strokeStyle='#b5762a';pl(c,11,-23,18,-19,r,.5);
   c.fillStyle='#f6d2a8';c.beginPath();c.arc(0,-36,8,0,7);c.fill();
   c.strokeStyle=INK;c.lineWidth=1.4;c.beginPath();c.arc(0,-36,8,0,7);c.stroke();
-  c.fillStyle='#d63b2f';c.beginPath();c.arc(0,-37,8.6,Math.PI*1.05,Math.PI*1.95);c.closePath();c.fill();
-  c.strokeStyle='#d63b2f';c.lineWidth=2.2;pl(c,-8,-39,-14,-34,r,1);
+  c.fillStyle='#6b4424';c.beginPath();c.arc(0,-37,8.8,Math.PI*1.08,Math.PI*1.92);c.closePath();c.fill();
+  c.fillStyle='#3a4f9a';c.fillRect(-7,-51,14,9);c.beginPath();c.ellipse(0,-42,13.5,3,0,0,7);c.fill();c.fillStyle='#f6cf3a';c.fillRect(-7,-45.6,14,2.2);c.strokeStyle='#d63b2f';c.lineWidth=1.8;pl(c,6,-50,11,-58,r,.6);
   c.fillStyle=INK;c.beginPath();c.arc(-3,-34.5,1.1,0,7);c.fill();c.beginPath();c.arc(3,-34.5,1.1,0,7);c.fill();
   c.strokeStyle=INK;c.lineWidth=1;c.beginPath();c.arc(0,-33,3,.3,Math.PI-.3);c.stroke();
   c.restore();}
@@ -377,11 +437,11 @@ function drawPoster(cv,o){const c=cv.getContext('2d'),W=cv.width,H=cv.height,r=R
   c.strokeStyle=INK;c.lineWidth=3;poly(c,[[12,12],[W-12,12],[W-12,H-12],[12,H-12]],r,3);
   c.fillStyle=INK;c.textAlign='center';c.font='700 96px "Amatic SC","Neucha",cursive';c.fillText('WANTED',W/2,104);
   c.fillStyle='#fbf6e6';c.fillRect(60,124,W-120,250);c.lineWidth=2.5;poly(c,[[60,124],[W-60,124],[W-60,374],[60,374]],r,2.5);
-  c.save();c.beginPath();c.rect(62,126,W-124,246);c.clip();if(o.boss)drawMonster2(c,o.boss,W/2,o.boss.tent?240:262,o.boss.tent?2.8:3.3,o.boss.seed);else drawHero2(c,W/2,356,5,3);c.restore();
+  c.save();c.beginPath();c.rect(62,126,W-124,246);c.clip();if(o.boss)drawMonster2(c,o.boss,W/2,o.boss.tent?240:262,o.boss.tent?2.8:3.3,o.boss.seed);else drawHero2(c,W/2,368,4,3);c.restore();
   c.fillStyle=INK;c.font='700 50px "Amatic SC","Neucha",cursive';c.fillText('DEAD OR ALIVE',W/2,424);
-  c.font='34px "Neucha",cursive';c.fillText(o.name,W/2,468,W-50);
+  c.font='34px "Neucha",cursive';c.fillText(tr(o.name),W/2,468,W-50);
   c.font='700 74px "Amatic SC","Neucha",cursive';c.fillStyle='#a8540a';c.fillText(money(o.bounty),W/2,548,W-50);
-  if(o.caught){c.save();c.translate(W/2,250);c.rotate(-.3);c.strokeStyle='#d63b2f';c.fillStyle='#d63b2f';c.lineWidth=7;c.strokeRect(-170,-52,340,104);c.font='700 96px "Amatic SC","Neucha",cursive';c.fillText('ПОЙМАН!',0,34);c.restore();}}
+  if(o.caught){c.save();c.translate(W/2,250);c.rotate(-.3);c.strokeStyle='#d63b2f';c.fillStyle='#d63b2f';c.lineWidth=7;c.strokeRect(-170,-52,340,104);c.font='700 96px "Amatic SC","Neucha",cursive';c.fillText(tr('ПОЙМАН!'),0,34);c.restore();}}
 
 /* ---------- 3D world ---------- */
 const T=THREE, cv=$('gl');
@@ -586,8 +646,8 @@ function jolly(bg,W,H){const c2=document.createElement('canvas');c2.width=W;c2.h
   c.fillStyle=ink;c.beginPath();c.arc(cx-8*u,cy,5.6*u,0,7);c.fill();c.beginPath();c.arc(cx+8*u,cy,5.6*u,0,7);c.fill();
   c.beginPath();c.moveTo(cx,cy+6*u);c.lineTo(cx-2.6*u,cy+11*u);c.lineTo(cx+2.6*u,cy+11*u);c.closePath();c.fill();
   c.lineWidth=1.8*u;[-5,0,5].forEach(x=>{c.beginPath();c.moveTo(cx+x*u,cy+15*u);c.lineTo(cx+x*u,cy+21*u);c.stroke();});
-  c.fillStyle='#d63b2f';c.beginPath();c.arc(cx,cy-4*u,22.5*u,Math.PI*1.06,Math.PI*1.94);c.closePath();c.fill();
-  c.beginPath();c.moveTo(cx-21*u,cy-11*u);c.lineTo(cx-33*u,cy-16*u);c.lineTo(cx-31*u,cy-5*u);c.closePath();c.fill();
+  c.fillStyle='#3a4f9a';c.strokeStyle=ink;c.lineWidth=2.2*u;c.beginPath();c.rect(cx-15*u,cy-37*u,30*u,21*u);c.fill();c.stroke();c.beginPath();c.ellipse(cx,cy-16*u,31*u,5.5*u,0,0,7);c.fill();c.stroke();
+  c.fillStyle='#f6cf3a';c.fillRect(cx-15*u,cy-25*u,30*u,4.5*u);c.fillStyle='#d63b2f';c.beginPath();c.moveTo(cx+10*u,cy-35*u);c.lineTo(cx+26*u,cy-44*u);c.lineTo(cx+16*u,cy-31*u);c.closePath();c.fill();
   return new T.MeshLambertMaterial({map:new T.CanvasTexture(c2),side:T.DoubleSide});}
 const sailM=jolly('#fffdf6',320,268),flagM=jolly('#2b2b33',160,100);
 /* ships: one in each sea; jump on deck to sail, jump off to land */
@@ -613,8 +673,8 @@ function mapBase(W,M){const c2=document.createElement('canvas');c2.width=W;c2.he
     path(c,pts);c.fillStyle='#f6f8e6';c.fill();c.save();path(c,pts);c.clip();scribble(c,X(I.x-I.R),Z(I.z-I.R),I.R*2*s,I.R*2*s,I.col,r,{gap:Math.max(2.5,W/60),lw:Math.max(2,W/70),ang:-.6,alpha:.9});c.restore();
     c.strokeStyle=INK;c.lineWidth=Math.max(1,W/220);poly(c,pts,r,W/200);});
   c.strokeStyle='#8a5a2b';c.lineWidth=Math.max(2,s*1.5);BR.forEach(b=>{c.beginPath();c.moveTo(X(b.px),Z(b.pz));c.lineTo(X(b.qx),Z(b.qz));c.stroke();});
-  if(W>200){c.fillStyle=INK;c.textAlign='left';c.font='700 30px "Amatic SC","Neucha",cursive';c.fillText('Малое море',X(M.x0+1),Z(10));c.fillText('Большое море',X(M.x0+1),Z(-131));
-    c.fillStyle='#d63b2f';c.font='700 24px "Amatic SC","Neucha",cursive';c.fillText('Красная стена',X(6),Z(WZ)-8);}
+  if(W>200){c.fillStyle=INK;c.textAlign='left';c.font='700 30px "Amatic SC","Neucha",cursive';c.fillText(tr('Малое море'),X(M.x0+1),Z(10));c.fillText(tr('Большое море'),X(M.x0+1),Z(-131));
+    c.fillStyle='#d63b2f';c.font='700 24px "Amatic SC","Neucha",cursive';c.fillText(tr('Красная стена'),X(6),Z(WZ)-8);}
   return c2;}
 function mapDraw(cvs,base,M){const c=cvs.getContext('2d'),s=cvs.width/M.w,u=s*.4375,X=x=>(x-M.x0)*s,Z=z=>(z-M.z0)*s;
   c.drawImage(base,0,0);c.lineWidth=Math.max(1,u*.8);c.strokeStyle=INK;
@@ -693,12 +753,12 @@ const keys={},joy={x:0,y:0,id:null,ox:0,oy:0};
 const overlayOpen=()=>['start','shop','map','wanted','win'].some(id=>!$(id).hidden);
 function placeAt(i){const I=ISL[i];P.x=I.x;P.z=I.z+I.R*.25;P.y=I.y;P.vy=0;P.kx=P.kz=0;P.ground=true;P.ship=-1;P.onBr=-1;P.isl=-1;P.sx=P.x;P.sz=P.z;P.sy=P.y;}
 
-function floatTxt(x,y,z,txt,cls){const v=new T.Vector3(x,y,z).project(cam),e=document.createElement('div');e.className='float '+(cls||'');e.textContent=txt;
+function floatTxt(x,y,z,txt,cls){const v=new T.Vector3(x,y,z).project(cam),e=document.createElement('div');e.className='float '+(cls||'');e.textContent=tr(txt);
   e.style.left=((v.x+1)/2*cv.clientWidth)+'px';e.style.top=((1-v.y)/2*cv.clientHeight)+'px';$('app').appendChild(e);setTimeout(()=>e.remove(),RM?1600:1000);}
 let sayT=0;
-function say(msg,keep){clearTimeout(sayT);const h=$('hint');h.textContent=msg;h.classList.remove('off');if(!keep)sayT=setTimeout(()=>h.classList.add('off'),4500);}
-function hud(){const mx=maxHp(),h=$('hearts');h.textContent='';h.appendChild(document.createTextNode('♥'.repeat(Math.max(0,S.hp))));const e=document.createElement('i');e.textContent='♥'.repeat(Math.max(0,mx-S.hp));h.appendChild(e);
-  $('coinT').textContent=money(S.coins);$('bountyT').textContent=money(S.bounty);
+function say(msg,keep){clearTimeout(sayT);const h=$('hint');h.textContent=tr(msg);h.classList.remove('off');if(!keep)sayT=setTimeout(()=>h.classList.add('off'),4500);}
+function hud(){const mx=maxHp(),h=$('hearts');h.textContent=tr('');h.appendChild(document.createTextNode('♥'.repeat(Math.max(0,S.hp))));const e=document.createElement('i');e.textContent=tr('♥'.repeat(Math.max(0,mx-S.hp)));h.appendChild(e);
+  $('coinT').textContent=tr(money(S.coins));$('bountyT').textContent=tr(money(S.bounty));
   const I=ISL[P.isl];$('act').hidden=!(started&&I&&I.heal&&MONS.some(m=>!m.boss&&!alive(m)));}
 function gain(n){n=Math.round(n*(has('luck')?1.5:1));S.coins+=n;return n;}
 
@@ -711,7 +771,7 @@ function hurtMon(m,dmg,fromX,fromZ){if(!alive(m))return;if(m.d.shell&&dmg>1)dmg-
 function hurtHero(m){if(P.inv>0||P.giant>0)return;S.hp-=m.dmg;P.inv=has('rock')?3:1.1;sfx.ouch();floatTxt(P.x,P.y+2.4,P.z,'−'+m.dmg+' ♥');
   const dx=P.x-m.x,dz=P.z-m.z,d=Math.hypot(dx,dz)||1;P.kx=dx/d*9;P.kz=dz/d*9;
   if(has('thorn')&&m.g)hurtMon(m,1,P.x,P.z);
-  if(S.hp<=0){S.hp=maxHp();placeAt(S.home);MONS.forEach(o=>{if(alive(o)){o.hp=o.max;o.x=o.hx;o.z=o.hz;}});say('Монстр оказался сильнее… Ты проснулся в деревне с полными сердечками. Загляни в SHOP DEVIL и попробуй ещё раз!');}
+  if(S.hp<=0){S.hp=maxHp();placeAt(S.home);MONS.forEach(o=>{if(alive(o)){o.hp=o.max;o.x=o.hx;o.z=o.hz;}});say('Монстр оказался сильнее… Ты проснулся в деревне с полными сердечками. Загляни в Лавку фруктов и попробуй ещё раз!');}
   hud();save();}
 function nearest(range){let best=null,bd=range;MONS.forEach(m=>{if(!alive(m))return;const d=Math.hypot(m.x-P.x,m.z-P.z)-m.s;if(d<bd){bd=d;best=m;}});return best;}
 const BALL=10000,ballCost=()=>has('powder')?BALL/2:BALL;
@@ -823,9 +883,9 @@ function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA
   hBody.rotation.x=P.dash>0?.55:P.slam?-.4:0;
   xMark.visible=!!S.dig;if(S.dig){xMark.position.set(S.dig.x,ISL[S.dig.isl].y+.04,S.dig.z);xMark.scale.setScalar(RM?1:1+Math.sin(tNow*4)*.1);}
   SHIPS.forEach((s,i)=>{s.g.position.set(s.x,RM?0:Math.sin(tNow*1.6+i)*.05,s.z);s.g.rotation.y=s.rot;});if(frameN++%8===0)mapDraw($('mini'),miniBase,MB);
-  const onS=P.ship>=0&&P.ground,al=onS?'Огонь':'Удар';const sm=onS?money(ballCost()):'F';if($('atkL').textContent!==al)$('atkL').textContent=al;if($('atkS').textContent!==sm)$('atkS').textContent=sm;
+  const onS=P.ship>=0&&P.ground,al=tr(onS?'Огонь':'Удар');const sm=onS?money(ballCost()):'F';if($('atkL').textContent!==al)$('atkL').textContent=tr(al);if($('atkS').textContent!==sm)$('atkS').textContent=tr(sm);
   ren.render(scene,cam);
-  pwBtns.forEach(b=>{const c=cd[b.fid]>0;b.el.classList.toggle('cd',c);b.num.textContent=c?Math.ceil(cd[b.fid]):'';});}
+  pwBtns.forEach(b=>{const c=cd[b.fid]>0;b.el.classList.toggle('cd',c);b.num.textContent=tr(c?Math.ceil(cd[b.fid]):'');});}
 let last=0;
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000||0);last=now;if(started&&!overlayOpen())update(dt);render();}
 function resize(){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;ren.setPixelRatio(Math.min(2,window.devicePixelRatio||1));ren.setSize(w,h,false);cam.aspect=w/h;cam.fov=w<h?58:50;cam.updateProjectionMatrix();}
@@ -849,19 +909,19 @@ $('app').addEventListener('contextmenu',e=>e.preventDefault());
 /* ---------- shop ---------- */
 let selF=null,pwBtns=[];
 function icon(f,px){const c2=document.createElement('canvas');c2.width=c2.height=px*2;drawFruit(c2.getContext('2d'),f,px,px+3,px*2/44);return c2;}
-function renderPows(){const w=$('pows');w.textContent='';pwBtns=[];FR.forEach(f=>{if(!f.act||!has(f.id))return;const b=document.createElement('button');b.className='pw';b.id='pw-'+f.id;b.setAttribute('aria-label',f.name);
-  b.appendChild(icon(f,40));const n=document.createElement('b');b.appendChild(n);const k=document.createElement('kbd');k.textContent=pwBtns.length+1;b.appendChild(k);press(b,()=>usePow(f.id));w.appendChild(b);pwBtns.push({el:b,num:n,fid:f.id});});}
-function renderShop(){const g=$('grid');g.textContent='';$('shopCoin').textContent=money(S.coins);
+function renderPows(){const w=$('pows');w.textContent=tr('');pwBtns=[];FR.forEach(f=>{if(!f.act||!has(f.id))return;const b=document.createElement('button');b.className='pw';b.id='pw-'+f.id;b.setAttribute('aria-label',f.name);
+  b.appendChild(icon(f,40));const n=document.createElement('b');b.appendChild(n);const k=document.createElement('kbd');k.textContent=tr(pwBtns.length+1);b.appendChild(k);press(b,()=>usePow(f.id));w.appendChild(b);pwBtns.push({el:b,num:n,fid:f.id});});}
+function renderShop(){const g=$('grid');g.textContent=tr('');$('shopCoin').textContent=tr(money(S.coins));
   FR.forEach(f=>{const b=document.createElement('button');b.className='fr'+(has(f.id)?' own':'')+(selF===f.id?' sel':'');b.id='fr-'+f.id;
-    b.appendChild(icon(f,50));const n=document.createElement('span');n.textContent=f.name;b.appendChild(n);
-    const p=document.createElement('b');if(has(f.id))p.textContent='Есть!';else{const co=document.createElement('span');co.className='coin';p.appendChild(co);p.appendChild(document.createTextNode(money(f.price)));}
+    b.appendChild(icon(f,50));const n=document.createElement('span');n.textContent=tr(f.name);b.appendChild(n);
+    const p=document.createElement('b');if(has(f.id))p.textContent=tr('Есть!');else{const co=document.createElement('span');co.className='coin';p.appendChild(co);p.appendChild(document.createTextNode(money(f.price)));}
     b.appendChild(p);b.onclick=()=>{selF=f.id;renderShop();};g.appendChild(b);});
-  const f=selF&&FBY[selF],info=$('fInfo'),buy=$('buy');info.textContent='';
-  if(!f){const p=document.createElement('p');p.textContent='Нажми на фрукт, чтобы узнать его силу.';info.appendChild(p);buy.disabled=true;buy.textContent='Купить';return;}
-  const s=document.createElement('strong');s.textContent=f.name;const p=document.createElement('p');p.textContent=f.d;info.appendChild(s);info.appendChild(p);
-  if(has(f.id)){buy.disabled=true;buy.textContent='Уже съеден';}
-  else if(S.coins<f.price){buy.disabled=true;buy.textContent='Не хватает '+money(f.price-S.coins);}
-  else{buy.disabled=false;buy.textContent='Купить за '+money(f.price);}}
+  const f=selF&&FBY[selF],info=$('fInfo'),buy=$('buy');info.textContent=tr('');
+  if(!f){const p=document.createElement('p');p.textContent=tr('Нажми на фрукт, чтобы узнать его силу.');info.appendChild(p);buy.disabled=true;buy.textContent=tr('Купить');return;}
+  const s=document.createElement('strong');s.textContent=tr(f.name);const p=document.createElement('p');p.textContent=tr(f.d);info.appendChild(s);info.appendChild(p);
+  if(has(f.id)){buy.disabled=true;buy.textContent=tr('Уже съеден');}
+  else if(S.coins<f.price){buy.disabled=true;buy.textContent=tr('Не хватает '+money(f.price-S.coins));}
+  else{buy.disabled=false;buy.textContent=tr('Купить за '+money(f.price));}}
 $('shopBtn').onclick=()=>{if(overlayOpen())return;for(const k in keys)keys[k]=false;renderShop();$('shop').hidden=false;};
 $('shopX').onclick=()=>{$('shop').hidden=true;};
 $('shop').addEventListener('click',e=>{if(e.target===$('shop'))$('shop').hidden=true;});
@@ -869,17 +929,17 @@ $('buy').onclick=()=>{const f=FBY[selF];if(!f||has(f.id)||S.coins<f.price)return
 (function burst(){const n=26,p=[];for(let i=0;i<n;i++){const a=i/n*TAU-1.57,rad=i%2?50:39;p.push((50+Math.cos(a)*rad).toFixed(1)+'% '+(50+Math.sin(a)*rad).toFixed(1)+'%');}$('shopBtn').style.clipPath='polygon('+p.join(',')+')';})();
 $('act').onclick=()=>{S.dead=S.dead.filter(id=>MONS[id].boss);save();syncMons();hud();say('Монстры вернулись на свои острова. Вперёд за монетами!');};
 $('miniB').onclick=openMap;$('mapX').onclick=()=>{$('map').hidden=true;};$('map').addEventListener('click',e=>{if(e.target===$('map'))$('map').hidden=true;});
-$('mute').onclick=()=>{muted=!muted;$('mute').textContent=muted?'✕':'♪';if(mus)mus.out.gain.value=muted?0:.18;if(!muted){beep(660,.1);if(started)music();}};
+$('mute').onclick=()=>{muted=!muted;$('mute').textContent=tr(muted?'✕':'♪');if(mus)mus.out.gain.value=muted?0:.18;if(!muted){beep(660,.1);if(started)music();}};
 window.addEventListener('pointerdown',()=>{if(started)music();});
 
 /* ---------- wanted posters, start, win ---------- */
 let afterWanted=null;
-function showWanted(b){for(const k in keys)keys[k]=false;$('wTitle').textContent='Разыскивается!';drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed});
-  $('wText').textContent='На этом острове прячется '+b.name+'. Поймаешь — награда за твою голову вырастет!';$('wOk').textContent='В бой!';afterWanted=null;$('wanted').hidden=false;}
-function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent='Пойман!';drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed,caught:1});
+function showWanted(b){for(const k in keys)keys[k]=false;$('wTitle').textContent=tr('Разыскивается!');drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed});
+  $('wText').textContent=tr('На этом острове прячется '+b.name+'. Поймаешь — награда за твою голову вырастет!');$('wOk').textContent=tr('В бой!');afterWanted=null;$('wanted').hidden=false;}
+function showCaught(b){for(const k in keys)keys[k]=false;$('wTitle').textContent=tr('Пойман!');drawPoster($('wCv'),{boss:b,name:b.name,bounty:b.bounty,seed:b.seed,caught:1});
   const left=MONS.filter(m=>m.boss&&alive(m)).length;
-  $('wText').textContent=(b===BOSS[0]?'Ворота в Красной стене открылись — впереди Большое море!':b===BOSS[3]?'Сундуки на Острове сокровищ теперь твои!':b.name+' больше никого не напугает.')+(left?' Пиратов в розыске осталось: '+left+'.':'');
-  $('wOk').textContent='Ура!';afterWanted=left?null:showWin;$('wanted').hidden=false;}
+  $('wText').textContent=tr(b===BOSS[0]?'Ворота в Красной стене открылись — впереди Большое море!':b===BOSS[3]?'Сундуки на Острове сокровищ теперь твои!':b.name+' больше никого не напугает.')+(left?tr(' Пиратов в розыске осталось: '+left+'.'):'');
+  $('wOk').textContent=tr('Ура!');afterWanted=left?null:showWin;$('wanted').hidden=false;}
 $('wOk').onclick=()=>{$('wanted').hidden=true;const f=afterWanted;afterWanted=null;if(f)f();};
 function showWin(){drawPoster($('winCv'),{name:'Гроза Карандашного моря',bounty:S.bounty,seed:8});$('win').hidden=false;}
 function reset(){S=fresh();save();for(const k in cd)cd[k]=0;selF=null;placeAt(0);syncMons();syncShips();syncDig();renderPows();hud();}
@@ -889,12 +949,18 @@ $('fresh').onclick=()=>{reset();begin();};
 $('again').onclick=()=>{$('win').hidden=true;reset();};
 $('stay').onclick=()=>{$('win').hidden=true;};
 
-function start(data){load();if(data&&data.S&&ISL[data.S.home]){S=Object.assign(fresh(),data.S);started=!!data.started;}
-  if(hadSave&&(S.coins||S.fr.length||S.dead.length)){$('go').textContent='Продолжить плавание';$('fresh').hidden=false;}
+const STAT=[];let goCont=false;
+function applyLang(){STAT.forEach(q=>{const k=q[1].trim();q[0].nodeValue=LANG==='ru'?q[1]:(EN[k]!=null?EN[k]:q[1]);});
+  $('lang').textContent=LANG==='ru'?'EN':'RU';$('lang2').firstChild?$('lang2').firstChild.nodeValue=LANG==='ru'?'English':'Русский':$('lang2').appendChild(document.createTextNode(LANG==='ru'?'English':'Русский'));if(goCont)$('go').textContent=tr('Продолжить плавание');
+  document.documentElement.lang=LANG;bigBase=null;$('atkL').textContent='';$('hint').classList.add('off');hud();renderPows();}
+function setLang(){LANG=LANG==='ru'?'en':'ru';try{localStorage.setItem('pencil-lang',LANG);}catch(e){}applyLang();}
+$('lang').onclick=setLang;$('lang2').onclick=setLang;
+function start(data){(function w(n){for(const c of n.childNodes){if(c.nodeType===3){if(/[А-Яа-яЁё]/.test(c.nodeValue))STAT.push([c,c.nodeValue]);}else if(c.nodeType===1)w(c);}})($('app'));load();if(data&&data.S&&ISL[data.S.home]){S=Object.assign(fresh(),data.S);started=!!data.started;}
+  if(hadSave&&(S.coins||S.fr.length||S.dead.length)){goCont=true;$('fresh').hidden=false;}
   if(started)$('start').hidden=true;
-  drawHero2($('r1').getContext('2d'),44,80,1.8,3);drawMonster2($('r2').getContext('2d'),BOSS[2],44,48,1.15,4);drawFruit($('r3').getContext('2d'),FBY.fire,44,48,2);{const c=$('r5').getContext('2d'),r=R(21);c.fillStyle='#8d939c';c.beginPath();c.arc(44,70,36,Math.PI,0);c.fill();c.fillStyle='#15131f';c.beginPath();c.arc(44,70,17,Math.PI,0);c.fill();c.strokeStyle=INK;c.lineWidth=2;c.beginPath();c.arc(44,70,36,Math.PI,0);c.closePath();c.stroke();}
+  drawHero2($('r1').getContext('2d'),44,86,1.42,3);drawMonster2($('r2').getContext('2d'),BOSS[2],44,48,1.15,4);drawFruit($('r3').getContext('2d'),FBY.fire,44,48,2);{const c=$('r5').getContext('2d'),r=R(21);c.fillStyle='#8d939c';c.beginPath();c.arc(44,70,36,Math.PI,0);c.fill();c.fillStyle='#15131f';c.beginPath();c.arc(44,70,17,Math.PI,0);c.fill();c.strokeStyle=INK;c.lineWidth=2;c.beginPath();c.arc(44,70,36,Math.PI,0);c.closePath();c.stroke();}
   {const c=$('r4').getContext('2d'),r=R(12);c.strokeStyle='#d63b2f';c.lineWidth=9;c.lineCap='round';pl(c,20,20,68,68,r,3);pl(c,68,20,20,68,r,3);}
-  placeAt(S.home);syncMons();syncShips();syncDig();renderPows();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
+  placeAt(S.home);syncMons();syncShips();syncDig();renderPows();applyLang();resize();cam.position.set(P.x,11,P.z+12.5);hud();say('',1);$('hint').classList.add('off');
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{});
   requestAnimationFrame(frame);}
 window.__game={ISL,MONS,P,SHIPS,BR,PR,SHARKS,BARRELS,shipBlocked,get S(){return S;},inside};
