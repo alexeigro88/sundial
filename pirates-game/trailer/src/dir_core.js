@@ -20,6 +20,8 @@ const TR={'папа и сын нарисовали игру…':'a dad and his s
  'КРАКЕН ЧЕРНИЛЬНОЕ ПУЗО':'KRAKEN INKBELLY','награда  30 000 000':'bounty  30,000,000','награда':'bounty','награда за тебя':'your bounty','ОСТРОВА':'ISLANDS','МОНСТРОВ':'MONSTERS','ФРУКТОВ':'FRUITS','ПОПУГАЙ':'PARROT',
  'ПИРАТЫ КАРАНДАШНОГО МОРЯ':'PIRATES OF THE PENCIL SEA','Нарисуй.':'Draw.','Оживи.':'Animate.','Играй.':'Play.','Гроза Карандашного моря':'Terror of the Pencil Sea',
  'Капитан Железный Зуб':'Captain Iron Tooth','Барон Песочник':'Baron Sandman','Кракен Чернильное Пузо':'Kraken Inkbelly','Адмирал Красный Клык':'Admiral Red Fang'};
+Object.assign(TR,{'идея и креатив':'idea & creative','ИЛЬЯ':'ILYA','продакшн':'production','АЛЕКСЕЙ':'ALEXEY'});
+const SUBS=window.__subs||null,SUBY=SUBS?70:0;
 const t_=s=>LANG==='en'&&TR[s]!=null?TR[s]:s;
 const fmt=n=>LANG==='en'?Math.round(n).toLocaleString('en-US'):G.money(n);
 const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
@@ -123,6 +125,12 @@ function parrotTo(){PR.x=P.x-.8;PR.y=P.y+2.5;PR.z=P.z+.4;PR.tg=null;PR.cd=99;}
 function warm(n,dt){MUTE_EV=true;const s=window.__skipGL;window.__skipGL=true;for(let i=0;i<n;i++){if(dt)G.update(dt);G.render();}window.__skipGL=s;MUTE_EV=false;}
 const monsOn=i=>MONS.filter(m=>m.isl===i&&!G.S.dead.includes(m.id));
 
+/* subtitles: a paper label at the bottom, same hand as the caption in the opening */
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function drawSubs(ctx,f){if(!SUBS)return;const t=f/FPS;for(const s of SUBS){if(t>=s[0]-.001&&t<s[1]){const k=E.out3(clamp((t-s[0])*FPS/3+.34)),txt=s[2];ctx.save();ctx.font=NE(54);const tw=ctx.measureText(txt).width,w=tw+68,h=80,x=W/2-w/2,y=H-24-h;
+      ctx.translate(W/2,y+h/2);ctx.scale(.9+.1*k,.9+.1*k);ctx.translate(-W/2,-(y+h/2));ctx.globalAlpha=k;
+      ctx.fillStyle='rgba(40,40,60,.28)';rr(ctx,x+5,y+7,w,h,16);ctx.fill();ctx.fillStyle=PAPER;rr(ctx,x,y,w,h,16);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3.5;ctx.stroke();
+      ctx.fillStyle=INK;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,W/2,y+h/2+3);ctx.restore();break;}}}
 /* ---------- shots + runner ---------- */
 const SHOTS=[];let lastF=-99,lastShot=null,hitStop=0;
 function shotAt(f){for(const s of SHOTS)if(f>=s.a&&f<=s.b)return s;return null;}
@@ -142,6 +150,7 @@ function runFrame(sh,f,draw){CUR=f;const lf=f-sh.a;
   glc.style.filter='';glc.style.transform='';glc.style.visibility=sh.gl===false||(sh.glHide&&sh.glHide(lf))?'hidden':'visible';
   X.setTransform(1,0,0,1,0,0);X.globalAlpha=1;X.globalCompositeOperation='source-over';X.filter='none';X.clearRect(0,0,W,H);
   ov.style.opacity=1;if(sh.ovl)sh.ovl(X,lf,f);
+  X.setTransform(1,0,0,1,0,0);X.globalAlpha=1;X.globalCompositeOperation='source-over';X.filter='none';drawSubs(X,f);
   X.setTransform(1,0,0,1,0,0);X.globalAlpha=1;X.globalCompositeOperation='source-over';
   grain(f,sh.dark&&sh.dark(lf));}
 window.__renderFrame=(f,draw)=>{const sh=shotAt(f);if(!sh)return false;

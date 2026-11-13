@@ -125,3 +125,18 @@ function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1
   ctx.restore();}
 SHOTS.push({name:'sheet',a:810,b:ET.last,sim:false,glHide:lf=>lf>3,glHold:()=>true,
   ovl(ctx,lf,F){endOvl(ctx,lf,F);ov.style.opacity=lf<4?[.3,.55,.8,1][lf]:1;}});
+
+/* ---------- credits card, dropped onto the sheet (only in the voiced cut) ---------- */
+if(window.__endv||window.__lang==='ruv')SHOTS.push({name:'credits',a:ET.last+1,b:ET.last+105,sim:false,gl:false,
+  ovl(ctx,lf,F){endOvl(ctx,ET.last-810,F);const boil=Math.floor(F/3);
+    ctx.fillStyle=`rgba(50,34,20,${(.36*E.out3(clamp(lf/6))).toFixed(3)})`;ctx.fillRect(0,0,W,H);
+    const k=E.out5(clamp(lf/5)),sc=lerp(1.7,1,k);ctx.save();ctx.translate(960,520);ctx.rotate(.018+(1-k)*.22);ctx.scale(sc,sc);ctx.globalAlpha=clamp(lf/2);
+    ctx.fillStyle='rgba(40,26,12,.38)';ctx.fillRect(-640+18,-360+24,1280,720);ctx.fillStyle=PAPER;ctx.fillRect(-640,-360,1280,720);ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.strokeRect(-640,-360,1280,720);
+    ctx.fillStyle='rgba(246,207,58,.88)';ctx.fillRect(-90,-390,180,60);ctx.globalAlpha=1;
+    [['идея и креатив','ИЛЬЯ',-320,8],['продакшн','АЛЕКСЕЙ',320,16]].forEach(q=>{const t=lf-q[3];if(t<0)return;ctx.font=NE(56);const tw=ctx.measureText(t_(q[0])).width;
+      hand(ctx,q[0],q[2]-tw/2,-205,56,clamp(t/6),'#7b7b86');kword(ctx,q[1],q[2],-30,210,t-3,{color:BLUE,shadow:false,sw:.02,nofit:true,st:.8});});
+    pline(ctx,[[-560,48],[560,48]],rm(lf,22,29),boil,4,INK,3);
+    kword(ctx,'grosul.design',0,250,200,lf-26,{color:INK,shadow:false,sw:.02,nofit:true,st:.7});
+    zig(ctx,-345,278,690,24,SUN,9+Math.floor(F/2),E.out3(rm(lf,38,45)),14,.95);ctx.restore();
+    const ht=lf-44;if(ht>=0){const hs=E.outBack(clamp(ht/5));ctx.save();ctx.translate(1610,150);ctx.rotate(.15+(h2(boil,2)-.5)*.02);ctx.scale(hs*.9,hs*.9);burst(ctx,0,0,320,205,boil);
+      ctx.font=AM(88);ctx.textAlign='center';ctx.fillStyle='#1c49a6';ctx.fillText('OPEN TO',0,-6);ctx.fillText('COLLABORATE',0,80);ctx.restore();}}});

@@ -4,7 +4,7 @@ const {chromium}=require('playwright');const fs=require('fs');
 const b=await chromium.launch();const p=await b.newPage();p.on('console',m=>console.log('PAGE',m.text()));p.on('pageerror',e=>console.log('PAGEERR',e.message));
 const b64=await p.evaluate(async(IN)=>{const EV=IN.ev,VO=IN.vo;
 const USER=IN.user,ED=USER?{t:838,u:860,w:[882,900,914],p:868,k:[924,927]}:{t:846,u:870,w:[870,878,885],p:883,k:[892,895]};
-const sr=44100,DUR=USER?31.5:31.0,ac=new OfflineAudioContext(2,sr*DUR,sr),B=.5,U=B/3,ft=f=>f/30,hz=m=>440*Math.pow(2,(m-69)/12);
+const sr=44100,DUR=USER?35.0:31.0,ac=new OfflineAudioContext(2,sr*DUR,sr),B=.5,U=B/3,ft=f=>f/30,hz=m=>440*Math.pow(2,(m-69)/12);
 /* ---- buses ---- */
 const master=ac.createGain();master.gain.value=.5;const comp=ac.createDynamicsCompressor();comp.threshold.value=-15;comp.knee.value=8;comp.ratio.value=5;comp.attack.value=.004;comp.release.value=.16;
 const sh=ac.createWaveShaper();{const c=new Float32Array(2048);for(let i=0;i<2048;i++){const x=i/1024-1;c[i]=Math.tanh(x*1.6)/Math.tanh(1.6);}sh.curve=c;}
@@ -102,6 +102,11 @@ tone('sine',hz(26),0,27,3.4,.34,music,{a:.01,exp:1});
 for(let k=0;k<22;k++)tick(ft(ED.t)+k*.9/30,70+(k*5)%12,.05);scratch(ft(ED.t),.75,.1);
 whoosh(ft(ED.u),.22,.25);[[ED.w[0],74],[ED.w[1],78],[ED.w[2],81]].forEach(q=>{pluck(ft(q[0]),q[1],.9,.24,.8);pop(ft(q[0]),q[1]+12,.12);});
 thud(ft(ED.p),.5);ED.k.forEach((f,i)=>tone('triangle',900-i*120,500,ft(f),.05,.2-i*.07,sfx,{exp:1}));
+/* credits card (voiced cut only): a soft major-key coda */
+if(USER){thud(ft(947),.8);noise(ft(947),.1,.4,sfx,{f0:1100,q:.6,exp:1,send:.3});pad(31.5,[50,57,62,66],3.3,.11);tone('sine',hz(26),0,31.55,3.2,.22,music,{a:.4,hold:.6});
+  {let t=31.85;[[74,2],[78,1],[81,2],[86,1],[81,2],[78,1],[74,3]].forEach(n=>{pluck(t,n[0],1.0,.17,.8);t+=n[1]*U*1.25;});}
+  [953,961].forEach(f=>{scratch(ft(f),.2,.12);pop(ft(f+3),78,.14);});for(let k=0;k<12;k++)tick(ft(971)+k*.7/30,72+(k*5)%12,.06);whoosh(ft(983),.2,.2);
+  stab(ft(989),[74,78,81,86],.24,.5);pop(ft(989),90,.22);tom(ft(989),150,.5);crash(ft(989),.22);}
 /* sidechain pump */
 KICKS.forEach(t=>{if(t<26.9&&t>=4){music.gain.setValueAtTime(.42,t);music.gain.linearRampToValueAtTime(1,t+.17);}});
 /* ---- picture-locked sound effects ---- */

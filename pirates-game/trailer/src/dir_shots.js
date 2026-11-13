@@ -3,7 +3,7 @@
 const hp2=()=>proj(P.x,P.y+1.1,P.z);
 function wipeOut(ctx,lf,len,col,seed){const k=lf-(len-3);if(k>=0)wipe(ctx,(k+1)/3,col,seed);}
 function wipeIn(ctx,lf,col,seed){if(lf<2)wipe(ctx,1+(lf+1)/3,col,seed);}
-function fruitTag(ctx,id,name,lt){if(lt<0)return;name=t_(name);const s=E.outBack(clamp(lt/4));ctx.save();ctx.translate(96,H-268);ctx.rotate(-.035);ctx.scale(s,s);
+function fruitTag(ctx,id,name,lt){if(lt<0)return;name=t_(name);const s=E.outBack(clamp(lt/4));ctx.save();ctx.translate(96,H-268-SUBY);ctx.rotate(-.035);ctx.scale(s,s);
   ctx.fillStyle='rgba(40,40,60,.22)';ctx.fillRect(10,14,name.length*52+250,190);ctx.fillStyle=PAPER;ctx.fillRect(0,0,name.length*52+250,190);ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.strokeRect(0,0,name.length*52+250,190);
   G.drawFruit(ctx,G.FBY[id],104,96,4.1);ctx.font=AM(118);ctx.fillStyle=INK;ctx.textBaseline='alphabetic';ctx.fillText(name,206,136);ctx.restore();}
 function bam(ctx,t,cx,cy,txt,F){if(t<0||t>15)return;txt=t_(txt);const s=E.outBack(clamp(t/4))*(t>12?1-(t-12)/3:1);if(s<=0)return;ctx.save();ctx.translate(cx,cy);ctx.rotate(-.16+(h2(Math.floor(F/2),4)-.5)*.04);ctx.scale(s,s);
@@ -36,7 +36,7 @@ SHOTS.push({name:'dive',a:120,b:179,
     kword(ctx,'ЭТО ТЫ!',1330,520,400,t-3,{block:RED,color:'#fff',stroke:INK,sw:.07,rot:-.05,seed:3});
     hand(ctx,'юный пират Карандашного моря',1010,668,64,rm(t,6,12),INK);
     for(let i=0;i<6;i++){const k=t-9-i*.8;if(k<0)continue;const hs=E.outBack(clamp(k/3));ctx.save();ctx.translate(1050+i*92,800);ctx.rotate((h2(i,Math.floor(F/3))-.5)*.2);ctx.scale(hs,hs);ctx.font='96px serif';ctx.textAlign='center';ctx.fillStyle=RED;ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.strokeText('♥',0,30);ctx.fillText('♥',0,30);ctx.restore();}
-    arrow(ctx,[[1040,930],[960,985],[850,975],[770,905]],rm(t,5,10),Math.floor(F/3),9,INK);
+    arrow(ctx,[[1040,895],[960,950],[850,940],[770,872]],rm(t,5,10),Math.floor(F/3),9,INK);
     wipeOut(ctx,lf,60,BLUE,7);}});
 
 /* ---------- JUMP: speed-ramped leap between islands (180-227) ---------- */
@@ -58,7 +58,7 @@ SHOTS.push({name:'faces',a:228,b:239,
   cam(c,lf){const m=this.ms[Math.floor(lf/4)],y=ISL[m.isl].y,k=(lf%4)/4;setCam(c,[m.x+1.5*m.s,y+m.s*1.9,m.z+(5.0-k*.7)*m.s],[m.x,y+m.s*1.15,m.z],null,36);},
   post(lf){this.ms.forEach(m=>{m.g.rotation.y=.3;m.bar.visible=false;});},
   ovl(ctx,lf,F){const i=Math.floor(lf/4),k=lf%4;if(k===0){ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,0,W,H);}
-    kword(ctx,this.nm[i],120,H-110,250,k*2.2+1,{align:'left',block:this.cl[i],color:INK,rot:-.03,seed:i*9,st:.4});}});
+    kword(ctx,this.nm[i],120,H-110-SUBY,250,k*2.2+1,{align:'left',block:this.cl[i],color:INK,rot:-.03,seed:i*9,st:.4});}});
 
 /* ---------- FIGHT: slashes, impact frames, ground slam (240-299) ---------- */
 SHOTS.push({name:'fight',a:240,b:299,hitStop:2,
@@ -79,7 +79,7 @@ SHOTS.push({name:'shop',a:300,b:314,gl:false,sim:false,
     G.FR.forEach((f,i)=>{const t=lf-1-i*.5;if(t<0)return;const s=E.outBack(clamp(t/4)),x=760+(i%5)*228,y=250+Math.floor(i/5)*290;ctx.save();ctx.translate(x,y);ctx.rotate((h2(i,Math.floor(F/3))-.5)*.14);
       ctx.fillStyle='rgba(40,40,60,.14)';ctx.beginPath();ctx.ellipse(8,98,70*s,16*s,0,0,TAU);ctx.fill();G.drawFruit(ctx,f,0,0,5.4*s);ctx.restore();});
     ctx.save();ctx.translate(330,300);ctx.rotate(-.13);const sp=E.outBack(clamp(lf/5));ctx.scale(sp,sp);burst(ctx,0,0,300,215,Math.floor(F/3));ctx.font=AM(150);ctx.textAlign='center';ctx.fillStyle='#1c49a6';ctx.fillText('SHOP',0,-18);ctx.fillText('DEVIL',0,104);ctx.restore();
-    kword(ctx,'ЕШЬ',120,760,300,lf-2,{align:'left',block:SUN,color:INK,rot:-.03,seed:2});kword(ctx,'ФРУКТЫ',120,1000,300,lf-4,{align:'left',block:SUN,color:INK,rot:-.02,seed:4});
+    kword(ctx,'ЕШЬ',120,SUBY?742:760,SUBY?265:300,lf-2,{align:'left',block:SUN,color:INK,rot:-.03,seed:2});kword(ctx,'ФРУКТЫ',120,SUBY?948:1000,SUBY?265:300,lf-4,{align:'left',block:SUN,color:INK,rot:-.02,seed:4});
     ctx.restore();wipeIn(ctx,lf,SUN,13);}});
 
 /* ---------- three fruit powers, one beat each (315-359) ---------- */
@@ -146,7 +146,7 @@ SHOTS.push({name:'cave',a:510,b:569,dark:()=>true,
   tick(lf){G.joy.x=0;G.joy.y=-.36;},
   cam(c,lf){const u=E.io3(lf/60);setCam(c,v3l([402.9,1.15,3.0],[403.7,6.4,3.3],u),v3l([400.4,1.6,-9],[401.5,.2,-17],u),null,50);},
   ovl(ctx,lf,F){const d=1-rm(lf,0,16);if(d>0){ctx.fillStyle=`rgba(21,19,31,${d.toFixed(2)})`;ctx.fillRect(0,0,W,H);}
-    kword(ctx,'ИССЛЕДУЙ',130,H-120,330,lf-18,{align:'left',block:PINK,balpha:.95,color:'#fff',stroke:'#15131f',sw:.08,rot:-.03,seed:31,shadowCol:'rgba(0,0,0,.4)',out:lf>=53?lf-53:-1});}});
+    kword(ctx,'ИССЛЕДУЙ',130,H-120-SUBY,330,lf-18,{align:'left',block:PINK,balpha:.95,color:'#fff',stroke:'#15131f',sw:.08,rot:-.03,seed:31,shadowCol:'rgba(0,0,0,.4)',out:lf>=53?lf-53:-1});}});
 SHOTS.push({name:'hall',a:570,b:599,dark:lf=>lf<22,
   setup(){reset({parrot:true,killIsl:[27]});place(397,-38.8,Math.PI);parrotTo();warm(45,0);},
   tick(lf){if(lf<5){G.joy.x=-.25;G.joy.y=-1;}else if(lf<15){G.joy.x=1;G.joy.y=-.12;}else{G.joy.x=0;G.joy.y=0;}},
@@ -175,7 +175,7 @@ SHOTS.push({name:'kraken',a:660,b:689,hitStop:5,
   tick(lf){G.joy.x=0;G.joy.y=lf<8?-1:0;if(lf===7)G.jump();if(lf===15)G.attack();},
   post(lf){if(this.hit<0&&G.S.dead.includes(this.m.id)){this.hit=lf;logEv('slam');}},
   cam(c,lf){setCam(c,v3l([-7.8,1.5,-110.2],[-5.6,2.5,-111.4],lf/30),[0,2.7,-118.6],null,52);},
-  ovl(ctx,lf,F){const t=lf-2;if(t>=0&&this.hit<0){const s=E.outBack(clamp(t/4));ctx.save();ctx.translate(110,H-250);ctx.rotate(-.025);ctx.scale(s,s);ctx.fillStyle='rgba(20,20,30,.3)';ctx.fillRect(10,14,1010,176);ctx.fillStyle=INK;ctx.fillRect(0,0,1010,176);
+  ovl(ctx,lf,F){const t=lf-2;if(t>=0&&this.hit<0){const s=E.outBack(clamp(t/4));ctx.save();ctx.translate(110,H-250-SUBY);ctx.rotate(-.025);ctx.scale(s,s);ctx.fillStyle='rgba(20,20,30,.3)';ctx.fillRect(10,14,1010,176);ctx.fillStyle=INK;ctx.fillRect(0,0,1010,176);
       ctx.font=AM(104);ctx.fillStyle=PAPER;ctx.fillText(t_('КРАКЕН ЧЕРНИЛЬНОЕ ПУЗО'),36,96);ctx.font=AM(64);ctx.fillStyle=SUN;ctx.fillText(t_('награда  30 000 000'),38,158);ctx.restore();}
     if(this.hit>=0){const p=hp2(),k=lf-this.hit,am=impact(ctx,k,p[0],p[1]-80,F,true);shake(am,F);bam(ctx,k-1,W*.62,H*.36,'БАЦ!',F);const w=rm(lf,this.hit+7,29);if(w>0){ctx.fillStyle=`rgba(251,250,244,${w.toFixed(2)})`;ctx.fillRect(0,0,W,H);}}}});
 SHOTS.push({name:'caught',a:690,b:704,gl:false,sim:false,
