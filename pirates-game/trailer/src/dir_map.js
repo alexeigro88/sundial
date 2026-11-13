@@ -84,6 +84,7 @@ function sheetPt(lx,ly){const c=Math.cos(SHEET.rot),s=Math.sin(SHEET.rot);return
 const VF=(()=>{const o=sheetPt(MAPL.x,MAPL.y);return {ox:o[0],oy:o[1],rot:Math.PI/2+SHEET.rot,s:MAPL.s,cx:MAPL.xm,cz:MAPL.zm};})();
 const REG=SEAS.filter(s=>s.x>-47&&s.x<43&&s.z>-143&&s.z<19);
 let POSTER=null;
+const ET=(window.__lang==='ruv'||window.__endv)?{title:28,under:50,w:[72,90,104],poster:58,pencil:112,last:944}:{title:36,under:60,w:[60,68,75],poster:70,pencil:74,last:929};
 function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1-e),rK=-VF.rot*(1-e),pF=w2s(VF,0,-2.5),boil=Math.floor(F/3);
   if(!POSTER){POSTER=mk(460,600);if(typeof CARD!=='undefined'&&CARD){const c=POSTER.getContext('2d');c.fillStyle='#f1e2bd';c.fillRect(0,0,460,600);zig(c,0,0,460,600,'#e6cf98',5,1,22,.5);c.strokeStyle=INK;c.lineWidth=4;c.strokeRect(12,12,436,576);
       c.fillStyle=INK;c.textAlign='center';c.font=AM(96);c.fillText('WANTED',230,104);c.fillStyle='#fbf6e6';c.fillRect(60,124,340,250);c.strokeRect(60,124,340,250);c.save();c.beginPath();c.rect(62,126,336,246);c.clip();c.drawImage(CARD.st,230-CARD.st.width*.19,112,CARD.st.width*.38,CARD.st.height*.38);c.restore();
@@ -105,14 +106,14 @@ function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1
   ctx.restore();
   const fr=rm(lf,30,42);if(fr>0)pline(ctx,[[MAPL.x-550,MAPL.y-296],[MAPL.x+550,MAPL.y-296],[MAPL.x+550,MAPL.y+296],[MAPL.x-550,MAPL.y+296],[MAPL.x-550,MAPL.y-296]],fr,boil,4,INK,3);
   /* title, written across the top of the sheet */
-  const tl=lf-36;if(tl>=0){ctx.save();ctx.font=AM(172);const tw=ctx.measureText(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ')).width+172*.05*(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ').length-1);ctx.restore();
-    zig(ctx,-tw/2+10,-250,tw-20,24,SUN,5+Math.floor(F/2),E.out3(rm(lf,60,67)),14,.95);
+  const tl=lf-ET.title;if(tl>=0){ctx.save();ctx.font=AM(172);const tw=ctx.measureText(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ')).width+172*.05*(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ').length-1);ctx.restore();
+    zig(ctx,-tw/2+10,-250,tw-20,24,SUN,5+Math.floor(F/2),E.out3(rm(lf,ET.under,ET.under+7)),14,.95);
     kword(ctx,'ПИРАТЫ КАРАНДАШНОГО МОРЯ',0,-276,172,tl,{color:BLUE,st:.9,shadow:false,sw:.02,nofit:true});}
   /* three words down the right margin */
-  [['Нарисуй.',BLUE,60],['Оживи.','#57a639',68],['Играй.',RED,75]].forEach((q,i)=>{const t=lf-q[2];if(t<0)return;const y=-52+i*104;
+  [['Нарисуй.',BLUE,ET.w[0]],['Оживи.','#57a639',ET.w[1]],['Играй.',RED,ET.w[2]]].forEach((q,i)=>{const t=lf-q[2];if(t<0)return;const y=-52+i*104;
     pline(ctx,[[352,y-52],[374,y-22],[420,y-92]],E.out3(clamp(t/4)),i*5+boil,11,q[1],3);kword(ctx,q[0],446,y,118,t,{align:'left',color:INK,st:.7,shadow:false,sw:.02,nofit:true});});
   /* our hero's own wanted poster, taped on */
-  const pt=lf-70;if(pt>=0){const ps=lerp(2.2,1,E.out5(clamp(pt/5)));ctx.save();ctx.translate(600,318);ctx.rotate(.075+(1-clamp(pt/5))*.3);ctx.scale(.44*ps,.44*ps);ctx.globalAlpha=clamp(pt/2);
+  const pt=lf-ET.poster;if(pt>=0){const ps=lerp(2.2,1,E.out5(clamp(pt/5)));ctx.save();ctx.translate(600,318);ctx.rotate(.075+(1-clamp(pt/5))*.3);ctx.scale(.44*ps,.44*ps);ctx.globalAlpha=clamp(pt/2);
     ctx.fillStyle='rgba(40,30,20,.28)';ctx.fillRect(-222,-286,460,600);ctx.drawImage(POSTER,-230,-300);ctx.fillStyle='rgba(246,207,58,.8)';ctx.fillRect(-70,-330,140,56);ctx.restore();}
   ctx.restore();
   /* things left on the table */
@@ -120,7 +121,7 @@ function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1
   crayon(ctx,lerp(-300,58,cin),lerp(1500,930,cin),-1.5,GREEN,1.0);
   crayon(ctx,lerp(2300,1868,cin),lerp(-500,150,cin),1.63,RED,1.0);
   crayon(ctx,lerp(2500,1560,cin),lerp(1300,1034,cin),-.12,SEA,1.05);
-  const pd=rm(lf,74,84),pb=E.out5(pd);if(pd>0)pencil(ctx,lerp(-600,150,pb),lerp(1250,1010,pb),-.1+Math.sin(pd*9)*(1-pd)*.12,1.1);
+  const pd=rm(lf,ET.pencil,ET.pencil+10),pb=E.out5(pd);if(pd>0)pencil(ctx,lerp(-600,150,pb),lerp(1250,1010,pb),-.1+Math.sin(pd*9)*(1-pd)*.12,1.1);
   ctx.restore();}
-SHOTS.push({name:'sheet',a:810,b:929,sim:false,glHide:lf=>lf>3,glHold:()=>true,
+SHOTS.push({name:'sheet',a:810,b:ET.last,sim:false,glHide:lf=>lf>3,glHold:()=>true,
   ovl(ctx,lf,F){endOvl(ctx,lf,F);ov.style.opacity=lf<4?[.3,.55,.8,1][lf]:1;}});

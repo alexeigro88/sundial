@@ -1,0 +1,21 @@
+time in video (s) | phrase
+  0.45 | A dad and his son drew a game
+  3.62 | and it came alive
+  5.25 | This is you
+  6.52 | Jump
+  8.32 | Slash
+ 10.08 | Eat magic fruits
+ 12.12 | Sail
+ 14.68 | Fire
+ 17.60 | Explore dark caves
+ 20.12 | Four pirates
+ 21.15 | wanted
+ 23.08 | Caught
+ 24.03 | Islands
+ 24.53 | monsters
+ 25.10 | fruits
+ 25.58 | and a parrot
+ 27.80 | Pirates of the Pencil Sea
+ 29.40 | Draw
+ 30.00 | animate
+ 30.48 | Play

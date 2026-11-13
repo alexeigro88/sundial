@@ -1,9 +1,10 @@
 // Sound design + score, rendered offline in the browser's Web Audio engine. 120 BPM, 12/8 feel, cuts on beats (15 frames).
 const {chromium}=require('playwright');const fs=require('fs');
-(async()=>{const ev={ev:JSON.parse(fs.readFileSync(__dirname+'/events.json','utf8')),vo:JSON.parse(fs.readFileSync(__dirname+'/vo'+(process.argv[2]?'_'+process.argv[2]:'')+'.json','utf8'))};
+(async()=>{const ev={user:(process.argv[2]||'').startsWith('user'),ev:JSON.parse(fs.readFileSync(__dirname+'/events.json','utf8')),vo:JSON.parse(fs.readFileSync(__dirname+'/vo'+(process.argv[2]?'_'+process.argv[2]:'')+'.json','utf8'))};
 const b=await chromium.launch();const p=await b.newPage();p.on('console',m=>console.log('PAGE',m.text()));p.on('pageerror',e=>console.log('PAGEERR',e.message));
 const b64=await p.evaluate(async(IN)=>{const EV=IN.ev,VO=IN.vo;
-const sr=44100,DUR=31.0,ac=new OfflineAudioContext(2,sr*DUR,sr),B=.5,U=B/3,ft=f=>f/30,hz=m=>440*Math.pow(2,(m-69)/12);
+const USER=IN.user,ED=USER?{t:838,u:860,w:[882,900,914],p:868,k:[924,927]}:{t:846,u:870,w:[870,878,885],p:883,k:[892,895]};
+const sr=44100,DUR=USER?31.5:31.0,ac=new OfflineAudioContext(2,sr*DUR,sr),B=.5,U=B/3,ft=f=>f/30,hz=m=>440*Math.pow(2,(m-69)/12);
 /* ---- buses ---- */
 const master=ac.createGain();master.gain.value=.5;const comp=ac.createDynamicsCompressor();comp.threshold.value=-15;comp.knee.value=8;comp.ratio.value=5;comp.attack.value=.004;comp.release.value=.16;
 const sh=ac.createWaveShaper();{const c=new Float32Array(2048);for(let i=0;i<2048;i++){const x=i/1024-1;c[i]=Math.tanh(x*1.6)/Math.tanh(1.6);}sh.curve=c;}
@@ -98,9 +99,9 @@ boom(27,1.1);crash(27,.75);braam(27,38,3.2,.5);taiko(27,.9);choir(27,[62,66,69,7
 [[50,.3],[57,.26],[62,.26],[66,.24],[69,.22],[74,.18]].forEach(q=>{[-9,9].forEach(dt=>tone('sawtooth',hz(q[0]),0,27,3.6,q[1]*.26,music,{det:dt,lp:3200,lp2:500,q:.8,a:.01,exp:1,send:.5}));});
 tone('sine',hz(26),0,27,3.4,.34,music,{a:.01,exp:1});
 {let t=27.25;[[74,2],[78,1],[81,2],[78,1],[74,3]].forEach(n=>{pluck(t,n[0],1.1,.2,.8);t+=n[1]*U*1.15;});}
-for(let k=0;k<22;k++)tick(ft(810+36)+k*.9/30,70+(k*5)%12,.05);scratch(ft(846),.75,.1);
-whoosh(ft(870),.22,.25);[[870,74],[878,78],[885,81]].forEach(q=>{pluck(ft(q[0]),q[1],.9,.24,.8);pop(ft(q[0]),q[1]+12,.12);});
-thud(ft(883),.5);[892,895].forEach((f,i)=>tone('triangle',900-i*120,500,ft(f),.05,.2-i*.07,sfx,{exp:1}));
+for(let k=0;k<22;k++)tick(ft(ED.t)+k*.9/30,70+(k*5)%12,.05);scratch(ft(ED.t),.75,.1);
+whoosh(ft(ED.u),.22,.25);[[ED.w[0],74],[ED.w[1],78],[ED.w[2],81]].forEach(q=>{pluck(ft(q[0]),q[1],.9,.24,.8);pop(ft(q[0]),q[1]+12,.12);});
+thud(ft(ED.p),.5);ED.k.forEach((f,i)=>tone('triangle',900-i*120,500,ft(f),.05,.2-i*.07,sfx,{exp:1}));
 /* sidechain pump */
 KICKS.forEach(t=>{if(t<26.9&&t>=4){music.gain.setValueAtTime(.42,t);music.gain.linearRampToValueAtTime(1,t+.17);}});
 /* ---- picture-locked sound effects ---- */
@@ -152,7 +153,7 @@ EV.forEach(e=>{const n=e[0],t=ft(e[1]);
 /* silence before each drop, clean tail at the end */
 master.gain.setValueAtTime(.5,3.925);master.gain.linearRampToValueAtTime(0,3.94);master.gain.setValueAtTime(0,3.995);master.gain.linearRampToValueAtTime(.5,4.0);
 master.gain.setValueAtTime(.5,19.925);master.gain.linearRampToValueAtTime(0,19.94);master.gain.setValueAtTime(0,19.995);master.gain.linearRampToValueAtTime(.5,20.0);
-master.gain.setValueAtTime(.5,30.6);master.gain.linearRampToValueAtTime(0,30.98);
+master.gain.setValueAtTime(.5,DUR-.4);master.gain.linearRampToValueAtTime(0,DUR-.02);
 const buf=await ac.startRendering(),L=buf.getChannelData(0),Rr=buf.getChannelData(1),n=L.length,out=new DataView(new ArrayBuffer(44+n*4));let pk=0;for(let i=0;i<n;i++)pk=Math.max(pk,Math.abs(L[i]),Math.abs(Rr[i]));console.log('peak',pk.toFixed(3));
 const w=(o,s)=>{for(let i=0;i<s.length;i++)out.setUint8(o+i,s.charCodeAt(i));};w(0,'RIFF');out.setUint32(4,36+n*4,true);w(8,'WAVEfmt ');out.setUint32(16,16,true);out.setUint16(20,1,true);out.setUint16(22,2,true);out.setUint32(24,sr,true);out.setUint32(28,sr*4,true);out.setUint16(32,4,true);out.setUint16(34,16,true);w(36,'data');out.setUint32(40,n*4,true);
 const k=.98/Math.max(pk,.98);for(let i=0;i<n;i++){out.setInt16(44+i*4,Math.max(-1,Math.min(1,L[i]*k))*32767,true);out.setInt16(46+i*4,Math.max(-1,Math.min(1,Rr[i]*k))*32767,true);}
