@@ -1,6 +1,6 @@
 // Sound design + score, rendered offline in the browser's Web Audio engine. 120 BPM, 12/8 feel, cuts on beats (15 frames).
 const {chromium}=require('playwright');const fs=require('fs');
-(async()=>{const ev={ev:JSON.parse(fs.readFileSync(__dirname+'/events.json','utf8')),vo:JSON.parse(fs.readFileSync(__dirname+'/vo.json','utf8'))};
+(async()=>{const ev={ev:JSON.parse(fs.readFileSync(__dirname+'/events.json','utf8')),vo:JSON.parse(fs.readFileSync(__dirname+'/vo'+(process.argv[2]?'_'+process.argv[2]:'')+'.json','utf8'))};
 const b=await chromium.launch();const p=await b.newPage();p.on('console',m=>console.log('PAGE',m.text()));p.on('pageerror',e=>console.log('PAGEERR',e.message));
 const b64=await p.evaluate(async(IN)=>{const EV=IN.ev,VO=IN.vo;
 const sr=44100,DUR=31.0,ac=new OfflineAudioContext(2,sr*DUR,sr),B=.5,U=B/3,ft=f=>f/30,hz=m=>440*Math.pow(2,(m-69)/12);
@@ -157,4 +157,4 @@ const buf=await ac.startRendering(),L=buf.getChannelData(0),Rr=buf.getChannelDat
 const w=(o,s)=>{for(let i=0;i<s.length;i++)out.setUint8(o+i,s.charCodeAt(i));};w(0,'RIFF');out.setUint32(4,36+n*4,true);w(8,'WAVEfmt ');out.setUint32(16,16,true);out.setUint16(20,1,true);out.setUint16(22,2,true);out.setUint32(24,sr,true);out.setUint32(28,sr*4,true);out.setUint16(32,4,true);out.setUint16(34,16,true);w(36,'data');out.setUint32(40,n*4,true);
 const k=.98/Math.max(pk,.98);for(let i=0;i<n;i++){out.setInt16(44+i*4,Math.max(-1,Math.min(1,L[i]*k))*32767,true);out.setInt16(46+i*4,Math.max(-1,Math.min(1,Rr[i]*k))*32767,true);}
 let s='';const u8=new Uint8Array(out.buffer);for(let i=0;i<u8.length;i+=32768)s+=String.fromCharCode.apply(null,u8.subarray(i,i+32768));return btoa(s);},ev);
-fs.writeFileSync(__dirname+'/audio.wav',Buffer.from(b64,'base64'));console.log('audio written',(b64.length*.75/1e6).toFixed(1)+'MB');await b.close();})();
+fs.writeFileSync(__dirname+'/audio'+(process.argv[2]?'_'+process.argv[2]:'')+'.wav',Buffer.from(b64,'base64'));console.log('audio written',(b64.length*.75/1e6).toFixed(1)+'MB');await b.close();})();

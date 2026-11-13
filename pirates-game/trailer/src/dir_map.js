@@ -87,8 +87,8 @@ let POSTER=null;
 function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1-e),rK=-VF.rot*(1-e),pF=w2s(VF,0,-2.5),boil=Math.floor(F/3);
   if(!POSTER){POSTER=mk(460,600);if(typeof CARD!=='undefined'&&CARD){const c=POSTER.getContext('2d');c.fillStyle='#f1e2bd';c.fillRect(0,0,460,600);zig(c,0,0,460,600,'#e6cf98',5,1,22,.5);c.strokeStyle=INK;c.lineWidth=4;c.strokeRect(12,12,436,576);
       c.fillStyle=INK;c.textAlign='center';c.font=AM(96);c.fillText('WANTED',230,104);c.fillStyle='#fbf6e6';c.fillRect(60,124,340,250);c.strokeRect(60,124,340,250);c.save();c.beginPath();c.rect(62,126,336,246);c.clip();c.drawImage(CARD.st,230-CARD.st.width*.19,112,CARD.st.width*.38,CARD.st.height*.38);c.restore();
-      c.fillStyle=INK;c.font=AM(50);c.fillText('DEAD OR ALIVE',230,424);c.font=NE(33);c.fillText('Гроза Карандашного моря',230,468);c.font=AM(74);c.fillStyle='#a8540a';c.fillText('100 000 000',230,548);}
-    else G.drawPoster(POSTER,{name:'Гроза Карандашного моря',bounty:100000000,seed:8});}
+      c.fillStyle=INK;c.font=AM(50);c.fillText('DEAD OR ALIVE',230,424);c.font=NE(33);c.fillText(t_('Гроза Карандашного моря'),230,468);c.font=AM(74);c.fillStyle='#a8540a';c.fillText(fmt(100000000),230,548);}
+    else G.drawPoster(POSTER,{name:t_('Гроза Карандашного моря'),bounty:100000000,seed:8});}
   ctx.save();ctx.translate(lerp(960,pF[0],e),lerp(540,pF[1],e));ctx.rotate(rK);ctx.scale(k,k);ctx.translate(-pF[0],-pF[1]);
   /* kitchen table */
   ctx.fillStyle='#c99c66';ctx.fillRect(-7000,-7000,16000,16000);
@@ -105,12 +105,12 @@ function endOvl(ctx,lf,F){const e=E.io5(rm(lf,2,38)),k=Math.pow((1080/26)/VF.s,1
   ctx.restore();
   const fr=rm(lf,30,42);if(fr>0)pline(ctx,[[MAPL.x-550,MAPL.y-296],[MAPL.x+550,MAPL.y-296],[MAPL.x+550,MAPL.y+296],[MAPL.x-550,MAPL.y+296],[MAPL.x-550,MAPL.y-296]],fr,boil,4,INK,3);
   /* title, written across the top of the sheet */
-  const tl=lf-36;if(tl>=0){ctx.save();ctx.font=AM(172);const tw=ctx.measureText('ПИРАТЫ КАРАНДАШНОГО МОРЯ').width+172*.05*23;ctx.restore();
+  const tl=lf-36;if(tl>=0){ctx.save();ctx.font=AM(172);const tw=ctx.measureText(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ')).width+172*.05*(t_('ПИРАТЫ КАРАНДАШНОГО МОРЯ').length-1);ctx.restore();
     zig(ctx,-tw/2+10,-250,tw-20,24,SUN,5+Math.floor(F/2),E.out3(rm(lf,60,67)),14,.95);
-    kword(ctx,'ПИРАТЫ КАРАНДАШНОГО МОРЯ',0,-276,172,tl,{color:BLUE,st:.9,shadow:false,sw:.02});}
+    kword(ctx,'ПИРАТЫ КАРАНДАШНОГО МОРЯ',0,-276,172,tl,{color:BLUE,st:.9,shadow:false,sw:.02,nofit:true});}
   /* three words down the right margin */
   [['Нарисуй.',BLUE,60],['Оживи.','#57a639',68],['Играй.',RED,75]].forEach((q,i)=>{const t=lf-q[2];if(t<0)return;const y=-52+i*104;
-    pline(ctx,[[352,y-52],[374,y-22],[420,y-92]],E.out3(clamp(t/4)),i*5+boil,11,q[1],3);kword(ctx,q[0],446,y,118,t,{align:'left',color:INK,st:.7,shadow:false,sw:.02});});
+    pline(ctx,[[352,y-52],[374,y-22],[420,y-92]],E.out3(clamp(t/4)),i*5+boil,11,q[1],3);kword(ctx,q[0],446,y,118,t,{align:'left',color:INK,st:.7,shadow:false,sw:.02,nofit:true});});
   /* our hero's own wanted poster, taped on */
   const pt=lf-70;if(pt>=0){const ps=lerp(2.2,1,E.out5(clamp(pt/5)));ctx.save();ctx.translate(600,318);ctx.rotate(.075+(1-clamp(pt/5))*.3);ctx.scale(.44*ps,.44*ps);ctx.globalAlpha=clamp(pt/2);
     ctx.fillStyle='rgba(40,30,20,.28)';ctx.fillRect(-222,-286,460,600);ctx.drawImage(POSTER,-230,-300);ctx.fillStyle='rgba(246,207,58,.8)';ctx.fillRect(-70,-330,140,56);ctx.restore();}

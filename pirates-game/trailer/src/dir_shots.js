@@ -3,10 +3,10 @@
 const hp2=()=>proj(P.x,P.y+1.1,P.z);
 function wipeOut(ctx,lf,len,col,seed){const k=lf-(len-3);if(k>=0)wipe(ctx,(k+1)/3,col,seed);}
 function wipeIn(ctx,lf,col,seed){if(lf<2)wipe(ctx,1+(lf+1)/3,col,seed);}
-function fruitTag(ctx,id,name,lt){if(lt<0)return;const s=E.outBack(clamp(lt/4));ctx.save();ctx.translate(96,H-268);ctx.rotate(-.035);ctx.scale(s,s);
+function fruitTag(ctx,id,name,lt){if(lt<0)return;name=t_(name);const s=E.outBack(clamp(lt/4));ctx.save();ctx.translate(96,H-268);ctx.rotate(-.035);ctx.scale(s,s);
   ctx.fillStyle='rgba(40,40,60,.22)';ctx.fillRect(10,14,name.length*52+250,190);ctx.fillStyle=PAPER;ctx.fillRect(0,0,name.length*52+250,190);ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.strokeRect(0,0,name.length*52+250,190);
   G.drawFruit(ctx,G.FBY[id],104,96,4.1);ctx.font=AM(118);ctx.fillStyle=INK;ctx.textBaseline='alphabetic';ctx.fillText(name,206,136);ctx.restore();}
-function bam(ctx,t,cx,cy,txt,F){if(t<0||t>15)return;const s=E.outBack(clamp(t/4))*(t>12?1-(t-12)/3:1);if(s<=0)return;ctx.save();ctx.translate(cx,cy);ctx.rotate(-.16+(h2(Math.floor(F/2),4)-.5)*.04);ctx.scale(s,s);
+function bam(ctx,t,cx,cy,txt,F){if(t<0||t>15)return;txt=t_(txt);const s=E.outBack(clamp(t/4))*(t>12?1-(t-12)/3:1);if(s<=0)return;ctx.save();ctx.translate(cx,cy);ctx.rotate(-.16+(h2(Math.floor(F/2),4)-.5)*.04);ctx.scale(s,s);
   burst(ctx,0,0,330,235,Math.floor(F/2));ctx.font=AM(230);ctx.textAlign='center';ctx.lineJoin='round';ctx.strokeStyle=PAPER;ctx.lineWidth=18;ctx.strokeText(txt,0,76);ctx.fillStyle=INK;ctx.fillText(txt,0,76);ctx.restore();}
 
 /* ---------- dive into the drawing + "this is you" freeze frame (120-179) ---------- */
@@ -130,7 +130,7 @@ SHOTS.push({name:'cannon',a:420,b:479,hitStop:3,
     if(this.hit>=0&&lf<40){const p=proj(this.k.x,0,this.k.z),am=impact(ctx,lf-this.hit,p[0],p[1],F,true);shake(am,F);bam(ctx,lf-this.hit-1,p[0]+300,p[1]-260,'БУМ!',F);}
     if(lf<40)drawFloats(ctx);
     else{const t=lf-40;if(t===0){ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,0,W,H);}const v=Math.round(150*E.out3(clamp(t/9)))*1000;
-      kword(ctx,'+'+G.money(v),W-150,330,330,t*1.4,{align:'right',block:SUN,color:INK,rot:.03,seed:29,st:.4});hand(ctx,'монет за акулу',W-720,440,70,rm(t,5,12),INK);}}});
+      kword(ctx,'+'+fmt(v),W-150,330,330,t*1.4,{align:'right',block:SUN,color:INK,rot:.03,seed:29,st:.4});hand(ctx,'монет за акулу',W-720,440,70,rm(t,5,12),INK);}}});
 
 /* ---------- into the dark (480-509) ---------- */
 SHOTS.push({name:'door',a:480,b:509,
@@ -156,8 +156,8 @@ SHOTS.push({name:'hall',a:570,b:599,dark:lf=>lf<22,
 
 /* ---------- WANTED (600-659) ---------- */
 let POSTERS=null;const PL=[{x:300,r:-.09},{x:740,r:.05},{x:1180,r:-.04},{x:1620,r:.1}];
-const posters=()=>POSTERS||(POSTERS=G.BOSS.map(b=>{const c=mk(460,600);G.drawPoster(c,{boss:b,name:b.name,bounty:b.bounty,seed:b.seed});return c;}));
-function stamp(ctx,t,F){if(t<0)return;const s=lerp(3.4,1,E.out5(clamp(t/3)));ctx.save();ctx.rotate(-.3);ctx.scale(s,s);ctx.globalAlpha=clamp(t/1.5)*.93;ctx.strokeStyle=RED;ctx.fillStyle=RED;ctx.lineWidth=11;ctx.strokeRect(-205,-64,410,128);ctx.font=AM(120);ctx.textAlign='center';ctx.fillText('ПОЙМАН!',0,42);ctx.restore();}
+const posters=()=>POSTERS||(POSTERS=G.BOSS.map(b=>{const c=mk(460,600);G.drawPoster(c,{boss:b,name:t_(b.name),bounty:b.bounty,seed:b.seed});return c;}));
+function stamp(ctx,t,F){if(t<0)return;const s=lerp(3.4,1,E.out5(clamp(t/3)));ctx.save();ctx.rotate(-.3);ctx.scale(s,s);ctx.globalAlpha=clamp(t/1.5)*.93;ctx.strokeStyle=RED;ctx.fillStyle=RED;ctx.lineWidth=11;ctx.strokeRect(-205,-64,410,128);ctx.font=AM(120);ctx.textAlign='center';ctx.fillText(t_('ПОЙМАН!'),0,42);ctx.restore();}
 function posterAt(ctx,i,x,y,sc,r,t,F,stampT){const P_=posters()[i];if(t<0)return;const s=sc*lerp(2.7,1,E.out5(clamp(t/4)));ctx.save();ctx.translate(x,y);ctx.rotate(r+(1-clamp(t/4))*.28);ctx.scale(s,s);ctx.globalAlpha=clamp(t/1.5);
   ctx.fillStyle='rgba(40,30,20,.3)';ctx.fillRect(-230+14+18*(1-clamp(t/4)),-300+18+24*(1-clamp(t/4)),460,600);ctx.drawImage(P_,-230,-300);ctx.fillStyle='rgba(246,207,58,.82)';ctx.fillRect(-64,-326,128,52);
   if(stampT!=null)stamp(ctx,stampT,F);ctx.restore();
@@ -176,18 +176,18 @@ SHOTS.push({name:'kraken',a:660,b:689,hitStop:5,
   post(lf){if(this.hit<0&&G.S.dead.includes(this.m.id)){this.hit=lf;logEv('slam');}},
   cam(c,lf){setCam(c,v3l([-7.8,1.5,-110.2],[-5.6,2.5,-111.4],lf/30),[0,2.7,-118.6],null,52);},
   ovl(ctx,lf,F){const t=lf-2;if(t>=0&&this.hit<0){const s=E.outBack(clamp(t/4));ctx.save();ctx.translate(110,H-250);ctx.rotate(-.025);ctx.scale(s,s);ctx.fillStyle='rgba(20,20,30,.3)';ctx.fillRect(10,14,1010,176);ctx.fillStyle=INK;ctx.fillRect(0,0,1010,176);
-      ctx.font=AM(104);ctx.fillStyle=PAPER;ctx.fillText('КРАКЕН ЧЕРНИЛЬНОЕ ПУЗО',36,96);ctx.font=AM(64);ctx.fillStyle=SUN;ctx.fillText('награда  30 000 000',38,158);ctx.restore();}
+      ctx.font=AM(104);ctx.fillStyle=PAPER;ctx.fillText(t_('КРАКЕН ЧЕРНИЛЬНОЕ ПУЗО'),36,96);ctx.font=AM(64);ctx.fillStyle=SUN;ctx.fillText(t_('награда  30 000 000'),38,158);ctx.restore();}
     if(this.hit>=0){const p=hp2(),k=lf-this.hit,am=impact(ctx,k,p[0],p[1]-80,F,true);shake(am,F);bam(ctx,k-1,W*.62,H*.36,'БАЦ!',F);const w=rm(lf,this.hit+7,29);if(w>0){ctx.fillStyle=`rgba(251,250,244,${w.toFixed(2)})`;ctx.fillRect(0,0,W,H);}}}});
 SHOTS.push({name:'caught',a:690,b:704,gl:false,sim:false,
   ovl(ctx,lf,F){ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);const sh=lf>=2&&lf<7?16*(1-(lf-2)/5):0;ctx.save();ctx.translate((h2(F,1)-.5)*2*sh,(h2(F,2)-.5)*2*sh);
     zig(ctx,900,170,980,760,'#f6e9c8',61+Math.floor(F/3),1,90,.8);posterAt(ctx,2,560,545,1.55,-.05,lf+4,F,lf-2);
-    const v=Math.round(30*E.out3(rm(lf,3,11)))*1000000;hand(ctx,'награда',1080,400,84,rm(lf,2,7),INK);kword(ctx,G.money(v),1040,640,250,(lf-3)*1.5,{align:'left',color:'#c98a06',st:.3,shadow:false,sw:.03});
+    const v=Math.round(30*E.out3(rm(lf,3,11)))*1000000;hand(ctx,'награда',1080,400,84,rm(lf,2,7),INK);kword(ctx,fmt(v),1040,640,250,(lf-3)*1.5,{align:'left',color:'#c98a06',st:.3,shadow:false,sw:.03});
     zig(ctx,1040,668,760,26,RED,7+Math.floor(F/2),E.out3(rm(lf,8,13)),15,.95);ctx.restore();}});
 SHOTS.push({name:'allcaught',a:705,b:719,gl:false,sim:false,
   ovl(ctx,lf,F){ctx.fillStyle=PAPER;ctx.fillRect(0,0,W,H);let sh=0;for(let i=0;i<4;i++){const t=lf-1-i*3;if(t>=0&&t<4)sh=12*(1-t/4);}ctx.save();ctx.translate((h2(F,1)-.5)*2*sh,(h2(F,2)-.5)*2*sh);
     zig(ctx,-40,90,2000,600,'#f6e9c8',51+Math.floor(F/3),1,90,.8);
     for(let i=0;i<4;i++)posterAt(ctx,i,PL[i].x,420,.8,PL[i].r,99,F,lf-1-i*3);
-    hand(ctx,'награда за тебя',150,860,80,rm(lf,3,9),INK);const v=Math.round(100*E.out3(rm(lf,4,12)))*1000000;kword(ctx,G.money(v),150,1030,230,(lf-4)*1.6,{align:'left',color:'#c98a06',st:.3,shadow:false,sw:.03});ctx.restore();
+    hand(ctx,'награда за тебя',150,860,80,rm(lf,3,9),INK);const v=Math.round(100*E.out3(rm(lf,4,12)))*1000000;kword(ctx,fmt(v),150,1030,230,(lf-4)*1.6,{align:'left',color:'#c98a06',st:.3,shadow:false,sw:.03});ctx.restore();
     wipeOut(ctx,lf,15,RED,71);}});
 
 /* ---------- the numbers, one per beat (720-779) ---------- */

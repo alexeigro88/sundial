@@ -1,0 +1,20 @@
+PIRATES OF THE PENCIL SEA — voice-over script
+Timecode (s) | scratch duration | line
+
+ 0.45  | 2.41 | A dad and his son drew a game.
+ 4.05  | 1.60 | And it came alive!
+ 5.25  | 1.09 | This is you.
+ 6.55  | 0.93 | Jump!
+ 8.30  | 0.93 | Slash!
+10.05  | 1.62 | Eat magic fruits!
+12.15  | 0.91 | Sail!
+14.65  | 0.93 | Fire!
+17.55  | 1.82 | Explore dark caves.
+20.10  | 2.21 | Four pirates. Wanted.
+23.05  | 0.86 | Caught!
+24.08  | 1.01 | Islands!
+24.58  | 1.14 | Monsters!
+25.08  | 0.98 | Fruits!
+25.58  | 1.10 | And a parrot.
+27.25  | 1.89 | Pirates of the Pencil Sea.
+28.75  | 2.06 | Draw, animate, play!

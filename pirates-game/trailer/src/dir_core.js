@@ -13,6 +13,15 @@ const E={out3:t=>1-Math.pow(1-t,3),in3:t=>t*t*t,io3:t=>t<.5?4*t*t*t:1-Math.pow(-
   io5:t=>t<.5?16*t*t*t*t*t:1-Math.pow(-2*t+2,5)/2,out5:t=>1-Math.pow(1-t,5)};
 const h2=(a,b=0)=>{const x=Math.sin(a*127.1+b*311.7+.5)*43758.5453;return x-Math.floor(x);};
 const AM=s=>`700 ${s}px "Amatic SC","Neucha",cursive`,NE=s=>`${s}px "Neucha",cursive`;
+const LANG=window.__lang||'ru';
+const TR={'папа и сын нарисовали игру…':'a dad and his son drew a game…','И':'AND','ОНА':'IT CAME','ОЖИЛА!':'ALIVE!','ЭТО ТЫ!':'THIS IS YOU!','юный пират Карандашного моря':'a young Pencil Sea pirate',
+ 'ПРЫГАЙ':'JUMP','ЁЖ':'HEDGEHOG','ЧЕРЕПАХА':'TURTLE','НОСОРОГ':'RHINO','РУБИ':'SLASH','БАЦ!':'BAM!','ЕШЬ':'EAT','ФРУКТЫ':'FRUITS','ОГНЕПЕРЕЦ':'FIRE PEPPER','ГРОМОСЛИВА':'THUNDER PLUM','ТЫКВА-ВЕЛИКАН':'GIANT PUMPKIN',
+ 'ПЛЫВИ':'SAIL','СТРЕЛЯЙ':'FIRE!','БУМ!':'BOOM!','монет за акулу':'coins for the shark','ИССЛЕДУЙ':'EXPLORE','ИЩИ КЛАДЫ':'FIND TREASURE','РАЗЫСКИВАЮТСЯ':'MOST WANTED','ПОЙМАН!':'CAUGHT!',
+ 'КРАКЕН ЧЕРНИЛЬНОЕ ПУЗО':'KRAKEN INKBELLY','награда  30 000 000':'bounty  30,000,000','награда':'bounty','награда за тебя':'your bounty','ОСТРОВА':'ISLANDS','МОНСТРОВ':'MONSTERS','ФРУКТОВ':'FRUITS','ПОПУГАЙ':'PARROT',
+ 'ПИРАТЫ КАРАНДАШНОГО МОРЯ':'PIRATES OF THE PENCIL SEA','Нарисуй.':'Draw.','Оживи.':'Animate.','Играй.':'Play.','Гроза Карандашного моря':'Terror of the Pencil Sea',
+ 'Капитан Железный Зуб':'Captain Iron Tooth','Барон Песочник':'Baron Sandman','Кракен Чернильное Пузо':'Kraken Inkbelly','Адмирал Красный Клык':'Admiral Red Fang'};
+const t_=s=>LANG==='en'&&TR[s]!=null?TR[s]:s;
+const fmt=n=>LANG==='en'?Math.round(n).toLocaleString('en-US'):G.money(n);
 const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
 
 /* ---------- event log for sound design ---------- */
@@ -46,8 +55,9 @@ function wipe(ctx,p,col,seed){if(p<=0||p>=2)return;const n=22,lw=190,a=p<=1?0:(p
     if(st)ctx.lineTo(q[0],q[1]);else{ctx.moveTo(q[0],q[1]);st=true;}}
   ctx.stroke();ctx.restore();}
 /* kinetic word: letters drop in with overshoot, crayon block behind, boil on twos */
-function kword(ctx,txt,x,y,size,lt,o){o=o||{};if(lt<0)return;const F=CUR,ls=size*(o.ls==null?.05:o.ls);ctx.save();ctx.font=AM(size);ctx.textBaseline='alphabetic';
+function kword(ctx,txt,x,y,size,lt,o){o=o||{};if(lt<0)return;txt=t_(txt);const F=CUR,ls=size*(o.ls==null?.05:o.ls);ctx.save();ctx.font=AM(size);ctx.textBaseline='alphabetic';
   const ws=[...txt].map(ch=>ctx.measureText(ch).width+ls),tw=ws.reduce((a,b)=>a+b,0)-ls;let x0=o.align==='left'?x:o.align==='right'?x-tw:x-tw/2;
+  {const mw=(o.align==='left'?W-x:o.align==='right'?x:Math.min(x,W-x)*2)-70;if(!o.nofit&&tw>mw&&!o._fit){ctx.restore();return kword(ctx,txt,x,y,size*mw/tw,lt,Object.assign({},o,{_fit:1}));}}
   const out=o.out==null?-1:o.out,sy=out>=0?1-E.in3(clamp(out/3)):1;if(sy<=0){ctx.restore();return;}
   ctx.translate(x0+tw/2,y);ctx.rotate((o.rot||0)+(h2(Math.floor(F/3),7)-.5)*.012);ctx.scale(1+(1-sy)*.5,sy);ctx.translate(-(x0+tw/2),-y);
   if(o.block){const pad=size*.14;zig(ctx,x0-pad,y-size*.84,tw+pad*2,size*1.0,o.block,(o.seed||1)+Math.floor(F/2)*3,E.out3(clamp(lt/4)),size*.2,o.balpha);}
@@ -58,7 +68,7 @@ function kword(ctx,txt,x,y,size,lt,o){o=o||{};if(lt<0)return;const F=CUR,ls=size
     cx+=ws[i];});
   ctx.restore();return tw;}
 /* plain handwritten text with left-to-right write-on */
-function hand(ctx,txt,x,y,size,prog,col,font){ctx.save();ctx.font=(font||NE)(size);ctx.textBaseline='alphabetic';const tw=ctx.measureText(txt).width;ctx.beginPath();ctx.rect(x-10,y-size*1.2,(tw+20)*clamp(prog),size*1.7);ctx.clip();ctx.fillStyle=col||INK;ctx.fillText(txt,x,y);ctx.restore();return tw;}
+function hand(ctx,txt,x,y,size,prog,col,font){txt=t_(txt);ctx.save();ctx.font=(font||NE)(size);ctx.textBaseline='alphabetic';const tw=ctx.measureText(txt).width;ctx.beginPath();ctx.rect(x-10,y-size*1.2,(tw+20)*clamp(prog),size*1.7);ctx.clip();ctx.fillStyle=col||INK;ctx.fillText(txt,x,y);ctx.restore();return tw;}
 /* anime-style speed lines converging on a point */
 function speedLines(ctx,cx,cy,seed,col,inner){ctx.save();ctx.fillStyle=col||'#16161c';const n=54;for(let i=0;i<n;i++){const a=i/n*TAU+(h2(seed,i)-.5)*.14,wd=.01+h2(seed+9,i)*.04,r0=(inner||300)*(.8+h2(seed+4,i)*.9),r1=1500;
     ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r0,cy+Math.sin(a)*r0*.72);ctx.lineTo(cx+Math.cos(a-wd)*r1,cy+Math.sin(a-wd)*r1);ctx.lineTo(cx+Math.cos(a+wd)*r1,cy+Math.sin(a+wd)*r1);ctx.closePath();ctx.fill();}ctx.restore();}
@@ -90,7 +100,7 @@ function pencil(ctx,x,y,ang,sc){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ct
 /* floating numbers from the game, redrawn as punchy type */
 function drawFloats(ctx,sc){const fl=window.__floats||[];for(const f of fl){const age=G.tNow-f.t;if(age<0||age>1.1)continue;const p=proj(f.x,f.y+age*1.7,f.z);if(p[2]>1)continue;
     const s=(sc||1)*(f.cls==='gold'?96:80)*(.6+.4*E.outBack(clamp(age*7)));ctx.save();ctx.globalAlpha=clamp((1.1-age)/.25);ctx.font=AM(s);ctx.textAlign='center';ctx.lineJoin='round';ctx.strokeStyle=PAPER;ctx.lineWidth=s*.16;
-    ctx.translate(p[0],p[1]);ctx.rotate((h2(f.t*100,3)-.5)*.2);ctx.strokeText(f.txt,0,0);ctx.fillStyle=f.cls==='gold'?'#e09a00':f.cls==='green'?'#3f9a2a':RED;ctx.fillText(f.txt,0,0);ctx.restore();}}
+    ctx.translate(p[0],p[1]);ctx.rotate((h2(f.t*100,3)-.5)*.2);const ft_=LANG==='en'?f.txt.replace(/(\d)[\s\u00a0\u202f](?=\d)/g,'$1,'):f.txt;ctx.strokeText(ft_,0,0);ctx.fillStyle=f.cls==='gold'?'#e09a00':f.cls==='green'?'#3f9a2a':RED;ctx.fillText(ft_,0,0);ctx.restore();}}
 /* impact frames: lf = frames since the hit. Returns shake amplitude. */
 function impact(ctx,k,cx,cy,seed,strong){if(k<0||k>5)return 0;
   if(k===0){glc.style.filter='invert(1) grayscale(1) contrast(2.4)';speedLines(ctx,cx,cy,seed,'#fbfaf4',strong?340:260);return 0;}
