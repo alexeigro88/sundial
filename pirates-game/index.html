@@ -33,7 +33,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .coin{width:17px;height:17px;border-radius:50%;background:var(--sun);border:2px solid var(--ink);display:inline-block;flex:none}
 .chip small{font-size:13px;letter-spacing:.5px}
 #lang{font-size:15px!important}
-#mute,#lang{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
+#mute,#lang,#rst{pointer-events:auto;background:var(--paper);border:2px solid var(--ink);border-radius:4px 10px 5px 11px;width:40px;height:32px;font-size:19px;padding:0}
 
 #shopWrap{position:absolute;top:8px;right:max(16px,env(safe-area-inset-right,0px));filter:drop-shadow(3px 5px 0 var(--shadow));animation:shopPop 1.6s ease-in-out infinite}
 #shopBtn{position:relative;display:block;width:138px;height:97px;border:0;background:var(--roof);padding:0;font-family:var(--display);font-size:29px;line-height:.9;color:var(--shopink);letter-spacing:1px;transition:transform .15s ease-out,filter .15s}
@@ -92,6 +92,8 @@ h1,h2{font-family:var(--display);margin:0;line-height:1;text-wrap:balance;font-w
 h1{font-size:52px;color:var(--blue)}
 h2{font-size:38px;color:var(--blue)}
 .card p{margin:0;line-height:1.25}
+#start .card{max-width:600px;padding:20px 26px;gap:14px}
+#start .rules{gap:13px}#start .rules li{gap:14px;line-height:1.3}
 .rules{display:flex;flex-direction:column;gap:6px;text-align:left;align-self:stretch;margin:0;padding:0;list-style:none}
 .rules li{display:flex;gap:10px;align-items:center}
 .rules canvas{flex:none;width:44px;height:44px}
@@ -121,6 +123,7 @@ h2{font-size:38px;color:var(--blue)}
     <div class="chip"><small>Награда за тебя</small><span id="bountyT">0</span></div>
     <button id="mute" aria-label="Музыка и звук">♪</button>
     <button id="lang" aria-label="Language"></button>
+    <button id="rst" aria-label="Начать заново" style="font-size:20px;line-height:1">↻</button>
     <button id="miniB" aria-label="Открыть карту"><canvas id="mini" width="128" height="320"></canvas></button>
   </div>
 
@@ -186,6 +189,17 @@ h2{font-size:38px;color:var(--blue)}
       <canvas id="bigMap" width="456" height="900"></canvas>
       <div class="legend"><span><i class="l-me"></i>ты</span><span><i class="l-ship"></i>корабль</span><span><i class="l-boss"></i>пират</span><span><i class="l-mon"></i>монстр</span><span><i class="l-shark"></i>акула</span><span><i class="l-chest"></i>сундук</span><span><b class="l-x">✕</b>клад</span></div>
       <button class="btn plain" id="mapX">Закрыть</button>
+    </div>
+  </div>
+
+  <div class="ov" id="rstOv" hidden>
+    <div class="card">
+      <h2>Начать заново?</h2>
+      <p>Монеты, фрукты и пойманные пираты сотрутся, игра начнётся с самого начала.</p>
+      <div class="row">
+        <button class="btn" id="rstYes">Да, заново</button>
+        <button class="btn plain" id="rstNo">Отмена</button>
+      </div>
     </div>
   </div>
 
@@ -265,6 +279,7 @@ const EN={
 '@ больше никого не напугает.':'@ will not scare anyone again.',' Пиратов в розыске осталось: #.':' Wanted pirates left: #.','Ура!':'Hooray!','Гроза Карандашного моря':'Terror of the Pencil Sea',
 'Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!':'Run to the edge of the island and jump to the next one. Your ship is waiting by the shore on the right!'};
 Object.assign(EN,{'Сабля':'Sword','Молот':'Hammer','Копьё':'Spear','Бумеранг':'Boomerang','Заряжено!':'Charged!','Красный круг на земле — туда прилетит удар. Уходи рывком!':'A red mark on the ground shows where the hit will land. Dash away!'});
+Object.assign(EN,{'Начать заново?':'Start over?','Монеты, фрукты и пойманные пираты сотрутся, игра начнётся с самого начала.':'Coins, fruits and caught pirates will be wiped and the game starts from the very beginning.','Да, заново':'Yes, start over','Отмена':'Cancel'});
 const NAMES=['Капитан Железный Зуб','Барон Песочник','Кракен Чернильное Пузо','Адмирал Красный Клык'];
 function tr(s){if(LANG==='ru'||typeof s!=='string'||!/[А-Яа-яЁё]/.test(s))return s;if(EN[s]!=null)return EN[s];
   const nums=[],nm=[];let k=s;NAMES.forEach(n=>{if(k.indexOf(n)>=0){k=k.split(n).join('@');nm.push(EN[n]);}});
@@ -759,7 +774,7 @@ function openMap(){if(overlayOpen())return;for(const k in keys)keys[k]=false;big
 const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,onBr:-1,giant:0,dj:false,dash:0,dcd:0,slam:false,comboN:0,lastAtk:-9,swingD:.26,spin:0,hold:false,holdT:0,pend:null,lunge:null,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
 const cd={};let jumpQ=0,started=false,tNow=0;
 const keys={},joy={x:0,y:0,id:null,ox:0,oy:0};
-const overlayOpen=()=>['start','shop','map','wanted','win'].some(id=>!$(id).hidden);
+const overlayOpen=()=>['start','shop','map','wanted','win','rstOv'].some(id=>!$(id).hidden);
 function placeAt(i){const I=ISL[i];P.x=I.x;P.z=I.z+I.R*.25;P.y=I.y;P.vy=0;P.kx=P.kz=0;P.ground=true;P.ship=-1;P.onBr=-1;P.isl=-1;P.sx=P.x;P.sz=P.z;P.sy=P.y;}
 
 function floatTxt(x,y,z,txt,cls){const v=new T.Vector3(x,y,z).project(cam),e=document.createElement('div');e.className='float '+(cls||'');e.textContent=tr(txt);
@@ -1022,6 +1037,7 @@ function applyLang(){STAT.forEach(q=>{const k=q[1].trim();q[0].nodeValue=LANG===
   $('lang').textContent=LANG==='ru'?'EN':'RU';$('lang2').firstChild?$('lang2').firstChild.nodeValue=LANG==='ru'?'English':'Русский':$('lang2').appendChild(document.createTextNode(LANG==='ru'?'English':'Русский'));if(goCont)$('go').textContent=tr('Продолжить плавание');
   document.documentElement.lang=LANG;bigBase=null;$('atkL').textContent='';$('hint').classList.add('off');hud();renderPows();}
 function setLang(){LANG=LANG==='ru'?'en':'ru';try{localStorage.setItem('pencil-lang',LANG);}catch(e){}applyLang();}
+$('rst').onclick=()=>{if(overlayOpen())return;for(const k in keys)keys[k]=false;$('rstOv').hidden=false;};$('rstNo').onclick=()=>{$('rstOv').hidden=true;};$('rstYes').onclick=()=>{$('rstOv').hidden=true;reset();say('Беги к краю острова и прыгай на следующий. А справа у берега ждёт твой корабль!');};
 $('lang').onclick=setLang;$('lang2').onclick=setLang;
 function start(data){(function w(n){for(const c of n.childNodes){if(c.nodeType===3){if(/[А-Яа-яЁё]/.test(c.nodeValue))STAT.push([c,c.nodeValue]);}else if(c.nodeType===1)w(c);}})($('app'));load();if(data&&data.S&&ISL[data.S.home]){S=Object.assign(fresh(),data.S);started=!!data.started;}
   if(hadSave&&(S.coins||S.fr.length||S.dead.length)){goCont=true;$('fresh').hidden=false;}
