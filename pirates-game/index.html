@@ -100,7 +100,8 @@ h2{font-size:38px;color:var(--blue)}
 .keys{font-size:15px;opacity:.8}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-self:stretch}
-@media (min-width:600px){#shop .card{max-width:640px;padding:16px 22px}#shop .grid{grid-template-columns:repeat(4,1fr);gap:10px}#fInfo{min-height:58px}}
+@media (min-width:460px){#shop .card{max-width:640px}#shop .grid{grid-template-columns:repeat(4,1fr)}#shop .fr{font-size:13px}#shop .fr canvas{width:44px;height:44px}#fInfo{min-height:58px}}
+@media (min-width:600px){#shop .card{padding:16px 22px}#shop .grid{gap:10px}#shop .fr{font-size:14px}#shop .fr canvas{width:50px;height:50px}}
 .fr{background:var(--paper);border:2.5px solid var(--blue);border-radius:4px 8px 5px 9px;padding:2px 2px 4px;display:flex;flex-direction:column;align-items:center;font-size:14px;line-height:1;min-width:0}
 .fr canvas{width:50px;height:50px}
 .fr b{font-weight:400;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:4px;margin-top:2px}
