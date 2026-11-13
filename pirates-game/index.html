@@ -160,7 +160,7 @@ h2{font-size:38px;color:var(--blue)}
         <li><canvas id="r5" width="88" height="88"></canvas><span>На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.</span></li>
         <li><canvas id="r3" width="88" height="88"></canvas><span>За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.</span></li>
       </ul>
-      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, Q — сменить оружие, M — карта. Три удара подряд — усиленный, держи F — заряженный. На телефоне: води пальцем слева, кнопки справа.</p>
+      <p class="keys">Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–6 — силы фруктов, Q — сменить оружие, M — карта. Три удара подряд — усиленный, держи F — заряженный. На телефоне: води пальцем слева, кнопки справа.</p>
       <div class="row">
         <button class="btn" id="go">В плавание!</button>
         <button class="btn plain" id="fresh" hidden>Начать заново</button>
@@ -251,7 +251,7 @@ const EN={
 'Ищи по карте красный крестик: там зарыт клад. А на первом острове в клетке сидит попугай — освободи его!':'Look for the red X on the map: treasure is buried there. And a parrot sits in a cage on the first island. Set it free!',
 'На одном из островов Малого моря есть вход в тёмную пещеру с кристаллами и сундуками.':'One island in the Small Sea hides the way into a dark cave full of crystals and chests.',
 'За монеты покупай волшебные фрукты в Лавке фруктов: огонь, лёд, молния, супер-прыжок.':'Spend coins on magic fruits in the Fruit Shop: fire, ice, lightning, super jump.',
-'Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–5 — силы фруктов, Q — сменить оружие, M — карта. Три удара подряд — усиленный, держи F — заряженный. На телефоне: води пальцем слева, кнопки справа.':'Keyboard: arrows or WASD to run, space to jump, F to hit (in the air: ground slam), Shift to dash, 1–5 for fruit powers, Q to switch weapon, M for the map. Three hits in a row make a strong one, hold F for a charged attack. On a phone: drag on the left, buttons on the right.',
+'Клавиатура: стрелки или WASD — бег, пробел — прыжок, F — удар (в прыжке — удар сверху), Shift — рывок, 1–6 — силы фруктов, Q — сменить оружие, M — карта. Три удара подряд — усиленный, держи F — заряженный. На телефоне: води пальцем слева, кнопки справа.':'Keyboard: arrows or WASD to run, space to jump, F to hit (in the air: ground slam), Shift to dash, 1–6 for fruit powers, Q to switch weapon, M for the map. Three hits in a row make a strong one, hold F for a charged attack. On a phone: drag on the left, buttons on the right.',
 'В плавание!':'Set sail!','Продолжить плавание':'Keep sailing','Начать заново':'Start over','Купить':'Buy','Закрыть':'Close','Разыскивается!':'Wanted!','В бой!':'Fight!','Карта Карандашного моря':'Map of the Pencil Sea',
 'ты':'you','корабль':'ship','пират':'pirate','монстр':'monster','акула':'shark','сундук':'chest','клад':'treasure','Победа!':'Victory!',
 'Все пираты из розыска пойманы. Теперь самый знаменитый пират Карандашного моря — ты!':'Every wanted pirate is caught. The most famous pirate of the Pencil Sea is now you!',
@@ -303,6 +303,7 @@ Object.assign(EN,{'Юнга':'Cabin boy','Матрос':'Sailor','Боцман':
  'Броня!':'Armor!','Верфь':'Shipyard','Пушки':'Cannons','Броня':'Armor','Паруса':'Sails','Максимум':'Maxed','Улучшено полностью.':'Fully upgraded.',
  'Вторая пушка: два ядра за один выстрел.':'Second cannon: two cannonballs per shot.','Быстрая перезарядка пушек.':'Cannons reload faster.','Щит на два удара в море. Чинится в деревне.':'A shield for two hits at sea. Repaired in the village.','Щит на четыре удара.':'A shield for four hits.','Корабль плывёт быстрее.':'The ship sails faster.','Корабль плывёт ещё быстрее.':'The ship sails even faster.',
  'Вражеский корабль потоплен! +# монет':'Enemy ship sunk! +# coins','Вражеский корабль! Красное кольцо на воде — туда упадёт ядро. Уплывай и стреляй в ответ.':'Enemy ship! A red ring on the water shows where the cannonball will land. Sail away and fire back.'});
+Object.assign(EN,{'Огненный феникс':'Fire Phoenix','Сила: восемь секунд ты летаешь над морем и островами и кидаешь огненные шары кнопкой «Удар».':'Power: for eight seconds you fly over the sea and the islands and throw fireballs with the Hit button.','Ты феникс! Лети куда хочешь и кидай огненные шары кнопкой «Удар».':'You are a phoenix! Fly anywhere and throw fireballs with the Hit button.','Крылья погасли! Приземляйся.':'The wings went out! Time to land.'});
 const NAMES=['Капитан Железный Зуб','Барон Песочник','Кракен Чернильное Пузо','Адмирал Красный Клык'];
 function tr(s){if(LANG==='ru'||typeof s!=='string'||!/[А-Яа-яЁё]/.test(s))return s;if(EN[s]!=null)return EN[s];
   const nums=[],nm=[];let k=s;NAMES.forEach(n=>{if(k.indexOf(n)>=0){k=k.split(n).join('@');nm.push(EN[n]);}});
@@ -335,7 +336,8 @@ const FR=[
  {id:'crown', name:'Королевский ананас',price:400000,d:'Силы фруктов заряжаются вдвое быстрее.',shape:'oval',col:'#f08a1c',light:'#fbd9ae',pat:'#a8540a',p:'cross'},
  {id:'double',name:'Облачный персик',price:350000,d:'Второй прыжок прямо в воздухе: нажми «Прыг» ещё раз, пока летишь.',shape:'round',col:'#f7a27a',light:'#fde0cf',pat:'#fff',p:'dots'},
  {id:'powder',name:'Пороховой гранат',price:300000,d:'Ядра пушки бьют вдвое сильнее и стоят вдвое дешевле.',shape:'round',col:'#a3243b',light:'#e9b3bd',pat:'#f6cf3a',p:'zig'},
- {id:'giant', name:'Тыква-великан',price:500000,d:'Сила: на восемь секунд ты великан — бьёшь втрое сильнее, и монстры не могут тебя ранить.',shape:'round',col:'#e8791c',light:'#fbd3ae',pat:'#8a4a0a',p:'stripes',act:1,cd:25}
+ {id:'giant', name:'Тыква-великан',price:500000,d:'Сила: на восемь секунд ты великан — бьёшь втрое сильнее, и монстры не могут тебя ранить.',shape:'round',col:'#e8791c',light:'#fbd3ae',pat:'#8a4a0a',p:'stripes',act:1,cd:25},
+ {id:'phoenix',name:'Огненный феникс',price:600000,d:'Сила: восемь секунд ты летаешь над морем и островами и кидаешь огненные шары кнопкой «Удар».',shape:'long',col:'#ff5a1f',light:'#ffd9b0',pat:'#ffe23d',p:'zig',act:1,cd:30}
 ];
 FR.forEach((f,i)=>f.seed=i*31+7);
 const FBY=Object.fromEntries(FR.map(f=>[f.id,f]));
@@ -650,6 +652,7 @@ add(WG[1],box(.08,.08,1.15),flat('#8a5a2b'),0,-.46,.5);add(WG[1],box(.62,.42,.42
 add(WG[2],box(.06,.06,2.3),flat('#8a5a2b'),0,-.46,.75);{const tp=add(WG[2],cone(.11,.42,6),flat('#cfd4dc'),0,-.46,2.1);tp.rotation.x=Math.PI/2;add(WG[2],box(.2,.05,.05),flat('#d63b2f'),0,-.46,1.82);}
 function boomShape(g,y,z){const m=flat('#f08a1c');const a=add(g,box(.14,.05,.6),m,-.17,y,z);a.rotation.y=.6;const b=add(g,box(.14,.05,.6),m,.17,y,z);b.rotation.y=-.6;add(g,box(.16,.06,.12),flat('#d63b2f'),0,y,z+.24);}
 boomShape(WG[3],-.46,.3);
+const wings=[1,-1].map(sd=>{const g=new T.Group();g.position.set(sd*.3,1.05,-.2);const wm=new T.MeshBasicMaterial({color:0xff7a1a,side:T.DoubleSide});add(g,box(1.25,.05,.6),wm,sd*.65,0,0);add(g,box(.8,.05,.38),new T.MeshBasicMaterial({color:0xffd23a,side:T.DoubleSide}),sd*1.3,0,-.12);g.visible=false;hBody.add(g);return g;});
 const chargeR=add(scene,new T.RingGeometry(.62,.8,28),new T.MeshBasicMaterial({color:0xf6cf3a,transparent:true,opacity:.9,side:T.DoubleSide,depthWrite:false}),0,0,0);chargeR.rotation.x=-Math.PI/2;chargeR.visible=false;
 const shadow=add(scene,new T.CircleGeometry(.5,16),new T.MeshBasicMaterial({color:0x333344,transparent:true,opacity:.25,depthWrite:false}),0,0,0);shadow.rotation.x=-Math.PI/2;
 
@@ -842,7 +845,7 @@ function renderYard(){const w=$('yardList');w.textContent='';$('yardCoin').textC
 function openMap(){if(overlayOpen())return;for(const k in keys)keys[k]=false;bigBase=bigBase||mapBase(456,MBIG);mapDraw($('bigMap'),bigBase,MBIG);$('map').hidden=false;}
 
 /* ---------- player ---------- */
-const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,onBr:-1,giant:0,dj:false,dash:0,dcd:0,slam:false,comboN:0,lastAtk:-9,swingD:.26,spin:0,hold:false,holdT:0,pend:null,lunge:null,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
+const P={x:0,y:0,z:2,vy:0,kx:0,kz:0,face:Math.PI,ground:true,ship:-1,onBr:-1,giant:0,fly:0,dj:false,dash:0,dcd:0,slam:false,comboN:0,lastAtk:-9,swingD:.26,spin:0,hold:false,holdT:0,pend:null,lunge:null,coy:0,inv:0,atk:0,swing:0,isl:-1,sx:0,sz:2,sy:0,walk:0};
 const cd={};let jumpQ=0,started=false,tNow=0;
 const keys={},joy={x:0,y:0,id:null,ox:0,oy:0};
 const overlayOpen=()=>['start','shop','map','wanted','win','rstOv','yardOv'].some(id=>!$(id).hidden);
@@ -889,7 +892,14 @@ function cannon(){const sh=SHIPS[P.ship],sx=sh.x+Math.sin(sh.rot)*2.2,sz=sh.z+Ma
   let dx,dz,d,ty;if(tg){dx=tg.x-sx;dz=tg.z-sz;d=Math.hypot(dx,dz)||1;ty=tg.y;}else{d=14;dx=Math.sin(sh.rot)*d;dz=Math.cos(sh.rot)*d;ty=-1.3;}
   const tt=Math.max(.3,d/19);(S.up.gun>=1?[-.45,.45]:[0]).forEach(of=>{const o=add(scene,ball(.28,10,8),flat(INK),sx+of*Math.cos(sh.rot),y0,sz-of*Math.sin(sh.rot));fx.push({k:'ball',dmg:has('powder')?4:2,o,vx:dx/tt,vz:dz/tt,vy:(ty-y0)/tt+7*tt,t:tt+.2+Math.abs(of)*.1});});
   beep(90,.3,'square',.09);setTimeout(()=>beep(55,.3,'sawtooth',.07),50);}
-function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.ship>=0&&P.ground){cannon();return;}if(digNear()&&!nearest(2.6)){digHit();return;}if(cageNear()&&!nearest(2.2)){cageHit();return;}if(!P.ground&&P.ship<0){if(!P.slam){P.slam=true;P.vy=-24;P.atk=.3;sfx.swing();}return;}const w=S.wpn||0;if(w===3&&boomOut)return;P.comboN=tNow-P.lastAtk<.8?P.comboN%3+1:1;P.lastAtk=tNow;doAttack(w,P.comboN===3&&w!==3?1:0);}
+function fireShot(){P.atk=.26;P.swing=P.swingD=.2;let tg=null,bd=17;MONS.forEach(m=>{if(!alive(m))return;const d=Math.hypot(m.x-P.x,m.z-P.z);if(d<bd){bd=d;tg=[m.x,ISL[m.isl].y+m.s,m.z];}});
+  ENEMY.forEach(k=>{if(k.dead>0)return;const d=Math.hypot(k.x-P.x,k.z-P.z);if(d<bd){bd=d;tg=[k.x,0,k.z];}});
+  if(tg)P.face=Math.atan2(tg[0]-P.x,tg[2]-P.z);else tg=[P.x+Math.sin(P.face)*10,Math.max(-1,P.y-3),P.z+Math.cos(P.face)*10];
+  const sy=P.y+1.1,dx=tg[0]-P.x,dy=tg[1]-sy,dz=tg[2]-P.z,d=Math.hypot(dx,dy,dz)||1,v=20,o=add(scene,fireGeo,fireMat,P.x,sy,P.z);sfx.zap();
+  fx.push({k:'pf',o,t:d/v+.25,up(f,dt){o.position.x+=dx/d*v*dt;o.position.y+=dy/d*v*dt;o.position.z+=dz/d*v*dt;o.scale.setScalar(1.2+Math.sin(tNow*30)*.25);
+    const h=MONS.find(m=>alive(m)&&Math.hypot(m.x-o.position.x,m.z-o.position.z)<m.s+.7&&Math.abs(ISL[m.isl].y+m.s-o.position.y)<m.s+1.2);if(h){hurtMon(h,3*(P.giant>0?3:1),P.x,P.z);f.t=0;return;}
+    const en=ENEMY.find(k=>k.dead<=0&&Math.hypot(k.x-o.position.x,k.z-o.position.z)<2.5&&o.position.y<1.6);if(en){hitEnemy(en,2);f.t=0;}}});}
+function attack(){if(!started||overlayOpen()||P.atk>0)return;if(P.fly>0){fireShot();return;}if(P.ship>=0&&P.ground){cannon();return;}if(digNear()&&!nearest(2.6)){digHit();return;}if(cageNear()&&!nearest(2.2)){cageHit();return;}if(!P.ground&&P.ship<0){if(!P.slam){P.slam=true;P.vy=-24;P.atk=.3;sfx.swing();}return;}const w=S.wpn||0;if(w===3&&boomOut)return;P.comboN=tNow-P.lastAtk<.8?P.comboN%3+1:1;P.lastAtk=tNow;doAttack(w,P.comboN===3&&w!==3?1:0);}
 const WPN=['Сабля','Молот','Копьё','Бумеранг'];let boomOut=false;
 function ringFx(x,y,z,r,col){const o=add(scene,new T.RingGeometry(.7,1,28),new T.MeshBasicMaterial({color:col||0xf6cf3a,transparent:true,side:T.DoubleSide,depthWrite:false}),x,y+.08,z);o.rotation.x=-Math.PI/2;fx.push({k:'r2',o,t:.35,d:.35,up(f){const u=1-Math.max(0,f.t)/f.d;o.scale.setScalar(.3+u*r);o.material.opacity=1-u;}});}
 function hitWhere(test,dmg,pierce,stun){let n=0;MONS.forEach(m=>{if(!alive(m)||Math.abs(P.y-ISL[m.isl].y)>2.4)return;if(test(m,m.x-P.x,m.z-P.z)){if(stun)m.froz=Math.max(m.froz,stun);hurtMon(m,dmg,P.x,P.z,pierce);n++;}});return n;}
@@ -949,6 +959,7 @@ function usePow(id){if(!started||overlayOpen()||!has(id)||cd[id]>0)return;const 
   else if(id==='bolt'){const t=nearest(13);if(!t){say('Рядом нет монстров — молнии не в кого бить.');ok=false;}else{const o=add(scene,cyl(.12,.3,14,5),boltMat.clone(),t.x,7,t.z);fx.push({k:'bolt',o,t:.3});sfx.zap();hurtMon(t,5,t.x,t.z+.01);}}
   else if(id==='ice'){let n=0;MONS.forEach(m=>{if(alive(m)&&Math.hypot(m.x-P.x,m.z-P.z)<11){m.froz=4;n++;}});if(!n){say('Рядом нет монстров — замораживать некого.');ok=false;}else{sfx.zap();say('Монстры заморожены! Бей скорее.');}}
   else if(id==='pear'){if(S.hp>=maxHp()){say('Сердечки и так полные.');ok=false;}else{const h=Math.min(3,maxHp()-S.hp);S.hp+=h;floatTxt(P.x,P.y+2.4,P.z,'+'+h+' ♥','green');sfx.coin();hud();}}
+  else if(id==='phoenix'){P.fly=8;if(P.ship>=0)P.ship=-2;P.ground=false;P.slam=false;P.onBr=-1;P.isl=-1;hud();sfx.win();say('Ты феникс! Лети куда хочешь и кидай огненные шары кнопкой «Удар».');}
   else if(id==='giant'){P.giant=8;sfx.win();say('Ты великан! Восемь секунд монстры не могут тебя ранить.');}
   if(ok)cd[id]=f.cd*(has('crown')?.5:1);}
 
@@ -979,7 +990,7 @@ function update(dt){tNow+=dt;
   /* wall */
   if(Math.abs(P.z-WZ)<1.5){if(!doorClosed()&&Math.abs(pz-WZ)<1.5)P.x=clamp(P.x,-GATE+.4,GATE-.4);else if(doorClosed()||Math.abs(P.x)>GATE-.4)P.z=pz>=WZ?WZ+1.5:WZ-1.5;}
   /* gravity & ground */
-  P.vy-=27*dt;P.y+=P.vy*dt;P.coy-=dt;jumpQ-=dt;
+  if(P.fly>0){P.fly-=dt;P.vy=0;const fi=islandAt(P.x,P.z),fy=(fi>=0?ISL[fi].y:0)+3;P.y+=(fy-P.y)*Math.min(1,dt*5);if(P.x<200){P.x=clamp(P.x,-54,54);P.z=clamp(P.z,-142,24);}if(P.fly<=0)say('Крылья погасли! Приземляйся.');}else{P.vy-=27*dt;P.y+=P.vy*dt;}P.coy-=dt;jumpQ-=dt;
   if(P.onBr>=0){const b=BR[P.onBr],dx=P.x-b.ax,dz=P.z-b.az,d=dx*b.ux+dz*b.uz,lat=dx*b.uz-dz*b.ux,by0=b.ya+(b.yb-b.ya)*clamp((d-1)/(b.len-2),0,1);
     if(d>.7&&d<b.len-.7&&P.y<by0+.9&&Math.abs(lat)>.7&&Math.abs(lat)<2.2){const k=(lat>0?.7:-.7)-lat;P.x+=b.uz*k;P.z-=b.ux*k;}}
   const gi=islandAt(P.x,P.z),by=gi<0?bridgeY(P.x,P.z):-99,si=gi<0&&by<-90?shipAt(P.x,P.z):-1,gy=gi>=0?ISL[gi].y:by>-90?by:si>=0?DECK:-99;
@@ -1037,6 +1048,7 @@ function render(){const moving=Math.hypot(joy.x,joy.y)>.15||keys.KeyW||keys.KeyA
     else if(w===1){arm.rotation.x=-3+sw*3.3;arm.rotation.y=0;}
     else if(w===2){arm.rotation.x=-.25;arm.rotation.y=0;arm.position.z=Math.sin(sw*Math.PI)*.75;}
     else{arm.rotation.x=-2.4+sw*2.6;arm.rotation.y=.6-sw*1.4;}
+    {const fl=P.fly>0&&(P.fly>2||Math.floor(tNow*8)%2===0);wings.forEach((g,i)=>{g.visible=fl;g.rotation.z=(i?-1:1)*(.25+Math.sin(tNow*14)*.55);});}
     hBody.rotation.y=P.spin>0?(1-P.spin/.45)*TAU*2:0;
     const ch=P.hold&&P.holdT>.25&&P.ground&&P.ship<0,k=clamp((P.holdT-.25)/.6,0,1);chargeR.visible=ch;if(ch){chargeR.position.set(P.x,P.y+.06,P.z);chargeR.scale.setScalar(.6+k*1.3+(k>=1&&!RM?Math.sin(tNow*18)*.08:0));chargeR.material.color.set(k>=1?0xff7a1a:0xf6cf3a);}}
   hero.visible=P.inv>0?Math.floor(tNow*14)%2===0:true;
@@ -1060,7 +1072,7 @@ window.addEventListener('resize',resize);
 /* ---------- input ---------- */
 window.addEventListener('keydown',e=>{if(overlayOpen()){if(e.code==='Escape'||e.code==='KeyM'){$('shop').hidden=true;$('map').hidden=true;}return;}keys[e.code]=true;
   if(e.code==='Space'){jump();e.preventDefault();}else if(e.code==='ShiftLeft'||e.code==='ShiftRight'||e.code==='KeyE')dash();else if(e.code==='KeyM')openMap();else if(e.code==='KeyQ')setWpn((S.wpn||0)+1);else if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter'){if(!e.repeat)atkDown();}
-  else if(/^Digit[1-5]$/.test(e.code)){const b=pwBtns[+e.code[5]-1];if(b)usePow(b.fid);}
+  else if(/^Digit[1-6]$/.test(e.code)){const b=pwBtns[+e.code[5]-1];if(b)usePow(b.fid);}
   if(e.code.indexOf('Arrow')===0)e.preventDefault();});
 window.addEventListener('keyup',e=>{keys[e.code]=false;if(e.code==='KeyF'||e.code==='KeyJ'||e.code==='KeyX'||e.code==='Enter')atkUp();});
 window.addEventListener('blur',()=>{for(const k in keys)keys[k]=false;joy.x=joy.y=0;joy.id=null;$('joy').hidden=true;});
